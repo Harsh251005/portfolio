@@ -1,7 +1,7 @@
 ---
 question: "Which one was hardest?"
 short: "The hardest one"
-aliases: ["hardest", "most difficult", "biggest challenge", "what was hard"]
+aliases: ["hardest", "most difficult", "biggest challenge", "what was hard", "most difficult thing youve built", "hardest project", "hardest thing youve built"]
 group: things-built
 card: story
 order: 6

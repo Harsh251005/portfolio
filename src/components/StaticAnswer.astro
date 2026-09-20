@@ -9,11 +9,17 @@ import type { Entry } from '../lib/brain/types';
 
 interface Props {
   entry: Entry;
-  headingLevel?: 'h1' | 'h2';
+  headingLevel?: 'h1' | 'h2' | 'h3';
 }
 
 const { entry, headingLevel = 'h2' } = Astro.props;
 const Heading = headingLevel;
+
+/* Sub-headings must sit exactly one level below the question, or the
+   document outline skips a level — which screen readers announce as a
+   missing section. */
+const SUB = { h1: 'h2', h2: 'h3', h3: 'h4' } as const;
+const Sub = SUB[headingLevel];
 
 /** Marks ⟨draft⟩ text the same way the Markdown pipeline does. */
 function mark(text: string) {
@@ -41,7 +47,7 @@ function mark(text: string) {
     <ol class="items">
       {entry.items.map((item) => (
         <li>
-          <h4>{item.label}</h4>
+          <Sub>{item.label}</Sub>
           {item.body && <p set:html={mark(item.body)} />}
         </li>
       ))}
@@ -52,7 +58,7 @@ function mark(text: string) {
     <div class="sides">
       {entry.sides.map((side) => (
         <section>
-          <h4>{side.label}</h4>
+          <Sub>{side.label}</Sub>
           <ul>{side.points.map((point) => <li>{point}</li>)}</ul>
         </section>
       ))}
@@ -69,7 +75,7 @@ function mark(text: string) {
 <style>
   .answer { padding-block: var(--s-7); border-top: var(--hairline) solid var(--rule-soft); }
 
-  h2, h1 {
+  h1, h2, h3 {
     font-size: var(--t-2xl);
     font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
     max-width: 20ch;
@@ -96,7 +102,8 @@ function mark(text: string) {
   .items { padding-left: var(--s-5); display: grid; gap: var(--s-4); }
   .sides { display: grid; gap: var(--s-5); }
 
-  h4 {
+  .items :global(:is(h2, h3, h4)),
+  .sides :global(:is(h2, h3, h4)) {
     font-family: var(--font-body);
     font-size: var(--t-base);
     font-variation-settings: 'wght' 650;

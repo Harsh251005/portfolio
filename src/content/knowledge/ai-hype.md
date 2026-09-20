@@ -1,7 +1,7 @@
 ---
 question: "Is any of this AI stuff actually real?"
 short: "Hype vs real"
-aliases: ["hype", "is ai real", "bubble", "overrated", "opinion on ai", "will ai replace"]
+aliases: ["hype", "is ai real", "bubble", "overrated", "opinion on ai", "will ai replace", "is ai overhyped", "overhyped", "is it all hype", "ai bubble"]
 group: how-i-think
 card: compare
 order: 4

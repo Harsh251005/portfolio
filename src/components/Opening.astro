@@ -47,6 +47,10 @@
     padding-top: clamp(var(--s-7), 10vh, var(--s-9));
     padding-bottom: var(--s-7);
     display: grid;
+    /* minmax(0, 1fr), not the default auto: an auto track sizes to the
+       min-content of its widest item, so one long word would widen the
+       whole page past the viewport regardless of min-width on the item. */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--s-6);
     grid-template-areas:
       'masthead'
@@ -60,6 +64,8 @@
 
   h1 {
     display: grid;
+    min-width: 0;
+    overflow-wrap: break-word;
     font-size: var(--t-4xl);
     /* Weight 400, not lighter: below that Fraunces' thin crossbars
        make a capital H read as two separate strokes at this size. */

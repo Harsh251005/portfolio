@@ -21,7 +21,7 @@ const total = groups.reduce((n, g) => n + g.entries.length, 0);
 >
   <div class="page" id="main">
     <header class="head">
-      <p class="label"><a href="/">← Back to the start</a></p>
+      <p class="label"><a class="touch" href="/">← Back to the start</a></p>
       <h1>Everything I can tell you</h1>
       <p class="sub">
         All {total} answers, in order, on one page. The version of this site
@@ -35,7 +35,7 @@ const total = groups.reduce((n, g) => n + g.entries.length, 0);
           <p class="label">{group.label}</p>
           <ul>
             {group.entries.map((entry) => (
-              <li><a href={`#${entry.id}`}>{entry.short}</a></li>
+              <li><a class="touch" href={`#${entry.id}`}>{entry.short}</a></li>
             ))}
           </ul>
         </section>
@@ -45,7 +45,7 @@ const total = groups.reduce((n, g) => n + g.entries.length, 0);
     {groups.map((group) => (
       <section class="group">
         <h2 class="group__title">{group.label}</h2>
-        {group.entries.map((entry) => <StaticAnswer entry={entry} />)}
+        {group.entries.map((entry) => <StaticAnswer entry={entry} headingLevel="h3" />)}
       </section>
     ))}
   </div>
@@ -74,7 +74,7 @@ const total = groups.reduce((n, g) => n + g.entries.length, 0);
     grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   }
 
-  .toc ul { list-style: none; padding: 0; margin-top: var(--s-2); display: grid; gap: var(--s-1); }
+  .toc ul { list-style: none; padding: 0; margin-top: var(--s-2); display: grid; }
   .toc a { font-size: var(--t-sm); color: var(--ink-soft); }
   .toc a:hover { color: var(--accent); }
 

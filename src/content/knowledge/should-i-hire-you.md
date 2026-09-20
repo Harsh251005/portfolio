@@ -1,7 +1,7 @@
 ---
 question: "Should I hire you?"
 short: "Hiring me"
-aliases: ["are you available", "are you looking for work", "hire", "job", "can i work with you", "are you any good", "why you"]
+aliases: ["are you available", "are you looking for work", "hire", "job", "can i work with you", "are you any good", "why you", "are you hiring", "are you looking for a job", "open to work", "recruiting"]
 group: short-version
 card: list
 featured: true

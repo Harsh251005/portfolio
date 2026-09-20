@@ -1,7 +1,7 @@
 ---
 question: "How do you actually work?"
 short: "How I work"
-aliases: ["process", "how do you work", "workflow", "method", "how do you approach problems"]
+aliases: ["process", "how do you work", "workflow", "method", "how do you approach problems", "how do you build things", "your working style"]
 group: how-i-think
 card: list
 order: 1

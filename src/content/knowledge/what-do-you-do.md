@@ -1,7 +1,7 @@
 ---
 question: "What do you actually do all day?"
 short: "What I do"
-aliases: ["what is your job", "what do you work on", "what is an ai engineer", "what do you build", "tell me about your work"]
+aliases: ["what is your job", "what do you work on", "what is an ai engineer", "what do you build", "tell me about your work", "what do you do", "what do you do all day", "so what do you do"]
 group: short-version
 card: story
 featured: true

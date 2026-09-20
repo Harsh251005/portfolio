@@ -1,7 +1,7 @@
 ---
 question: "Where are you from?"
 short: "Where I'm from"
-aliases: ["location", "where do you live", "mumbai", "india", "based", "remote", "relocate"]
+aliases: ["location", "where do you live", "mumbai", "india", "based", "remote", "relocate", "do you work remotely", "remote work", "can you work remotely", "relocating"]
 group: the-person
 card: story
 order: 3

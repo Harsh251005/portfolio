@@ -14,7 +14,7 @@
       <li>
         <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
         <div>
-          <h4>{item.label}</h4>
+          <h3>{item.label}</h3>
           {#if item.body}<p><Placeholder text={item.body} /></p>{/if}
         </div>
       </li>
@@ -46,7 +46,7 @@
     letter-spacing: 0.05em;
   }
 
-  h4 {
+  h3 {
     font-family: var(--font-body);
     font-size: var(--t-base);
     font-variation-settings: 'wght' 650;

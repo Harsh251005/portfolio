@@ -11,7 +11,7 @@
   <div class="sides">
     {#each entry.sides as side, i (side.label)}
       <section class:second={i === 1}>
-        <h4>{side.label}</h4>
+        <h3>{side.label}</h3>
         <ul>
           {#each side.points as point (point)}
             <li>{point}</li>
@@ -41,7 +41,7 @@
     }
   }
 
-  h4 {
+  h3 {
     font-family: var(--font-body);
     font-size: var(--t-xs);
     font-variation-settings: 'wght' 700;
@@ -50,7 +50,7 @@
     color: var(--ink-faint);
   }
 
-  .second h4 { color: var(--accent); }
+  .second h3 { color: var(--accent); }
 
   ul {
     margin-top: var(--s-4);

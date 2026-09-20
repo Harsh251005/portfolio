@@ -12,7 +12,7 @@
   <ol class="track">
     {#each entry.items as item (item.label)}
       <li>
-        <h4>{item.label}</h4>
+        <h3>{item.label}</h3>
         {#if item.body}<p><Placeholder text={item.body} /></p>{/if}
       </li>
     {/each}
@@ -52,7 +52,7 @@
     border: 2px solid var(--accent);
   }
 
-  h4 {
+  h3 {
     font-family: var(--font-body);
     font-size: var(--t-xs);
     font-variation-settings: 'wght' 700;
