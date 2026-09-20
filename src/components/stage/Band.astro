@@ -1,15 +1,15 @@
 ---
 /* A full-width horizontal band of the page.
 
-   Owns two things and nothing else: which tone it carries, and the
-   vertical rhythm around it. Everything inside inherits the palette
-   through custom properties, so no child component knows or cares
-   whether it is on dark or light.
+   Owns two things and nothing else: which of the two surface tones
+   it carries, and the vertical rhythm around it. Everything inside
+   inherits the palette through custom properties, so no child
+   component knows or cares which tone it is sitting on.
 
    Reordering the page is reordering these in index.astro. */
 
 interface Props {
-  tone?: 'ink' | 'paper';
+  tone?: 'deep' | 'soft';
   id?: string;
   /** Removes the default vertical padding — for bands that manage
    *  their own, like the hero. */
@@ -17,7 +17,7 @@ interface Props {
   class?: string;
 }
 
-const { tone = 'ink', id, flush = false, class: extra = '' } = Astro.props;
+const { tone = 'deep', id, flush = false, class: extra = '' } = Astro.props;
 ---
 
 <section

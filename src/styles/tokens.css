@@ -4,23 +4,13 @@
    --------------------------------------------------------------- */
 
 :root {
-  /* --- Palette -------------------------------------------------
-     The page alternates dark and light bands rather than committing
-     to one. Each band re-declares the palette locally through
-     .tone-ink or .tone-paper, and because custom properties inherit,
-     every component inside simply follows — no component needs to
-     know which band it is sitting in.
-
-     That is the whole theming mechanism. Adding a band is adding a
-     class, not writing variants. */
-
   /* --- Type ----------------------------------------------------
      Fraunces carries voice; Archivo carries information. */
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-body:    'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Fluid scale. min is the 390px phone value, max the 1440px value. */
+  /* Fluid scale. min is the ~360px phone value, max the 1440px one. */
   --t-xs:   clamp(0.75rem,  0.72rem + 0.15vw, 0.8125rem);
   --t-sm:   clamp(0.875rem, 0.85rem  + 0.15vw, 0.9375rem);
   --t-base: clamp(1rem,     0.96rem  + 0.2vw,  1.125rem);
@@ -28,7 +18,7 @@
   --t-xl:   clamp(1.375rem, 1.2rem   + 0.8vw,  1.875rem);
   --t-2xl:  clamp(1.75rem,  1.4rem   + 1.6vw,  2.75rem);
   --t-3xl:  clamp(2.5rem,   1.7rem   + 3.6vw,  5rem);
-  --t-4xl:  clamp(2rem,     9.5vw, 7rem);
+  --t-4xl:  clamp(2rem,     9.5vw,               7rem);
 
   --leading-tight: 1.05;
   --leading-snug:  1.25;
@@ -51,70 +41,85 @@
   --s-7: 3rem;
   --s-8: 4rem;
   --s-9: 6rem;
-  --section: clamp(3rem, 2rem + 5vw, 7rem);
+  --section: clamp(3.5rem, 2rem + 6vw, 8rem);
   --gutter:  clamp(1.25rem, 0.9rem + 1.8vw, 3rem);
-  --measure: 34rem;          /* comfortable reading column */
+  --measure: 34rem;
   --page-max: 74rem;
 
   /* --- Form ---------------------------------------------------- */
   --radius-sm: 2px;
   --radius:    4px;
-  --radius-lg: 8px;
+  --radius-lg: 10px;
   --hairline:  1px;
 
   /* --- Motion --------------------------------------------------
-     Short and eased-out. Motion is only ever used to explain where
-     something came from, never as decoration. */
+     Short and eased-out. Motion explains where something came from;
+     it is never decoration on its own. */
   --ease:      cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast:  140ms;
   --dur:       260ms;
   --dur-slow:  520ms;
 
-  --tap: 44px;               /* minimum touch target */
+  --tap: 44px;
 
   color-scheme: dark;
 }
 
 /* --- Tones ---------------------------------------------------
-   Dark is the default, so :root carries it and .tone-ink restates
-   it for a band that follows a light one. */
+   One palette, sitting in the middle. Not a black site and not a
+   white one: a warm graphite between the two, so nothing on the
+   page is a hard extreme.
+
+   Nothing here is pure. The darkest surface is nowhere near #000,
+   the lightest text is nowhere near #fff, and every neutral carries
+   a little warmth — which is most of why it reads as a considered
+   grey rather than "the lights are off".
+
+   Sections alternate between two *neighbouring* tones rather than
+   opposite ones, so the page has rhythm without the eye having to
+   re-adjust each time it crosses a seam.
+
+   To move the whole site lighter or darker, move these surface
+   values together. Everything else follows.
+   --------------------------------------------------------------- */
 
 :root,
-.tone-ink {
-  --paper:        #0b0b0d;
-  --paper-sunk:   #060607;
-  --paper-raised: #131317;
-  --rule:         #26262e;
-  --rule-soft:    #1a1a20;
+.tone-deep {
+  --paper:        #2c2a27;
+  --paper-sunk:   #262421;
+  --paper-raised: #37342f;
+  --rule:         #4a4640;
+  --rule-soft:    #3b3833;
 
-  --ink:          #f3f1ef;
-  --ink-soft:     #a6a39f;
-  --ink-faint:    #6e6b67;
+  --ink:          #ece8e1;
+  --ink-soft:     #b3aca2;
+  --ink-faint:    #9a938a;   /* 4.7:1 — passes for the small mono labels */
 
-  --accent:       #ff5c2b;
-  --accent-soft:  #2b1710;
-  --accent-ink:   #0b0b0d;
+  --accent:       #ff7043;
+  --accent-soft:  #45291e;
+  --accent-ink:   #221f1c;
 
-  --glow:         color-mix(in oklab, var(--accent) 40%, transparent);
-  --shadow:       0 1px 0 color-mix(in oklab, #fff 6%, transparent);
+  --glow:   color-mix(in oklab, var(--accent) 38%, transparent);
+  --shadow: 0 1px 0 color-mix(in oklab, #fff 5%, transparent);
 }
 
-.tone-paper {
-  --paper:        #f4f1ea;
-  --paper-sunk:   #e9e4d9;
-  --paper-raised: #fffdf9;
-  --rule:         #d8d0c1;
-  --rule-soft:    #e6dfd2;
+/* One step lighter, not the opposite end. */
+.tone-soft {
+  --paper:        #38342f;
+  --paper-sunk:   #312e2a;
+  --paper-raised: #433f39;
+  --rule:         #57524a;
+  --rule-soft:    #46423b;
 
-  --ink:          #16140f;
-  --ink-soft:     #4c463c;
-  --ink-faint:    #8b8175;
+  --ink:          #f1ede6;
+  --ink-soft:     #bcb5aa;
+  --ink-faint:    #a49d93;   /* 4.6:1 on this surface */
 
-  --accent:       #d63f11;
-  --accent-soft:  #f6e3d9;
-  --accent-ink:   #fffdf9;
+  --accent:       #ff7a50;
+  --accent-soft:  #4d2f22;
+  --accent-ink:   #2c2a27;
 
-  --glow:         color-mix(in oklab, var(--accent) 22%, transparent);
-  --shadow:       0 1px 2px color-mix(in oklab, #000 8%, transparent);
+  --glow:   color-mix(in oklab, var(--accent) 34%, transparent);
+  --shadow: 0 1px 0 color-mix(in oklab, #fff 6%, transparent);
 }

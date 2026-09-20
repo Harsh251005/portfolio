@@ -1,10 +1,10 @@
 ---
 /* The page, as an ordered stack of bands.
 
-   Bands alternate ink and paper so the eye gets a rhythm instead of
-   one continuous field of either. Each band declares its own tone and
-   everything inside inherits it — reordering the page means moving
-   these blocks, nothing else. */
+   Bands alternate between two neighbouring tones of one mid palette,
+   so the page has rhythm without the eye re-adjusting at every seam.
+   Each band declares its tone and everything inside inherits it —
+   reordering the page means moving these blocks, nothing else. */
 import Base from '../layouts/Base.astro';
 import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
@@ -46,33 +46,33 @@ const MARQUEE = [
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
   <ScrollProgress client:load sections={SECTIONS} />
 
-  <Band tone="ink" id="top" flush>
+  <Band tone="deep" id="top" flush>
     <Hero client:load role={OWNER.role} location="Mumbai" />
   </Band>
 
-  <Band tone="paper" id="what">
+  <Band tone="soft" id="what">
     <Marquee client:visible items={MARQUEE} />
     <div class="gap"></div>
     <Capabilities client:visible />
   </Band>
 
-  <Band tone="ink" id="work">
+  <Band tone="deep" id="work">
     <Work client:visible entries={projects} />
   </Band>
 
-  <Band tone="paper" id="approach">
+  <Band tone="soft" id="approach">
     <Approach client:visible entry={howIWork} />
   </Band>
 
-  <Band tone="ink" id="about">
+  <Band tone="deep" id="about">
     <About client:visible />
   </Band>
 
-  <Band tone="paper" id="contact">
+  <Band tone="soft" id="contact">
     <Contact client:visible links={LINKS} />
   </Band>
 
-  <Band tone="ink" flush>
+  <Band tone="deep" flush>
     <Footer />
   </Band>
 </Base>

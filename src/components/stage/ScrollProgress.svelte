@@ -14,7 +14,7 @@
   /* Which band is under the rail. The rail adopts that band's tone
      so it stays legible over both — a blend mode looks clever here
      and turns the orange accent cyan over the light bands. */
-  let tone = $state<'ink' | 'paper'>('ink');
+  let tone = $state<'deep' | 'soft'>('deep');
 
   onMount(() => {
     let ticking = false;
@@ -35,7 +35,7 @@
       const under = document
         .elementsFromPoint(innerWidth / 2, 2)
         .find((el) => (el as HTMLElement).dataset?.tone) as HTMLElement | undefined;
-      if (under?.dataset.tone === 'ink' || under?.dataset.tone === 'paper') {
+      if (under?.dataset.tone === 'deep' || under?.dataset.tone === 'soft') {
         tone = under.dataset.tone;
       }
 

@@ -27,6 +27,11 @@ export async function initSmoothScroll() {
     touchMultiplier: 1.6,
   });
 
+  // Lenis takes over the scroll position, which means window.scrollTo
+  // no longer moves the page. Exposing the instance gives tests and
+  // debugging tools a way to drive it; nothing in the site reads this.
+  (window as unknown as { __lenis?: unknown }).__lenis = lenis;
+
   let raf = 0;
   function frame(time: number) {
     lenis.raf(time);
@@ -50,6 +55,7 @@ export async function initSmoothScroll() {
   return () => {
     cancelAnimationFrame(raf);
     document.removeEventListener('click', onClick);
+    delete (window as unknown as { __lenis?: unknown }).__lenis;
     lenis.destroy();
   };
 }
