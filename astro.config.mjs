@@ -10,10 +10,17 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // Point this at the real domain once it is bought. Canonical URLs,
-  // sitemap and social tags all read from here and nowhere else.
+  // ────────────────────────────────────────────────────────────────
+  //  THE ONE LINE TO CHANGE BEFORE DEPLOYING.
+  //  Canonical URLs, the sitemap, robots.txt and the social share
+  //  tags all read the domain from here and from nowhere else.
+  // ────────────────────────────────────────────────────────────────
   site: 'https://example.com',
-  integrations: [svelte(), sitemap()],
+  integrations: [
+    svelte(),
+    // og-card is a rendering surface for the share image, not a page.
+    sitemap({ filter: (page) => !page.includes('/og-card') }),
+  ],
   markdown: {
     // remarkMore turns `:::more[label]` blocks into collapsed <details>,
     // so a plain-English answer always comes before the technical one.

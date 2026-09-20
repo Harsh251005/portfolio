@@ -1,10 +1,14 @@
 # Portfolio — Harsh Dharnidharka
 
-A personal site with no navigation. It assembles itself from the questions a
-visitor taps: each answer unfolds in place and offers the next question, so the
-page you end up with is the path you took.
+A static site. One scrolling page over a generated Mumbai skyline, plus a flat
+version of everything and one page per answer for search engines and for anyone
+in a hurry.
 
-**Start here:** [`NEEDS-INPUT.md`](./NEEDS-INPUT.md) — what's still missing.
+Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
+
+**Before you deploy:** [`NEEDS-INPUT.md`](./NEEDS-INPUT.md) lists what is still
+missing. Anything unwritten renders as a loud marked box on the page, so nothing
+half-finished can ship by accident.
 
 ## Run it
 
@@ -13,7 +17,26 @@ npm install
 npm run dev      # http://localhost:4321
 npm run build    # → dist/
 npm run preview  # serve the built site
+npm run test:brain   # the question matcher, against ~40 real questions
 ```
+
+## Deploying
+
+The build output is static files. Any host works, and the domain is set in one
+place.
+
+1. **Set the domain.** `site:` in `astro.config.mjs`. Canonical URLs, the
+   sitemap, `robots.txt` and the social share tags all read it from there.
+2. **Build.** `npm run build`.
+3. **Upload `dist/`.**
+
+| Host | What to do |
+|---|---|
+| **Netlify** | Drag `dist/` onto the dashboard, or connect the repo with build command `npm run build` and publish directory `dist`. |
+| **Vercel** | Import the repo. It detects Astro. Output directory `dist`. |
+| **Cloudflare Pages** | Connect the repo; build command `npm run build`, output `dist`. |
+| **GitHub Pages** | Push `dist/` to a `gh-pages` branch. If the site lives under a sub-path, also set `base` in `astro.config.mjs`. |
+| **Any nginx/Apache box** | Copy `dist/` into the web root. Nothing else to configure. |
 
 ## How it's laid out
 
@@ -21,51 +44,61 @@ npm run preview  # serve the built site
 |---|---|
 | `src/content/knowledge/*.md` | **The whole site's content.** One file per answer. Adding a question means adding a file — no code changes. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
-| `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer goes through here. |
-| `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point. |
-| `src/components/Thread.svelte` | The only stateful component. Owns the list of opened questions and nothing else. |
-| `src/components/cards/` | One file per answer style. Add a file, add a line to `AnswerCard.svelte`. |
-| `src/styles/tokens.css` | Every colour, type size and spacing value. Restyling the site should mean editing this file. |
+| `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
+| `src/lib/links.ts` | Name, role, and every outbound link. One place. |
+| `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
+| `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
+| `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
+| `src/components/stage/CityScape.svelte` | The skyline. Self-contained; delete the one line in `index.astro` and the site is a plain dark page. |
+| `src/styles/tokens.css` | Every colour, type size, spacing value and glass setting. Restyling the site should mean editing this file and nothing else. |
 
-Each piece is meant to be replaceable on its own. Deleting a knowledge file, a
-card type or a whole section shouldn't require touching anything else.
+Each piece is meant to be replaceable on its own. Deleting a knowledge file or a
+whole section shouldn't require touching anything else.
 
 ## The three ways in
 
-The conversation is the main experience, but it can't be the only one:
+The scrolling page is the main experience, but it can't be the only one:
 
-- `/` — the thread. Needs JavaScript.
-- `/everything` — every answer, flat, in one page. Works with JavaScript off. This
-  is what search engines read and what a visitor in a hurry skims.
+- `/` — the page.
+- `/everything` — every answer, flat, in one document. Works with JavaScript off.
+  This is what search engines read and what a visitor in a hurry skims.
 - `/ask/<id>` — one static page per answer, so any single answer is linkable.
 
-## The agent
+## The photo
 
-Today `src/lib/brain/static.ts` answers typed questions with a local matcher:
-no network, no API key, no cost, works offline.
+Drop a file at `src/images/portrait.jpg` — `.jpeg`, `.png` and `.webp` also
+work. The build finds it, sizes it, hashes it and puts it on the About section.
+No other file changes. Remove it and the section falls back to a drawn frame
+rather than a gap.
 
-To put a real model behind it later:
+## The share card
 
-1. Add a server adapter — `npx astro add node` (or `vercel`, `cloudflare`).
-2. Create `src/pages/api/ask.ts`. Retrieve over the same knowledge entries,
-   generate, return `{ answerId, suggestionIds, confidence }`.
-3. Set `PUBLIC_BRAIN=llm`.
+`public/og.png` is what appears when the link is posted anywhere. It is
+generated from the real fonts and the real skyline rather than drawn by hand, so
+it can be remade whenever the copy changes:
 
-`src/lib/brain/llm.ts` is already written and falls back to the local matcher if
-the model is unreachable. No component changes, no design changes.
+1. `npm run build && npx serve dist` (or any static server).
+2. Open `/og-card/`. It sizes itself to your window and reports the exact region
+   to capture in the `data-capture` attribute on `#og`.
+3. Screenshot that region from the top-left corner.
+4. Scale it to 1200×630 and save it over `public/og.png`.
 
-## Deploying
+On a window at least 1200×700 the card renders at 1:1 and step 3 needs no
+scaling.
 
-`npm run build` produces `dist/` — plain static files, no server required. Drop it
-on any host.
+## Motion
 
-Before the first deploy, set `site` in `astro.config.mjs` and the `Sitemap:` line
-in `public/robots.txt` to the real domain.
+Everything animated is behind `prefers-reduced-motion`. With it on: the skyline
+is drawn once and stays still, nothing flickers, nothing drifts on scroll, and
+the glass panels drop their blur for a solid surface.
 
-| Host | What to do |
-|---|---|
-| **Netlify** | Connect the repo. Build `npm run build`, publish `dist`. |
-| **Vercel** | Connect the repo. The Astro preset is detected automatically. |
-| **Cloudflare Pages** | Build `npm run build`, output `dist`. |
-| **GitHub Pages** | Push `dist/` to a `gh-pages` branch, or use the Astro Pages action. |
-| **Any nginx box** | Copy `dist/` into the web root. |
+The skyline follows the actual clock in Mumbai — the sky is a different colour in
+the evening than at 3am — but never reaches daylight, because a bright sky would
+put the white text below usable contrast.
+
+## Content that isn't there on purpose
+
+Real evaluation numbers and throughput figures exist for these projects and are
+deliberately absent. The site is written so a non-technical reader can follow it,
+and metrics-as-proof only land with engineers. Projects are described by outcome
+instead. A technical-depth page is a separate addition if it's ever wanted.

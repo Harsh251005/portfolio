@@ -47,6 +47,15 @@
     period: number;
   }
 
+  interface Props {
+    /** Compose the scene into the top `horizon` share of the window
+     *  instead of the whole of it. 1 is the page; the share card uses
+     *  a smaller value so the skyline lands inside its own frame. */
+    horizon?: number;
+  }
+
+  const { horizon = 1 }: Props = $props();
+
   let canvas: HTMLCanvasElement;
 
   onMount(() => {
@@ -57,6 +66,9 @@
 
     let w = 0;
     let h = 0;
+    /** The height the composition is laid out against. Equal to the
+     *  window unless a caller asked for a tighter frame. */
+    let H = 0;
     let dpr = 1;
     let raf = 0;
     let running = true;
@@ -134,7 +146,7 @@
       for (let i = 0; i < count; i++) {
         const x = r() * w;
         // Only in the upper sky — no stars behind the skyline.
-        const y = r() * h * 0.7;
+        const y = r() * H * 0.7;
         const a = 0.18 + r() * 0.62;
         const s = r() > 0.94 ? 1.6 : 1;
         g.globalAlpha = a;
@@ -175,8 +187,8 @@
       const edge = blend(body, sky.haze, 0.45);
       const near = rank.depth > 0.7;
 
-      const baseY = h * rank.top;
-      const range = h * rank.height;
+      const baseY = H * rank.top;
+      const range = H * rank.height;
       let x = -rank.width;
 
       while (x < w + rank.width) {
@@ -341,6 +353,16 @@
       dpr = Math.min(devicePixelRatio || 1, 2);
       w = innerWidth;
       h = innerHeight;
+      // A page may override the frame at runtime when it only knows
+      // the right value once the window exists — the share card does.
+      const override = Number(document.documentElement.dataset.horizon);
+      const base = override > 0 ? override : horizon;
+      // A short window has less sky in it. Composing against a frame
+      // slightly taller than the window pushes the ground line below
+      // the fold, which keeps the crest clear of the headline instead
+      // of letting it climb into the text.
+      const roomy = Math.min(1, Math.max(0, (h - 560) / 300));
+      H = h * base * (override > 0 ? 1 : 1.18 - roomy * 0.18);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       canvas.style.width = `${w}px`;
@@ -358,12 +380,12 @@
     /** Haze drawn *between* the ranks, not just once behind them.
      *  Separating the layers with air is what reads as distance. */
     function drawHaze(strength: number) {
-      const grad = ctx.createLinearGradient(0, h * 0.52, 0, h);
+      const grad = ctx.createLinearGradient(0, H * 0.52, 0, H);
       grad.addColorStop(0, 'transparent');
       grad.addColorStop(1, sky.haze);
       ctx.globalAlpha = strength;
       ctx.fillStyle = grad;
-      ctx.fillRect(0, h * 0.52, w, h * 0.48);
+      ctx.fillRect(0, H * 0.52, w, h - H * 0.52);
       ctx.globalAlpha = 1;
     }
 
@@ -378,7 +400,7 @@
       ctx.clearRect(0, 0, w, h);
 
       // Sky
-      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(0, sky.high);
       grad.addColorStop(0.62, sky.low);
       grad.addColorStop(1, sky.low);
@@ -391,11 +413,11 @@
       for (const glow of GLOWS) {
         const g = ctx.createRadialGradient(
           w * glow.x,
-          h * glow.y,
+          H * glow.y,
           0,
           w * glow.x,
-          h * glow.y,
-          Math.max(w, h) * glow.r,
+          H * glow.y,
+          Math.max(w, H) * glow.r,
         );
         g.addColorStop(0, glow.color);
         g.addColorStop(1, 'transparent');
@@ -472,7 +494,7 @@
       const pass = Math.floor(clock / PLANE_CYCLE);
       const dir = pass % 2 === 0 ? 1 : -1;
       const x = dir === 1 ? -0.06 * w + k * w * 1.12 : w * 1.06 - k * w * 1.12;
-      const y = h * (0.16 + ((pass * 0.37) % 1) * 0.22) - k * h * 0.02;
+      const y = H * (0.16 + ((pass * 0.37) % 1) * 0.22) - k * H * 0.02;
 
       // Fade in and out at the edges so it never pops.
       const fade = Math.min(1, Math.min(k, 1 - k) * 8);

@@ -31,10 +31,38 @@ import { LINKS, OWNER } from '../lib/links';
 
 
 <style>
+  /* The footer is the one place on the page with no panel behind it,
+     and it sits at the foot of the frame — which is exactly where the
+     city is brightest. Left bare, the name and the links compete with
+     lit windows. A scrim gives it the same ground every other block
+     has without adding another backdrop-filter to the stack. */
   .foot {
-    border-top: var(--hairline) solid var(--rule);
+    position: relative;
     padding-block: var(--s-6);
     margin-top: auto;
+    isolation: isolate;
+  }
+
+  .foot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklab, var(--paper-sunk) 82%, transparent) 38%,
+      color-mix(in oklab, var(--paper-sunk) 94%, transparent)
+    );
+    /* Bleed past the footer so the fade starts above the rule rather
+       than cutting across it. */
+    margin-block-start: calc(var(--s-8) * -1);
+    pointer-events: none;
+  }
+
+  .inner {
+    border-top: var(--hairline) solid var(--rule);
+    padding-top: var(--s-5);
   }
 
   .inner {
@@ -48,7 +76,7 @@ import { LINKS, OWNER } from '../lib/links';
   .name {
     font-family: var(--font-display);
     font-size: var(--t-sm);
-    color: var(--ink-faint);
+    color: var(--ink-soft);
   }
 
   ul {
@@ -60,12 +88,12 @@ import { LINKS, OWNER } from '../lib/links';
     font-size: var(--t-sm);
   }
 
-  a { color: var(--ink-soft); }
+  a { color: var(--ink); }
   a:hover { color: var(--accent); }
 
   .year {
     font-family: var(--font-mono);
     font-size: var(--t-xs);
-    color: var(--ink-faint);
+    color: var(--ink-soft);
   }
 </style>

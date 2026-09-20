@@ -6,6 +6,13 @@
   import Reveal from './Reveal.svelte';
   import Glass from './Glass.svelte';
 
+  interface Props {
+    /** Resolved by the build from src/images/portrait.*, or null. */
+    portrait?: { src: string; width: number; height: number } | null;
+  }
+
+  const { portrait = null }: Props = $props();
+
   let frame: HTMLElement;
   let offset = $state(0);
 
@@ -41,10 +48,22 @@
 <div class="page wrap">
   <div class="portrait" bind:this={frame}>
     <div class="frame">
-      <!-- Replace with /portrait.jpg — see NEEDS-INPUT.md -->
-      <div class="placeholder" style={`transform: translate3d(0, ${offset}px, 0) scale(1.12)`}>
-        <span>your photo<br />goes here</span>
-      </div>
+      {#if portrait}
+        <img
+          src={portrait.src}
+          width={portrait.width}
+          height={portrait.height}
+          alt="Harsh Dharnidharka"
+          loading="lazy"
+          decoding="async"
+          style={`transform: translate3d(0, ${offset}px, 0) scale(1.12)`}
+        />
+      {:else}
+        <!-- No photo yet. Drop one at src/images/portrait.jpg. -->
+        <div class="placeholder" style={`transform: translate3d(0, ${offset}px, 0) scale(1.12)`}>
+          <span>your photo<br />goes here</span>
+        </div>
+      {/if}
     </div>
     <p class="caption">Borivali East, Mumbai</p>
   </div>
@@ -86,6 +105,15 @@
     box-shadow: var(--glass-shadow);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+
+  .frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform;
   }
 
   .placeholder {

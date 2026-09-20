@@ -8,6 +8,7 @@
 import Base from '../layouts/Base.astro';
 import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
+import { PORTRAIT } from '../lib/portrait';
 
 import CityScape from '../components/stage/CityScape.svelte';
 import Hero from '../components/stage/Hero.svelte';
@@ -67,7 +68,7 @@ const MARQUEE = [
   </Band>
 
   <Band tone="deep" id="about" field={0.45}>
-    <About client:visible />
+    <About portrait={PORTRAIT} client:visible />
   </Band>
 
   <Band tone="soft" id="contact" field={0.8}>

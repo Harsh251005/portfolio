@@ -6,7 +6,7 @@ group: the-person
 card: story
 featured: true
 order: 1
-followups: ["what-i-believe", "where-im-from"]
+followups: ["where-im-from", "talk-to-me"]
 ---
 
 ⟨ NEEDS YOUR WORDS — this one I can't write for you, and it's one of the most

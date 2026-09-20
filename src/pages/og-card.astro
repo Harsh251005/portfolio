@@ -1,0 +1,110 @@
+---
+/* ---------------------------------------------------------------
+   The social share card, as a page.
+
+   Not shipped as content — it exists so the image can be re-made
+   from the real fonts and the real scene whenever the copy changes,
+   instead of being a stale PNG nobody can regenerate.
+
+   The card is authored at a true 1200×630 and then scaled down to
+   whatever the window can actually show, so it renders correctly on
+   any screen. `#og` reports the exact region to capture; save the
+   capture to `public/og.png`. Steps are in README.md.
+   --------------------------------------------------------------- */
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import CityScape from '../components/stage/CityScape.svelte';
+import { OWNER } from '../lib/links';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Share card</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <CityScape client:load />
+    <div class="card" id="og">
+      <p class="kicker">{OWNER.role} · Mumbai</p>
+      <h1>Harsh<br />Dharnidharka</h1>
+      <p class="line">
+        I build software that makes decisions on its own —
+        and then I make sure it makes the right ones.
+      </p>
+    </div>
+
+    <script is:inline>
+      // Fit the card to the window, never above 1:1.
+      const fit = () => {
+        const s = Math.min(1, innerWidth / 1200, innerHeight / 630);
+        document.documentElement.style.setProperty('--og-scale', String(s));
+        const el = document.getElementById('og');
+        el.dataset.capture = `${Math.round(1200 * s)}x${Math.round(630 * s)}`;
+        // Compose the scene into the card rather than the window, so
+        // the skyline lands inside the captured region on any screen.
+        document.documentElement.dataset.horizon = (
+          (630 * s) / innerHeight
+        ).toFixed(3);
+      };
+      fit();
+      addEventListener('resize', fit);
+      // The scene reads the frame at build time; nudge it now that
+      // the value is set.
+      addEventListener('load', () => dispatchEvent(new Event('resize')));
+    </script>
+  </body>
+</html>
+
+<style>
+  body { margin: 0; background: var(--paper); }
+
+  /* Authored at the real share-card size and scaled to fit the
+     window. Capture the region this element reports. */
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(var(--og-scale, 1));
+    transform-origin: top left;
+    width: 1200px;
+    height: 630px;
+    box-sizing: border-box;
+    padding: 72px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 2;
+  }
+
+  .kicker {
+    margin: 0 0 28px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 44, 'wght' 380, 'SOFT' 0, 'WONK' 1;
+    font-size: 96px;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .line {
+    margin: 30px 0 0;
+    max-width: 30ch;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 20, 'wght' 300;
+    font-size: 26px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+</style>

@@ -14,8 +14,6 @@ Mumbai. Borivali East, in the north of the city.
 on a map. What do you actually like about living there? What would someone who's
 never been get wrong about it? ⟩
 
-For work: I'm set up to work remotely, and I'm in Mumbai if you'd rather do this
-in a room together.
-
-⟨ CHECK — is remote / hybrid / on-site / relocating accurate? I've written the
-broadest true version. ⟩
+For work: Mumbai is where I am, not where I have to stay. I'm set up to work
+remotely, I'm here if you'd rather do this in a room together, and I'll move for
+the right team.

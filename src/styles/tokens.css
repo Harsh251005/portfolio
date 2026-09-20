@@ -66,6 +66,18 @@
   color-scheme: dark;
 }
 
+/* Short and wide: a laptop with browser chrome open, or a phone held
+   sideways. The display sizes are set from viewport *width*, which on
+   these screens yields a headline taller than the sky above the
+   skyline. Cap them against height as well. */
+@media (height < 46rem) {
+  :root {
+    --t-4xl: clamp(1.75rem, 6.5vw, 4rem);
+    --t-3xl: clamp(1.875rem, 1.4rem + 2.4vw, 3.25rem);
+    --section: clamp(3rem, 1.5rem + 4vw, 5.5rem);
+  }
+}
+
 /* --- Tones ---------------------------------------------------
    Built for glass. Two requirements drive every value here:
 

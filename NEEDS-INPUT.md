@@ -1,60 +1,92 @@
-# What I need from you
+# What I still need from you
 
-Everything below is either missing or guessed. Nothing here blocks the site from
-running — it runs now — but each item makes it less yours until it's filled in.
+Everything else is done and deployable. The four items in section 1 are the only
+things standing between this and shipping — each one renders as a loud marked box
+on the live page, so none of them can go out unnoticed.
 
-Draft text is wrapped in `⟨ angle brackets ⟩` and renders as a loud marked box on
-the page, so it cannot ship by accident. Search the repo for `⟨` to find every one.
+Search the repo for `⟨` to find every one.
 
 ---
 
-## 1. Assets
+## 1. Words only you can write
 
-| What | Where it goes | Notes |
-|---|---|---|
-| A photo of you | `public/portrait.jpg` | Then swap the placeholder in `src/components/Opening.astro`. A phone portrait in decent light is fine — a real face is one of the strongest signals a site wasn't generated. |
-| Email, GitHub, LinkedIn | `src/lib/links.ts` | I've left these `null` rather than guess at URLs. They currently render as visible `⟨missing⟩` markers in the footer. |
-| Your CV | — | Send it to me; I'll check nothing on the site contradicts it. |
+### `src/content/knowledge/outside-of-work.md` — *entirely blank, and the most important*
 
-## 2. Content I could not write for you
+This is the answer that makes a stranger decide they'd like working with you. It
+should have nothing to do with engineering.
 
-These are in `src/content/knowledge/`. Each is one Markdown file.
+What do you spend a Sunday on? What are you unreasonably into? What's something
+you're bad at and do it anyway?
 
-- **`outside-of-work.md`** — the most important one on the site, and completely
-  blank. This is the answer that makes a stranger decide they'd like working with
-  you. Nothing to do with engineering. Specific beats impressive.
-- **`how-did-you-get-here.md`** — two of the four moments are blank. What pulled
-  you toward computers, and when did it stop being coursework?
-- **`where-im-from.md`** — a couple of lines that make Mumbai a place rather than a
-  pin. Also: confirm remote / hybrid / on-site / relocating.
-- **`what-i-believe.md`** — you've said you're spiritual. I wrote nothing, because
-  guessing at what someone believes is the one thing I shouldn't do. Write it,
-  keep it glancing, or delete the file — deleting changes nothing else.
+**Specific beats impressive.** "I make terrible filter coffee and refuse to stop"
+is worth more here than a list of interests.
 
-## 3. Things to check, not write
+### `src/content/knowledge/how-did-you-get-here.md` — *two gaps*
 
-- **`where-are-you-headed.md`** — drafted from what you've told me privately, then
-  rewritten for a public page. Your actual goal includes independence; stated
-  plainly on a site recruiters read, that reads as "will leave within a year." The
-  file has the softened version. Tell me if it's not yours.
+- **Before** — what pulled you toward computers in the first place? One specific
+  moment beats a general interest.
+- **The turn** — when did this stop being coursework and start being the thing
+  you actually cared about? What was the first thing you built because you wanted
+  to, not because it was assigned?
+- Plus one or two opening lines in your own voice.
+
+### `src/content/knowledge/where-im-from.md` — *one paragraph*
+
+A couple of lines that make Mumbai a place rather than a pin on a map. What do
+you actually like about living there? What would someone who's never been get
+wrong about it?
+
+*(The work-arrangement line is written: open to remote, in Mumbai if you'd rather
+meet, and willing to relocate.)*
+
+### `src/components/stage/About.svelte` — *one paragraph*
+
+The short version of the same thing, for the About section. Two or three
+sentences. It can be a compression of the answer above.
+
+---
+
+## 2. One file to drop in
+
+**A photo of you** → `src/images/portrait.jpg`
+
+A phone portrait in decent light is fine. A real face is one of the strongest
+signals a site wasn't generated, and it is currently the largest missing piece
+after the writing.
+
+Nothing else changes — the build finds the file, sizes it and places it.
+
+---
+
+## 3. Read these and tell me if they're wrong
+
+- **`where-are-you-headed.md`** — drafted from what you've told me privately and
+  then rewritten for a public page. Your actual goal includes building for
+  yourself; stated plainly on a site recruiters read, that reads as "will leave
+  within a year." The file has the honest-but-usable version. There is a `⟨ CHECK ⟩`
+  note in it that I'll delete once you've confirmed it.
 - **`should-i-hire-you.md`** and **`what-i-get-wrong.md`** — I put words in your
-  mouth about your own weaknesses. Read them. If you wouldn't say it out loud in
-  an interview, it shouldn't be there.
-- **The opening line** in `src/components/Opening.astro`: *"I build software that
-  makes decisions on its own — and then I make sure it makes the right ones."*
-  It's the first thing anyone reads. Change it if it isn't how you'd put it.
+  mouth about your own weaknesses. If you wouldn't say it out loud in an
+  interview, it shouldn't be there.
+- **The opening line**, in `src/components/stage/Hero.svelte`: *"I build software
+  that makes decisions on its own — and then I make sure it makes the right
+  ones."* It's the first thing anyone reads, and it's on the share card too.
 
-## 4. Decisions still open
+---
 
-- **Domain.** Nothing depends on it. When you buy one, set `site` in
-  `astro.config.mjs` and the host line in `public/robots.txt`.
-- **Host.** Any static host works — see `README.md`.
-- **The real AI agent.** The site answers questions now with a local matcher. See
-  `src/lib/brain/llm.ts` for exactly what turning on a real model requires.
+## 4. Before deploying
 
-## 5. Deliberately absent
+- **The domain.** One line: `site:` in `astro.config.mjs`. Canonical URLs, the
+  sitemap, `robots.txt` and the social share tags all read it from there. Nothing
+  else needs changing.
+- **Re-make the share card** if you change the opening line — steps in
+  `README.md`.
 
-You asked for no real metrics, so none of the eval numbers from Evident AI or the
-retry figures from Phoenix are on the site, even though they're real and on disk.
-Projects are described in outcomes instead. If you ever want a technical-depth
-page for engineers specifically, that's a separate addition — say the word.
+---
+
+## 5. Settled
+
+- Links are real and wired: email, GitHub, LinkedIn.
+- `what-i-believe.md` — deleted, on your call. Nothing else referenced it.
+- Work arrangement — open to relocating, written into `where-im-from.md`.
+- No metrics anywhere, on your instruction, even though the real numbers exist.
