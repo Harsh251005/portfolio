@@ -136,8 +136,23 @@
    --------------------------------------------------------------- */
 
 :root {
-  --glass-tint:        rgba(255, 255, 255, 0.045);
-  --glass-tint-strong: rgba(255, 255, 255, 0.075);
+  /* Dark glass, not light. Over a night city the backdrop is full of
+     bright window lights, and a white wash only raises the floor
+     under pale text. A dark translucent base pushes the scene down
+     and lets the copy sit clearly on top — the white edge and the
+     highlight are what still read it as glass. */
+  --glass-tint:
+    linear-gradient(
+      rgba(255, 255, 255, 0.07),
+      rgba(255, 255, 255, 0.02)
+    ),
+    rgba(9, 12, 28, 0.55);
+  --glass-tint-strong:
+    linear-gradient(
+      rgba(255, 255, 255, 0.10),
+      rgba(255, 255, 255, 0.03)
+    ),
+    rgba(9, 12, 28, 0.68);
   --glass-border:      rgba(255, 255, 255, 0.10);
   --glass-edge:        rgba(255, 255, 255, 0.28);
   --glass-blur:        22px;

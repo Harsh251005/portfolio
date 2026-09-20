@@ -81,7 +81,7 @@
     max-width: 28rem;
     overflow: hidden;
     border-radius: var(--glass-radius);
-    background: var(--glass-tint);
+    background: rgba(9, 12, 28, 0.55);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     backdrop-filter: blur(var(--glass-blur));

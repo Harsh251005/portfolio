@@ -58,9 +58,31 @@
     position: relative;
     min-height: 100svh;
     display: flex;
-    align-items: center;
+    /* Sits high in the frame, in the sky above the skyline crest,
+       rather than centred over the buildings. */
+    align-items: flex-start;
+    padding-top: clamp(5rem, 15vh, 10rem);
     isolation: isolate;
     overflow: hidden;
+  }
+
+  /* A soft pool of shade behind the copy. On a short viewport the
+     crest rises into the text block, and this is what keeps it
+     readable without dimming the whole scene. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 86%;
+    background: radial-gradient(
+      70% 58% at 32% 45%,
+      color-mix(in oklab, #05070f 62%, transparent) 0%,
+      color-mix(in oklab, #05070f 28%, transparent) 45%,
+      transparent 72%
+    );
+    pointer-events: none;
+    z-index: 0;
   }
 
   .inner { position: relative; z-index: 1; padding-block: var(--s-8); }

@@ -30,6 +30,12 @@
     const perChar = 1000 / (speed * 18);
 
     function finish() {
+      // Stop for good. Without this the bail timeout can resolve the
+      // text while frames are still suspended, and then the first
+      // frame that arrives afterwards sees `start` unset, restarts
+      // the whole animation, and the name is left mid-scramble.
+      stopped = true;
+      cancelAnimationFrame(raf);
       shown = text;
       animating = false;
       done = true;
