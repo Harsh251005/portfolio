@@ -18,7 +18,7 @@
   }
 </script>
 
-<section class="work page" id="work">
+<div class="work page">
   <Reveal>
     <header class="head">
       <p class="label">
@@ -65,7 +65,7 @@
       </li>
     {/each}
   </ol>
-</section>
+</div>
 
 <style>
   .work { padding-block: var(--section); }

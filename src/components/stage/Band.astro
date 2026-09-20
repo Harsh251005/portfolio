@@ -1,0 +1,45 @@
+---
+/* A full-width horizontal band of the page.
+
+   Owns two things and nothing else: which tone it carries, and the
+   vertical rhythm around it. Everything inside inherits the palette
+   through custom properties, so no child component knows or cares
+   whether it is on dark or light.
+
+   Reordering the page is reordering these in index.astro. */
+
+interface Props {
+  tone?: 'ink' | 'paper';
+  id?: string;
+  /** Removes the default vertical padding — for bands that manage
+   *  their own, like the hero. */
+  flush?: boolean;
+  class?: string;
+}
+
+const { tone = 'ink', id, flush = false, class: extra = '' } = Astro.props;
+---
+
+<section
+  class:list={['band', `tone-${tone}`, { flush }, extra]}
+  id={id}
+  data-tone={tone}
+>
+  <slot />
+</section>
+
+<style>
+  .band {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    padding-block: var(--section);
+  }
+
+  .flush { padding-block: 0; }
+
+  /* A hairline at every seam, in the incoming band's own rule colour,
+     so the transition reads as deliberate rather than as two pages
+     stacked. */
+  .band + .band { border-top: 1px solid var(--rule-soft); }
+</style>

@@ -25,29 +25,10 @@ import { LINKS, OWNER } from '../lib/links';
       </ul>
     </nav>
 
-    <button class="theme" type="button" data-theme-toggle aria-label="Switch colour theme">
-      <span aria-hidden="true">◐</span>
-    </button>
+    <p class="year">{new Date().getFullYear()}</p>
   </div>
 </footer>
 
-<script>
-  /* Theme toggle. Small enough to live with the footer rather than
-     justify a component of its own. */
-  const root = document.documentElement;
-  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
-    const current =
-      root.dataset.theme ??
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    const next = current === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem('theme', next);
-    } catch {
-      /* blocked storage: the toggle still works for this visit */
-    }
-  });
-</script>
 
 <style>
   .foot {
@@ -82,14 +63,9 @@ import { LINKS, OWNER } from '../lib/links';
   a { color: var(--ink-soft); }
   a:hover { color: var(--accent); }
 
-  .theme {
-    width: var(--tap);
-    height: var(--tap);
-    display: grid;
-    place-items: center;
+  .year {
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
     color: var(--ink-faint);
-    font-size: var(--t-lg);
-    border-radius: 50%;
   }
-  .theme:hover { color: var(--ink); }
 </style>

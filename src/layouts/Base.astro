@@ -32,22 +32,9 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14110f" media="(prefers-color-scheme: dark)" />
+    {/* Matches the first band, so the browser chrome does not flash. */}
+    <meta name="theme-color" content="#0b0b0d" />
 
-    {/* Applied before first paint so the theme never flashes. */}
-    <script is:inline>
-      (() => {
-        try {
-          const saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') {
-            document.documentElement.dataset.theme = saved;
-          }
-        } catch {
-          /* private mode, blocked storage — the media query still works */
-        }
-      })();
-    </script>
   </head>
 
   <body>

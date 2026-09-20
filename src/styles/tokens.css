@@ -5,28 +5,14 @@
 
 :root {
   /* --- Palette -------------------------------------------------
-     Dark by default, deliberately. This is a near-black with warmth
-     in it, not the blue-black every technical site ships. A single
-     electric accent does all the emphasis; nothing else competes.
+     The page alternates dark and light bands rather than committing
+     to one. Each band re-declares the palette locally through
+     .tone-ink or .tone-paper, and because custom properties inherit,
+     every component inside simply follows — no component needs to
+     know which band it is sitting in.
 
-     Light is available via the toggle but is the secondary mode —
-     the whole visual system is built for the dark one. */
-  --paper:        #0a0a0c;
-  --paper-sunk:   #050506;
-  --paper-raised: #121216;
-  --rule:         #26262e;
-  --rule-soft:    #18181e;
-
-  --ink:          #f2f0ee;
-  --ink-soft:     #a8a5a2;
-  --ink-faint:    #6b6864;
-
-  --accent:       #ff5c2b;   /* signal orange — one colour, used sparingly */
-  --accent-soft:  #2a1610;
-  --accent-ink:   #0a0a0c;
-
-  --glow:         color-mix(in oklab, var(--accent) 40%, transparent);
-  --visited:      #7a8b6f;
+     That is the whole theming mechanism. Adding a band is adding a
+     class, not writing variants. */
 
   /* --- Type ----------------------------------------------------
      Fraunces carries voice; Archivo carries information. */
@@ -90,23 +76,45 @@
   color-scheme: dark;
 }
 
-/* --- Light mode (opt-in via the toggle) ---------------------- */
-:root[data-theme='light'] {
-  color-scheme: light;
-  --paper:        #f6f2ea;
-  --paper-sunk:   #ece6da;
-  --paper-raised: #fffdf8;
-  --rule:         #ddd4c4;
-  --rule-soft:    #e7dfd1;
+/* --- Tones ---------------------------------------------------
+   Dark is the default, so :root carries it and .tone-ink restates
+   it for a band that follows a light one. */
 
-  --ink:          #14120f;
-  --ink-soft:     #4a443d;
+:root,
+.tone-ink {
+  --paper:        #0b0b0d;
+  --paper-sunk:   #060607;
+  --paper-raised: #131317;
+  --rule:         #26262e;
+  --rule-soft:    #1a1a20;
+
+  --ink:          #f3f1ef;
+  --ink-soft:     #a6a39f;
+  --ink-faint:    #6e6b67;
+
+  --accent:       #ff5c2b;
+  --accent-soft:  #2b1710;
+  --accent-ink:   #0b0b0d;
+
+  --glow:         color-mix(in oklab, var(--accent) 40%, transparent);
+  --shadow:       0 1px 0 color-mix(in oklab, #fff 6%, transparent);
+}
+
+.tone-paper {
+  --paper:        #f4f1ea;
+  --paper-sunk:   #e9e4d9;
+  --paper-raised: #fffdf9;
+  --rule:         #d8d0c1;
+  --rule-soft:    #e6dfd2;
+
+  --ink:          #16140f;
+  --ink-soft:     #4c463c;
   --ink-faint:    #8b8175;
 
-  --accent:       #d6350a;
-  --accent-soft:  #f7e2da;
-  --accent-ink:   #fffdf8;
+  --accent:       #d63f11;
+  --accent-soft:  #f6e3d9;
+  --accent-ink:   #fffdf9;
 
   --glow:         color-mix(in oklab, var(--accent) 22%, transparent);
-  --visited:      #6d7d62;
+  --shadow:       0 1px 2px color-mix(in oklab, #000 8%, transparent);
 }
