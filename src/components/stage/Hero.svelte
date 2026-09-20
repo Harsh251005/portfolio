@@ -77,13 +77,21 @@
     color: var(--ink-faint);
   }
 
+  /* A mark and an expanding hairline ring. No glow: this palette is
+     a drawing, and drawings do not emit light. */
   .dot {
+    position: relative;
     width: 0.4rem;
     height: 0.4rem;
-    border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 0 var(--glow);
-    animation: pulse 2.6s var(--ease) infinite;
+  }
+
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--accent);
+    animation: ping 2.8s var(--ease) infinite;
   }
 
   .sep { opacity: 0.35; }
@@ -141,10 +149,9 @@
 
   .cue:hover .cue__line { animation-play-state: paused; }
 
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 var(--glow); }
-    70%  { box-shadow: 0 0 0 0.6rem transparent; }
-    100% { box-shadow: 0 0 0 0 transparent; }
+  @keyframes ping {
+    0%        { transform: scale(1);   opacity: 0.9; }
+    70%, 100% { transform: scale(3.2); opacity: 0; }
   }
 
   @keyframes sweep {

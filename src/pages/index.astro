@@ -9,7 +9,7 @@ import Base from '../layouts/Base.astro';
 import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
 
-import Atmosphere from '../components/stage/Atmosphere.svelte';
+import DotField from '../components/stage/DotField.svelte';
 import Hero from '../components/stage/Hero.svelte';
 import Marquee from '../components/stage/Marquee.svelte';
 import Capabilities from '../components/stage/Capabilities.svelte';
@@ -45,7 +45,7 @@ const MARQUEE = [
 ---
 
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
-  <Atmosphere client:load />
+  <DotField client:load />
   <ScrollProgress client:load sections={SECTIONS} />
 
   <Band tone="deep" id="top" flush clear field={1}>

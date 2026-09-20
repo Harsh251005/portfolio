@@ -67,59 +67,54 @@
 }
 
 /* --- Tones ---------------------------------------------------
-   One palette, sitting in the middle. Not a black site and not a
-   white one: a warm graphite between the two, so nothing on the
-   page is a hard extreme.
+   Blueprint. A deep indigo ground with fine rules over it, the way a
+   technical drawing is built: structure first, colour almost never.
 
-   Nothing here is pure. The darkest surface is nowhere near #000,
-   the lightest text is nowhere near #fff, and every neutral carries
-   a little warmth — which is most of why it reads as a considered
-   grey rather than "the lights are off".
+   Blue is the most over-used colour on AI sites, so the difference
+   has to come from execution rather than hue. The rules here:
 
-   Sections alternate between two *neighbouring* tones rather than
-   opposite ones, so the page has rhythm without the eye having to
-   re-adjust each time it crosses a seam.
+     - no gradients, anywhere
+     - no glow, no blur, no glass
+     - hairlines and grid carry the structure
+     - the accent marks one thing at a time, and is never a fill
 
-   To move the whole site lighter or darker, move these surface
-   values together. Everything else follows.
+   Sections alternate between two neighbouring grounds, one step
+   apart, so the page has rhythm without swinging to light.
    --------------------------------------------------------------- */
 
 :root,
 .tone-deep {
-  --paper:        #2c2a27;
-  --paper-sunk:   #262421;
-  --paper-raised: #37342f;
-  --rule:         #4a4640;
-  --rule-soft:    #3b3833;
+  --paper:        #0f1428;
+  --paper-sunk:   #0a0e1f;
+  --paper-raised: #171d38;
+  --rule:         #2b3357;
+  --rule-soft:    #1e2440;
 
-  --ink:          #ece8e1;
-  --ink-soft:     #b3aca2;
-  --ink-faint:    #9a938a;   /* 4.7:1 — passes for the small mono labels */
+  --ink:          #f0f3ff;
+  --ink-soft:     #b4bcd8;
+  --ink-faint:    #8a93b8;
 
-  --accent:       #ff7043;
-  --accent-soft:  #45291e;
-  --accent-ink:   #221f1c;
+  --accent:       #7dd3fc;
+  --accent-soft:  #16294a;
+  --accent-ink:   #0a0e1f;
 
-  --glow:   color-mix(in oklab, var(--accent) 38%, transparent);
-  --shadow: 0 1px 0 color-mix(in oklab, #fff 5%, transparent);
+  --shadow: none;
 }
 
-/* One step lighter, not the opposite end. */
 .tone-soft {
-  --paper:        #38342f;
-  --paper-sunk:   #312e2a;
-  --paper-raised: #433f39;
-  --rule:         #57524a;
-  --rule-soft:    #46423b;
+  --paper:        #171d38;
+  --paper-sunk:   #131832;
+  --paper-raised: #1f2644;
+  --rule:         #39426b;
+  --rule-soft:    #28304f;
 
-  --ink:          #f1ede6;
-  --ink-soft:     #bcb5aa;
-  --ink-faint:    #a49d93;   /* 4.6:1 on this surface */
+  --ink:          #f2f5ff;
+  --ink-soft:     #bcc4de;
+  --ink-faint:    #949dc0;
 
-  --accent:       #ff7a50;
-  --accent-soft:  #4d2f22;
-  --accent-ink:   #2c2a27;
+  --accent:       #8fdaff;
+  --accent-soft:  #1d3355;
+  --accent-ink:   #131832;
 
-  --glow:   color-mix(in oklab, var(--accent) 34%, transparent);
-  --shadow: 0 1px 0 color-mix(in oklab, #fff 6%, transparent);
+  --shadow: none;
 }
