@@ -10,6 +10,12 @@
 
 interface Props {
   tone?: 'deep' | 'soft';
+  /** Drops the band's surface entirely so the field runs at full
+   *  strength behind it. For the hero only. */
+  clear?: boolean;
+  /** How present the background field should be here, 0–1. Reading
+   *  sections ask it to recede; the hero lets it run. */
+  field?: number;
   id?: string;
   /** Removes the default vertical padding — for bands that manage
    *  their own, like the hero. */
@@ -17,13 +23,21 @@ interface Props {
   class?: string;
 }
 
-const { tone = 'deep', id, flush = false, class: extra = '' } = Astro.props;
+const {
+  tone = 'deep',
+  field = 1,
+  clear = false,
+  id,
+  flush = false,
+  class: extra = '',
+} = Astro.props;
 ---
 
 <section
-  class:list={['band', `tone-${tone}`, { flush }, extra]}
+  class:list={['band', `tone-${tone}`, { flush, clear }, extra]}
   id={id}
   data-tone={tone}
+  data-field={field}
 >
   <slot />
 </section>
@@ -31,12 +45,20 @@ const { tone = 'deep', id, flush = false, class: extra = '' } = Astro.props;
 <style>
   .band {
     position: relative;
-    background: var(--paper);
+    /* Sits above the fixed field. The surface is *almost* opaque:
+       enough of the field shows through for the page to feel alive,
+       not enough to fight the text. The environment never gets to
+       make the words harder to read. */
+    z-index: 1;
+    background: color-mix(in oklab, var(--paper) 93%, transparent);
     color: var(--ink);
     padding-block: var(--section);
   }
 
   .flush { padding-block: 0; }
+
+  /* Hero only: no surface at all, the field runs clear. */
+  .clear { background: transparent; }
 
   /* A hairline at every seam, in the incoming band's own rule colour,
      so the transition reads as deliberate rather than as two pages

@@ -2,7 +2,6 @@
   /* The first screen. A living field, a name that resolves out of
      noise, and a live status line — nothing decorative that isn't
      also telling you something. */
-  import FlowField from './FlowField.svelte';
   import Scramble from './Scramble.svelte';
 
   let { role, location }: { role: string; location: string } = $props();
@@ -27,8 +26,6 @@
 </script>
 
 <section class="hero" id="main">
-  <FlowField />
-
   <div class="page inner">
     <p class="eyebrow">
       <span class="dot" aria-hidden="true"></span>
