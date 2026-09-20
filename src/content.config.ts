@@ -78,6 +78,12 @@ const knowledge = defineCollection({
       .optional(),
     /** quote: attribution, if any. */
     attribution: z.string().optional(),
+    /** project: the stages a request passes through, in order.
+     *  Rendered as a live animated diagram — a non-technical visitor
+     *  watches the flow rather than reading about it. 3-5 stages. */
+    flow: z.array(z.string()).optional(),
+    /** project: the single sentence shown under the diagram. */
+    flowNote: z.string().optional(),
     /** Excluded from search engines and /everything when true. */
     hidden: z.boolean().default(false),
   }),

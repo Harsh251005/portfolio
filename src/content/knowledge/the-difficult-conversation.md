@@ -7,6 +7,13 @@ card: project
 order: 5
 tagline: "Asking people for money, carefully"
 plain: "A system that contacts people about money they owe. It has to be polite, it has to follow the rules exactly, and it is not allowed to improvise about your bank details."
+flow:
+  - "Person speaks"
+  - "Work out what they meant"
+  - "Check it against the rules"
+  - "Rules decide"
+  - "Reply"
+flowNote: "The model never decides. It only works out what you meant; the rules do the rest."
 followups: ["what-i-refuse-to-do", "how-i-work"]
 ---
 

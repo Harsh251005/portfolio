@@ -7,6 +7,13 @@ card: project
 order: 3
 tagline: "Code that fixes its own mistakes"
 plain: "You describe an app in a sentence. It writes the app, runs it, watches it break, works out why, and rewrites it. Then it tries again."
+flow:
+  - "You describe it"
+  - "It writes code"
+  - "It runs it"
+  - "It breaks"
+  - "It rewrites it"
+flowNote: "The loop closes on itself — and gives up after five tries instead of burning money forever."
 followups: ["reading-documents", "what-i-get-wrong"]
 ---
 

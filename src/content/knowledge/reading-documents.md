@@ -7,6 +7,13 @@ card: project
 order: 4
 tagline: "A reader that shows its working"
 plain: "Give it a long document and ask a question. It answers — and it points at the exact lines it got the answer from. If it can't find any, it tells you, instead of inventing something."
+flow:
+  - "Your question"
+  - "Search the document"
+  - "Rank what matters"
+  - "Answer"
+  - "Show the source"
+flowNote: "If the last step cannot find a source, there is no answer — it says so instead."
 followups: ["what-i-refuse-to-do", "the-difficult-conversation"]
 ---
 

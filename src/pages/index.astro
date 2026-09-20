@@ -1,27 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import Opening from '../components/Opening.astro';
+import Hero from '../components/stage/Hero.svelte';
+import Work from '../components/stage/Work.svelte';
 import Footer from '../components/Footer.astro';
-import Thread from '../components/Thread.svelte';
-import { loadEntries, loadFeatured, loadGrouped } from '../lib/knowledge';
+import { loadEntries } from '../lib/knowledge';
 import { OWNER } from '../lib/links';
 
 const entries = await loadEntries();
-const featured = await loadFeatured();
-const groups = await loadGrouped();
+// Projects, in their authored order. Anything with a flow is a system
+// we can draw; the rest of the knowledge base is unaffected.
+const projects = entries.filter((entry) => entry.card === 'project');
 ---
 
-<Base
-  title={`${OWNER.name} — ${OWNER.role}`}
-  description={OWNER.tagline}
-  path="/"
->
-  <Opening />
-
-  {/* The one interactive island on the page. Everything above it
-      renders and reads fine without JavaScript. */}
-  <Thread client:load entries={entries} featured={featured} groups={groups} />
-
+<Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
+  <Hero client:load role={OWNER.role} location="Mumbai" />
+  <Work client:visible entries={projects} />
   <Footer />
 </Base>
 

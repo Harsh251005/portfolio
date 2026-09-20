@@ -8,6 +8,13 @@ featured: true
 order: 1
 tagline: "A receptionist that never sleeps"
 plain: "You call a clinic. It picks up on the first ring, understands what you want, and books you in. It is not a person."
+flow:
+  - "Someone calls"
+  - "It hears"
+  - "It understands"
+  - "It answers"
+  - "Appointment booked"
+flowNote: "Under two seconds, start to finish. Long enough to feel natural, short enough that nobody says “hello?”"
 followups: ["accents-question", "code-that-fixes-itself"]
 ---
 

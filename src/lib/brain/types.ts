@@ -30,6 +30,8 @@ export interface Entry {
   items?: { label: string; body?: string }[];
   sides?: { label: string; points: string[] }[];
   attribution?: string;
+  flow?: string[];
+  flowNote?: string;
 }
 
 export type AnswerKind = 'hit' | 'miss';
