@@ -73,3 +73,27 @@ export function skyFor(hour: number): Sky {
     label: t < 0.5 ? a.sky.label : b.sky.label,
   };
 }
+
+/** Parse `#rrggbb` or `rgb(r,g,b)` into channels. */
+function channels(c: string): [number, number, number] {
+  if (c.startsWith('#')) {
+    const n = parseInt(c.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  const m = c.match(/-?\d+(\.\d+)?/g) ?? ['0', '0', '0'];
+  return [Number(m[0]), Number(m[1]), Number(m[2])];
+}
+
+/** Blend two colours in any of the formats used here.
+ *
+ *  Canvas `fillStyle` does accept `color-mix()` in current browsers,
+ *  but silently keeps the previous colour where it doesn't — and a
+ *  silhouette that falls back to black loses the whole sense of
+ *  distance. Mixing in JS removes that dependency. */
+export function blend(a: string, b: string, t: number): string {
+  const [r1, g1, b1] = channels(a);
+  const [r2, g2, b2] = channels(b);
+  return `rgb(${Math.round(r1 + (r2 - r1) * t)},${Math.round(
+    g1 + (g2 - g1) * t,
+  )},${Math.round(b1 + (b2 - b1) * t)})`;
+}
