@@ -1,0 +1,118 @@
+/* ---------------------------------------------------------------
+   Styling for body copy rendered from Markdown. Scoped to .prose
+   so it never leaks into UI chrome.
+   --------------------------------------------------------------- */
+
+.prose {
+  font-size: var(--t-base);
+  line-height: var(--leading-body);
+  color: var(--ink-soft);
+}
+
+.prose > * + * { margin-top: var(--s-4); }
+
+.prose p { max-width: var(--measure); }
+
+/* First paragraph of an answer carries the weight — it is the part
+   a hurried reader will actually read. */
+.prose > p:first-child {
+  font-size: var(--t-lg);
+  line-height: var(--leading-snug);
+  color: var(--ink);
+  font-variation-settings: 'wght' 380;
+}
+
+.prose strong { font-variation-settings: 'wght' 650; color: var(--ink); }
+.prose em { font-style: italic; }
+
+.prose a {
+  color: var(--accent);
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+.prose ul, .prose ol { padding-left: var(--s-5); max-width: var(--measure); }
+.prose li + li { margin-top: var(--s-2); }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--paper-sunk);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: var(--s-4);
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* --- The "explain more" disclosure ---------------------------
+   Produced by remarkMore from a :::more block. The plain answer
+   is always above it; this is strictly opt-in depth. */
+
+.more {
+  margin-top: var(--s-5);
+  border-top: var(--hairline) solid var(--rule);
+  padding-top: var(--s-4);
+  max-width: var(--measure);
+}
+
+.more__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  font-variation-settings: 'wght' 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  min-height: var(--tap);
+  user-select: none;
+}
+
+.more__summary::-webkit-details-marker { display: none; }
+
+.more__summary::after {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-0.1em);
+  transition: transform var(--dur) var(--ease);
+}
+
+.more[open] .more__summary::after { transform: rotate(-135deg) translateY(-0.1em); }
+
+.more[open] > *:not(.more__summary) {
+  animation: more-in var(--dur) var(--ease-out) both;
+}
+
+.more > p { font-size: var(--t-sm); color: var(--ink-faint); }
+.more > *:not(.more__summary) + * { margin-top: var(--s-3); }
+
+@keyframes more-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- Draft placeholders --------------------------------------
+   Any ⟨ ... ⟩ in content is marked loudly, so unfinished copy is
+   impossible to miss and impossible to ship by accident. */
+
+.todo {
+  display: block;
+  margin-block: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: var(--t-sm);
+  font-style: italic;
+  color: var(--ink);
+  max-width: var(--measure);
+}

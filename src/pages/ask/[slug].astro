@@ -1,0 +1,82 @@
+---
+/* One real URL per answer.
+
+   A conversation-driven site is invisible to search engines and
+   impossible to link to unless each answer also exists on its own.
+   These pages are static, need no JavaScript, and each one offers
+   its follow-ups as ordinary links. */
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import StaticAnswer from '../../components/StaticAnswer.astro';
+import { loadEntries } from '../../lib/knowledge';
+import { OWNER } from '../../lib/links';
+
+export async function getStaticPaths() {
+  const { loadEntries } = await import('../../lib/knowledge');
+  const entries = await loadEntries();
+  return entries
+    .filter((entry) => !entry.hidden)
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const all = await loadEntries();
+const followups = entry.followups
+  .map((id: string) => all.find((e) => e.id === id))
+  .filter(Boolean);
+
+// First 155 characters of the body, for the search result snippet.
+const description = entry.text.slice(0, 155).trim();
+---
+
+<Base
+  title={`${entry.question} — ${OWNER.name}`}
+  description={description || OWNER.tagline}
+  path={`/ask/${entry.id}`}
+>
+  <div class="page" id="main">
+    <p class="label crumb">
+      <a href="/">← {OWNER.name}</a>
+    </p>
+
+    <StaticAnswer entry={entry} headingLevel="h1" />
+
+    {followups.length > 0 && (
+      <nav class="next" aria-label="Related questions">
+        <p class="label">Still curious</p>
+        <ul>
+          {followups.map((next: any) => (
+            <li><a href={`/ask/${next.id}`}>→ {next.question}</a></li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <p class="back">
+      <a href={`/?p=${entry.id}`}>Continue from here on the main site →</a>
+    </p>
+  </div>
+
+  <Footer />
+</Base>
+
+<style>
+  .crumb { padding-top: var(--s-6); padding-bottom: var(--s-4); }
+  .crumb a { color: var(--ink-faint); }
+  .crumb a:hover { color: var(--accent); }
+
+  .next { padding-top: var(--s-6); border-top: var(--hairline) solid var(--rule); }
+  .next ul { list-style: none; padding: 0; margin-top: var(--s-3); display: grid; gap: var(--s-2); }
+  .next a {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    color: var(--ink);
+    min-height: var(--tap);
+    display: inline-flex;
+    align-items: center;
+  }
+  .next a:hover { color: var(--accent); }
+
+  .back { padding-block: var(--section); }
+  .back a { color: var(--accent); font-size: var(--t-sm); }
+</style>

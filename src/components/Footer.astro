@@ -1,0 +1,95 @@
+---
+/* Sitewide footer. Links live in one place — src/lib/links.ts —
+   so they are never duplicated across pages. */
+import { LINKS, OWNER } from '../lib/links';
+---
+
+<footer class="foot">
+  <div class="page inner">
+    <p class="name">{OWNER.name}</p>
+
+    <nav aria-label="Elsewhere">
+      <ul>
+        {LINKS.map((link) => (
+          <li>
+            {link.href ? (
+              <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
+                {link.label}
+              </a>
+            ) : (
+              <span class="todo" title="Add this in src/lib/links.ts">{link.label} ⟨missing⟩</span>
+            )}
+          </li>
+        ))}
+        <li><a href="/everything">Everything</a></li>
+      </ul>
+    </nav>
+
+    <button class="theme" type="button" data-theme-toggle aria-label="Switch colour theme">
+      <span aria-hidden="true">◐</span>
+    </button>
+  </div>
+</footer>
+
+<script>
+  /* Theme toggle. Small enough to live with the footer rather than
+     justify a component of its own. */
+  const root = document.documentElement;
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    const current =
+      root.dataset.theme ??
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* blocked storage: the toggle still works for this visit */
+    }
+  });
+</script>
+
+<style>
+  .foot {
+    border-top: var(--hairline) solid var(--rule);
+    padding-block: var(--s-6);
+    margin-top: auto;
+  }
+
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    flex-wrap: wrap;
+  }
+
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--t-sm);
+    color: var(--ink-faint);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    list-style: none;
+    padding: 0;
+    font-size: var(--t-sm);
+  }
+
+  a { color: var(--ink-soft); }
+  a:hover { color: var(--accent); }
+
+  .theme {
+    width: var(--tap);
+    height: var(--tap);
+    display: grid;
+    place-items: center;
+    color: var(--ink-faint);
+    font-size: var(--t-lg);
+    border-radius: 50%;
+  }
+  .theme:hover { color: var(--ink); }
+</style>

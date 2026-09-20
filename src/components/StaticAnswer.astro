@@ -1,0 +1,111 @@
+---
+/* Renders one answer without any JavaScript.
+
+   Used by /everything and /ask/[slug]. It mirrors what the Svelte
+   cards show, so a visitor with JS disabled — and every search
+   engine — gets the same content. Kept deliberately plain: the
+   interactive version is where the design effort goes. */
+import type { Entry } from '../lib/brain/types';
+
+interface Props {
+  entry: Entry;
+  headingLevel?: 'h1' | 'h2';
+}
+
+const { entry, headingLevel = 'h2' } = Astro.props;
+const Heading = headingLevel;
+
+/** Marks ⟨draft⟩ text the same way the Markdown pipeline does. */
+function mark(text: string) {
+  return text
+    .split(/(⟨[^⟩]*⟩)/g)
+    .filter(Boolean)
+    .map((part) =>
+      part.startsWith('⟨')
+        ? `<span class="todo">${part}</span>`
+        : part,
+    )
+    .join('');
+}
+---
+
+<article class="answer" id={entry.id}>
+  <Heading>{entry.question}</Heading>
+
+  {entry.tagline && <p class="tagline">{entry.tagline}</p>}
+  {entry.plain && <p class="plain" set:html={mark(entry.plain)} />}
+
+  <div class="prose" set:html={entry.html} />
+
+  {entry.items?.length && (
+    <ol class="items">
+      {entry.items.map((item) => (
+        <li>
+          <h4>{item.label}</h4>
+          {item.body && <p set:html={mark(item.body)} />}
+        </li>
+      ))}
+    </ol>
+  )}
+
+  {entry.sides?.length === 2 && (
+    <div class="sides">
+      {entry.sides.map((side) => (
+        <section>
+          <h4>{side.label}</h4>
+          <ul>{side.points.map((point) => <li>{point}</li>)}</ul>
+        </section>
+      ))}
+    </div>
+  )}
+
+  {entry.link && (
+    <p class="link">
+      <a href={entry.link} rel="noreferrer noopener">See the code ↗</a>
+    </p>
+  )}
+</article>
+
+<style>
+  .answer { padding-block: var(--s-7); border-top: var(--hairline) solid var(--rule-soft); }
+
+  h2, h1 {
+    font-size: var(--t-2xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
+    max-width: 20ch;
+  }
+
+  .tagline {
+    margin-top: var(--s-4);
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    color: var(--ink);
+  }
+
+  .plain {
+    margin-top: var(--s-3);
+    font-size: var(--t-lg);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+    max-width: var(--measure);
+  }
+
+  .prose { margin-top: var(--s-5); }
+
+  .items, .sides { margin-top: var(--s-5); max-width: var(--measure); }
+  .items { padding-left: var(--s-5); display: grid; gap: var(--s-4); }
+  .sides { display: grid; gap: var(--s-5); }
+
+  h4 {
+    font-family: var(--font-body);
+    font-size: var(--t-base);
+    font-variation-settings: 'wght' 650;
+    letter-spacing: 0;
+  }
+
+  .items p, .sides li { margin-top: var(--s-2); color: var(--ink-soft); font-size: var(--t-sm); }
+  .sides ul { margin-top: var(--s-3); padding-left: var(--s-5); }
+
+  .link { margin-top: var(--s-4); }
+  .link a { color: var(--accent); font-size: var(--t-sm); }
+</style>

@@ -1,0 +1,128 @@
+/* ---------------------------------------------------------------
+   Design tokens. Every visual decision in the site resolves here.
+   Restyling the whole site should mean editing this file only.
+   --------------------------------------------------------------- */
+
+:root {
+  /* --- Palette -------------------------------------------------
+     Warm paper and ink. Deliberately not a blue/purple tech palette.
+     Hues stay in a narrow warm band so the one accent can carry
+     all the emphasis without anything else competing. */
+  --paper:        #f6f2ea;
+  --paper-sunk:   #ede7db;
+  --paper-raised: #fffdf8;
+  --rule:         #ddd4c4;
+  --rule-soft:    #e7dfd1;
+
+  --ink:          #1c1917;
+  --ink-soft:     #4a443d;
+  --ink-faint:    #857c6f;
+
+  --accent:       #a63c1e;   /* burnt sienna — reads as printed ink, not UI chrome */
+  --accent-soft:  #f0e0d6;
+  --accent-ink:   #fffdf8;
+
+  --visited:      #7a8b6f;   /* olive, for progress marks */
+
+  /* --- Type ----------------------------------------------------
+     Fraunces carries voice; Archivo carries information. */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-body:    'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Fluid scale. min is the 390px phone value, max the 1440px value. */
+  --t-xs:   clamp(0.75rem,  0.72rem + 0.15vw, 0.8125rem);
+  --t-sm:   clamp(0.875rem, 0.85rem  + 0.15vw, 0.9375rem);
+  --t-base: clamp(1rem,     0.96rem  + 0.2vw,  1.125rem);
+  --t-lg:   clamp(1.125rem, 1.05rem  + 0.4vw,  1.375rem);
+  --t-xl:   clamp(1.375rem, 1.2rem   + 0.8vw,  1.875rem);
+  --t-2xl:  clamp(1.75rem,  1.4rem   + 1.6vw,  2.75rem);
+  --t-3xl:  clamp(2.5rem,   1.7rem   + 3.6vw,  5rem);
+  --t-4xl:  clamp(3rem,     1.8rem   + 5.6vw,  7rem);
+
+  --leading-tight: 1.05;
+  --leading-snug:  1.25;
+  --leading-body:  1.6;
+
+  /* Fraunces optical size. Kept well below the 144 maximum: the high
+     end thins horizontal strokes until capitals lose their crossbars. */
+  --opsz-display: 44;
+  --opsz-text:    14;
+
+  /* --- Space ---------------------------------------------------
+     A 4px-rooted scale. Section rhythm is fluid so phone layouts
+     don't inherit desktop's generosity. */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --section: clamp(3rem, 2rem + 5vw, 7rem);
+  --gutter:  clamp(1.25rem, 0.9rem + 1.8vw, 3rem);
+  --measure: 34rem;          /* comfortable reading column */
+  --page-max: 74rem;
+
+  /* --- Form ---------------------------------------------------- */
+  --radius-sm: 2px;
+  --radius:    4px;
+  --radius-lg: 8px;
+  --hairline:  1px;
+
+  /* --- Motion --------------------------------------------------
+     Short and eased-out. Motion is only ever used to explain where
+     something came from, never as decoration. */
+  --ease:      cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:  140ms;
+  --dur:       260ms;
+  --dur-slow:  520ms;
+
+  --tap: 44px;               /* minimum touch target */
+
+  color-scheme: light dark;
+}
+
+/* --- Dark mode ------------------------------------------------
+   Warm near-black, not the default navy. Accent lifts in
+   lightness so it keeps contrast against the darker ground. */
+:root[data-theme='dark'] {
+  --paper:        #14110f;
+  --paper-sunk:   #0d0b0a;
+  --paper-raised: #1d1917;
+  --rule:         #352f2a;
+  --rule-soft:    #26221e;
+
+  --ink:          #f0e9df;
+  --ink-soft:     #b9b0a4;
+  --ink-faint:    #857c6f;
+
+  --accent:       #e07a52;
+  --accent-soft:  #33211a;
+  --accent-ink:   #14110f;
+
+  --visited:      #93a486;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper:        #14110f;
+    --paper-sunk:   #0d0b0a;
+    --paper-raised: #1d1917;
+    --rule:         #352f2a;
+    --rule-soft:    #26221e;
+
+    --ink:          #f0e9df;
+    --ink-soft:     #b9b0a4;
+    --ink-faint:    #857c6f;
+
+    --accent:       #e07a52;
+    --accent-soft:  #33211a;
+    --accent-ink:   #14110f;
+
+    --visited:      #93a486;
+  }
+}

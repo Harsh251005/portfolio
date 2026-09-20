@@ -1,0 +1,172 @@
+---
+/* The first screen. Deliberately static — it renders with no
+   JavaScript, it is what search engines read, and it is the thing
+   that stops a non-technical visitor wondering where they've landed.
+
+   Everything here is content, not logic. Edit freely. */
+---
+
+<header class="opening page" id="main">
+  <div class="masthead">
+    <h1>
+      <span>Harsh</span>
+      <span>Dharnidharka</span>
+    </h1>
+
+    <p class="meta">
+      <span class="label">AI Engineer</span>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="label">Mumbai</span>
+    </p>
+  </div>
+
+  <div class="portrait">
+    {/* Replace with a real photo at /portrait.jpg — see NEEDS-INPUT.md */}
+    <div class="portrait__frame">
+      <div class="portrait__placeholder">
+        <span>your photo<br />goes here</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="statement">
+    I build software that makes decisions on its own — and then I make sure
+    it makes the right ones.
+  </p>
+
+  <noscript>
+    <p class="noscript">
+      This page normally answers questions as you tap them.
+      <a href="/everything">Read everything in one go instead →</a>
+    </p>
+  </noscript>
+</header>
+
+<style>
+  .opening {
+    padding-top: clamp(var(--s-7), 10vh, var(--s-9));
+    padding-bottom: var(--s-7);
+    display: grid;
+    gap: var(--s-6);
+    grid-template-areas:
+      'masthead'
+      'portrait'
+      'statement';
+  }
+
+  .masthead { grid-area: masthead; }
+  .portrait { grid-area: portrait; }
+  .statement { grid-area: statement; }
+
+  h1 {
+    display: grid;
+    font-size: var(--t-4xl);
+    /* Weight 400, not lighter: below that Fraunces' thin crossbars
+       make a capital H read as two separate strokes at this size. */
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+  }
+
+  /* The surname sits back so the two lines read as one mark rather
+     than two competing headlines. */
+  h1 span:last-child {
+    color: var(--ink-soft);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 350;
+  }
+
+  .meta {
+    margin-top: var(--s-5);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .rule {
+    flex: 1;
+    max-width: 6rem;
+    height: var(--hairline);
+    background: var(--rule);
+  }
+
+  /* On a phone the portrait is a letterbox strip, not a tall block:
+     a 4/5 portrait pushes the questions a full screen down, and the
+     questions are the whole point of the page. */
+  .portrait__frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 9rem;
+    border: var(--hairline) solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--paper-sunk);
+  }
+
+  .portrait__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-size: var(--t-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent 0 10px,
+        color-mix(in oklab, var(--rule) 50%, transparent) 10px 11px
+      );
+  }
+
+  .statement {
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 350;
+    line-height: var(--leading-snug);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 24ch;
+  }
+
+  .noscript {
+    margin-top: var(--s-4);
+    padding: var(--s-4);
+    border: var(--hairline) solid var(--rule);
+    border-radius: var(--radius);
+    font-size: var(--t-sm);
+  }
+
+  /* Asymmetric on wider screens: the name and statement hold the
+     left two-thirds, the portrait sits right and slightly low.
+     Nothing here is centred — that is most of why it doesn't read
+     as a generated page. */
+  @media (width >= 52rem) {
+    .opening {
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      grid-template-areas:
+        'masthead  portrait'
+        'statement portrait';
+      gap: var(--s-7) var(--s-7);
+      align-items: start;
+      padding-top: clamp(var(--s-8), 14vh, 10rem);
+    }
+
+    /* Stretch, then push the frame right with flex. `justify-self:
+       end` would shrink the column to fit, which collapses the
+       frame's percentage width to nothing. */
+    .portrait {
+      justify-self: stretch;
+      display: flex;
+      justify-content: flex-end;
+      padding-top: var(--s-3);
+    }
+    .portrait__frame {
+      aspect-ratio: 4 / 5;
+      max-height: none;
+      max-width: 24rem;
+    }
+    .statement { align-self: end; font-size: var(--t-2xl); }
+  }
+</style>

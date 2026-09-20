@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import { loadFeatured } from '../lib/knowledge';
+import { OWNER } from '../lib/links';
+
+const featured = await loadFeatured();
+---
+
+<Base title={`Not here — ${OWNER.name}`} description="That page doesn't exist." path="/404">
+  <div class="page wrap" id="main">
+    <p class="label">404</p>
+    <h1>That page isn't here.</h1>
+    <p class="sub">
+      Which is a shame, because there's no menu to send you back to. Try one of
+      these instead:
+    </p>
+
+    <ul>
+      {featured.map((entry) => (
+        <li><a href={`/ask/${entry.id}`}>→ {entry.question}</a></li>
+      ))}
+      <li><a href="/everything">→ Or read everything in one go</a></li>
+    </ul>
+  </div>
+
+  <Footer />
+</Base>
+
+<style>
+  .wrap { padding-block: clamp(var(--s-8), 18vh, 12rem); }
+
+  h1 {
+    margin-top: var(--s-4);
+    font-size: var(--t-3xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
+    letter-spacing: -0.03em;
+  }
+
+  .sub { margin-top: var(--s-4); font-size: var(--t-lg); color: var(--ink-soft); }
+
+  ul { list-style: none; padding: 0; margin-top: var(--s-6); display: grid; gap: var(--s-2); }
+
+  ul a {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    color: var(--ink);
+    min-height: var(--tap);
+    display: inline-flex;
+    align-items: center;
+  }
+  ul a:hover { color: var(--accent); }
+</style>

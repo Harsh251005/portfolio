@@ -1,0 +1,74 @@
+---
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/prose.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/everything". Joined to `site` for canonical. */
+  path?: string;
+}
+
+const { title, description, path = '/' } = Astro.props;
+const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site ?? 'https://example.com').href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#f6f2ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14110f" media="(prefers-color-scheme: dark)" />
+
+    {/* Applied before first paint so the theme never flashes. */}
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved;
+          }
+        } catch {
+          /* private mode, blocked storage — the media query still works */
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: var(--s-4);
+    top: var(--s-4);
+    z-index: 100;
+    padding: var(--s-2) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--dur) var(--ease);
+  }
+  .skip:focus-visible { transform: translateY(0); }
+</style>

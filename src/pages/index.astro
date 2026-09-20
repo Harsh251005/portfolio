@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Opening from '../components/Opening.astro';
+import Footer from '../components/Footer.astro';
+import Thread from '../components/Thread.svelte';
+import { loadEntries, loadFeatured, loadGrouped } from '../lib/knowledge';
+import { OWNER } from '../lib/links';
+
+const entries = await loadEntries();
+const featured = await loadFeatured();
+const groups = await loadGrouped();
+---
+
+<Base
+  title={`${OWNER.name} — ${OWNER.role}`}
+  description={OWNER.tagline}
+  path="/"
+>
+  <Opening />
+
+  {/* The one interactive island on the page. Everything above it
+      renders and reads fine without JavaScript. */}
+  <Thread client:load entries={entries} featured={featured} groups={groups} />
+
+  <Footer />
+</Base>
+
+<style is:global>
+  body { display: flex; flex-direction: column; }
+</style>

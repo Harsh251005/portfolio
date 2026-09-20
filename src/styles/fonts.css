@@ -1,0 +1,8 @@
+/* Self-hosted variable fonts. No third-party request, no layout shift.
+
+   Fraunces is loaded from `full.css` rather than a single-axis file:
+   the opsz-only build ignores `wght`, which leaves display sizes at
+   a contrast so high the crossbar of a capital H disappears. */
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
+@import '@fontsource-variable/archivo/wght.css';
