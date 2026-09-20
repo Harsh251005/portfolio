@@ -45,23 +45,18 @@ const {
 <style>
   .band {
     position: relative;
-    /* Sits above the fixed field. The surface is *almost* opaque:
-       enough of the field shows through for the page to feel alive,
-       not enough to fight the text. The environment never gets to
-       make the words harder to read. */
+    /* Transparent: the aurora behind is the surface now, and the
+       glass panels inside are what the reader actually reads off. */
     z-index: 1;
-    background: color-mix(in oklab, var(--paper) 93%, transparent);
+    background: transparent;
     color: var(--ink);
     padding-block: var(--section);
   }
 
   .flush { padding-block: 0; }
 
-  /* Hero only: no surface at all, the field runs clear. */
-  .clear { background: transparent; }
 
-  /* A hairline at every seam, in the incoming band's own rule colour,
-     so the transition reads as deliberate rather than as two pages
-     stacked. */
-  .band + .band { border-top: 1px solid var(--rule-soft); }
+
+  /* No seams between bands — the light behind is continuous, and a
+     rule across it would cut the page into slabs again. */
 </style>

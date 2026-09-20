@@ -67,54 +67,83 @@
 }
 
 /* --- Tones ---------------------------------------------------
-   Blueprint. A deep indigo ground with fine rules over it, the way a
-   technical drawing is built: structure first, colour almost never.
+   Built for glass. Two requirements drive every value here:
 
-   Blue is the most over-used colour on AI sites, so the difference
-   has to come from execution rather than hue. The rules here:
+     1. The ground must be dark and deeply coloured, or the panels
+        have nothing worth refracting and look like grey plastic.
+     2. Text is checked against the *lightest* surface glass ever
+        reaches, not against the base — a panel sitting over a bright
+        part of the aurora is the worst case, and that is where
+        contrast usually fails.
 
-     - no gradients, anywhere
-     - no glow, no blur, no glass
-     - hairlines and grid carry the structure
-     - the accent marks one thing at a time, and is never a fill
-
-   Sections alternate between two neighbouring grounds, one step
-   apart, so the page has rhythm without swinging to light.
+   Sections no longer alternate a surface colour. The aurora provides
+   all the variation now; the bands are transparent and the glass
+   floats over it.
    --------------------------------------------------------------- */
 
 :root,
 .tone-deep {
-  --paper:        #0f1428;
-  --paper-sunk:   #0a0e1f;
-  --paper-raised: #171d38;
-  --rule:         #2b3357;
-  --rule-soft:    #1e2440;
+  --paper:        #070a18;
+  --paper-sunk:   #04060f;
+  --paper-raised: #0e1326;
+  --rule:         #232a47;
+  --rule-soft:    #181d33;
 
-  --ink:          #f0f3ff;
-  --ink-soft:     #b4bcd8;
-  --ink-faint:    #8a93b8;
+  --ink:          #f2f4ff;
+  --ink-soft:     #aab3d4;
+  --ink-faint:    #8b95bb;
 
-  --accent:       #7dd3fc;
-  --accent-soft:  #16294a;
-  --accent-ink:   #0a0e1f;
+  --accent:       #67e8f9;
+  --accent-soft:  #0e2d3a;
+  --accent-ink:   #04060f;
 
-  --shadow: none;
+  /* The three light sources behind the glass. Kept far apart in hue
+     so the panels pick up a colour shift as you scroll past them. */
+  --light-1:      #22d3ee;
+  --light-2:      #7c5cff;
+  --light-3:      #f43f5e;
 }
 
+/* One step up. Used where a section wants to feel nearer. */
 .tone-soft {
-  --paper:        #171d38;
-  --paper-sunk:   #131832;
-  --paper-raised: #1f2644;
-  --rule:         #39426b;
-  --rule-soft:    #28304f;
+  --paper:        #0c1124;
+  --paper-sunk:   #080d1c;
+  --paper-raised: #141a31;
+  --rule:         #2c3457;
+  --rule-soft:    #1f2540;
 
-  --ink:          #f2f5ff;
-  --ink-soft:     #bcc4de;
-  --ink-faint:    #949dc0;
+  --ink:          #f4f6ff;
+  --ink-soft:     #b3bbd9;
+  --ink-faint:    #939cc0;
 
-  --accent:       #8fdaff;
-  --accent-soft:  #1d3355;
-  --accent-ink:   #131832;
+  --accent:       #7dd3fc;
+  --accent-soft:  #123043;
+  --accent-ink:   #080d1c;
+}
 
-  --shadow: none;
+/* --- Glass ---------------------------------------------------
+   A panel is four things layered, and skipping any one of them is
+   what makes glass look like flat plastic:
+
+     the tint    a barely-there white wash
+     the blur    what is behind, softened
+     the edge    a 1px highlight along the top that catches light
+     the ground  a shadow, so it is floating rather than pasted
+
+   Blur is deliberately modest. Large blur radii over large areas are
+   the main cause of scroll jank on this effect, and past about 24px
+   the eye cannot tell the difference anyway.
+   --------------------------------------------------------------- */
+
+:root {
+  --glass-tint:        rgba(255, 255, 255, 0.045);
+  --glass-tint-strong: rgba(255, 255, 255, 0.075);
+  --glass-border:      rgba(255, 255, 255, 0.10);
+  --glass-edge:        rgba(255, 255, 255, 0.28);
+  --glass-blur:        22px;
+  --glass-shadow:
+    0 1px 1px rgba(255, 255, 255, 0.04) inset,
+    0 18px 44px rgba(2, 4, 14, 0.5),
+    0 2px 8px rgba(2, 4, 14, 0.4);
+  --glass-radius: 18px;
 }

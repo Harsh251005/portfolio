@@ -5,6 +5,7 @@
      the section, and it points at the thing you are meant to click. */
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
+  import Glass from './Glass.svelte';
   import type { Link } from '../../lib/links';
 
   let { links }: { links: Link[] } = $props();
@@ -21,6 +22,7 @@
       for it — including when I'm not.
     </p>
 
+    <Glass class="links-panel" lift={false}>
     <ul class="links">
       {#each links as link (link.label)}
         <li>
@@ -38,6 +40,7 @@
         </li>
       {/each}
     </ul>
+    </Glass>
   </Reveal>
 </div>
 
@@ -64,16 +67,17 @@
     max-width: 38ch;
   }
 
+  :global(.links-panel) { margin-top: var(--s-7); max-width: 44rem; }
+  :global(.links-panel .inner) { padding-inline: var(--s-5); }
+
   .links {
     list-style: none;
-    margin-top: var(--s-7);
+    margin: 0;
     padding: 0;
     display: grid;
-    max-width: 44rem;
   }
 
-  li { border-top: 1px solid var(--rule-soft); }
-  li:last-child { border-bottom: 1px solid var(--rule-soft); }
+  li + li { border-top: 1px solid var(--rule-soft); }
 
   a, .missing {
     display: flex;

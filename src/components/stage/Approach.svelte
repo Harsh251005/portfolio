@@ -6,6 +6,7 @@
   import type { Entry } from '../../lib/brain/types';
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
+  import Glass from './Glass.svelte';
 
   let { entry }: { entry: Entry } = $props();
   const items = $derived(entry?.items ?? []);
@@ -22,11 +23,13 @@
     {#each items as item, i (item.label)}
       <Reveal delay={i * 60} y={26}>
         <li>
-          <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <div>
-            <h3>{item.label}</h3>
-            {#if item.body}<p>{item.body}</p>{/if}
-          </div>
+          <Glass class="row">
+            <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{item.label}</h3>
+              {#if item.body}<p>{item.body}</p>{/if}
+            </div>
+          </Glass>
         </li>
       </Reveal>
     {/each}
@@ -56,14 +59,13 @@
     max-width: 32ch;
   }
 
-  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-6); }
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
 
-  li {
+  li :global(.row .inner) {
     display: grid;
     grid-template-columns: 2.5rem 1fr;
     gap: var(--s-4);
-    padding-top: var(--s-5);
-    border-top: 1px solid var(--rule-soft);
+    padding: var(--s-5);
   }
 
   .n {
@@ -86,6 +88,6 @@
   @media (width >= 60rem) {
     .wrap { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
     .sticky { position: sticky; top: 22vh; }
-    .list { gap: var(--s-7); }
+    .list { gap: var(--s-4); }
   }
 </style>

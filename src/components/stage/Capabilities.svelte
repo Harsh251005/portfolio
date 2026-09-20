@@ -5,6 +5,7 @@
      a sense of being assembled rather than pasted in. */
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
+  import Glass from './Glass.svelte';
 
   const ITEMS = [
     {
@@ -38,12 +39,13 @@
 
   <ol class="grid">
     {#each ITEMS as item, i (item.k)}
-      <Reveal delay={i * 90}>
+      <Reveal delay={i * 90} y={26}>
         <li>
-          <span class="k">{item.k}</span>
-          <h3>{item.title}</h3>
-          <p>{item.body}</p>
-          <span class="rule" aria-hidden="true"></span>
+          <Glass class="card">
+            <span class="k">{item.k}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </Glass>
         </li>
       </Reveal>
     {/each}
@@ -71,14 +73,19 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-6);
+    gap: var(--s-4);
   }
 
-  li {
-    position: relative;
-    padding-top: var(--s-5);
+  li { height: 100%; }
+
+  li :global(.card) { height: 100%; }
+
+  li :global(.card .inner) {
     display: grid;
     gap: var(--s-3);
+    align-content: start;
+    padding: var(--s-5);
+    height: 100%;
   }
 
   .k {
@@ -105,23 +112,8 @@
     max-width: 42ch;
   }
 
-  /* Draws itself in as the row arrives. */
-  .rule {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 1px;
-    background: var(--rule);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 900ms var(--ease-out) 120ms;
-  }
-
-  :global(.reveal.shown) .rule,
-  :global(.reveal:not(.armed)) .rule { transform: scaleX(1); }
-
   @media (width >= 48rem) {
-    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-7) var(--s-7); }
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (width >= 72rem) {

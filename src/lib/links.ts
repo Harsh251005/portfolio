@@ -1,9 +1,9 @@
 /* ---------------------------------------------------------------
    Identity and outbound links, in one place.
 
-   Nothing here is invented. A link with href: null renders as a
-   visible ⟨missing⟩ marker rather than a dead or guessed URL.
-   Fill these in and every page picks them up.
+   Nothing here is invented — these are the real ones he gave.
+   A link with href: null renders as a visible ⟨missing⟩ marker
+   rather than a dead or guessed URL.
    --------------------------------------------------------------- */
 
 export const OWNER = {
@@ -21,7 +21,14 @@ export interface Link {
 }
 
 export const LINKS: Link[] = [
-  { label: 'Email', href: null },
-  { label: 'GitHub', href: null, external: true },
-  { label: 'LinkedIn', href: null, external: true },
+  { label: 'Email', href: 'mailto:dharnidharkaharsh@gmail.com' },
+  { label: 'GitHub', href: 'https://github.com/Harsh251005', external: true },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/harsh-dharnidharka',
+    external: true,
+  },
 ];
+
+/** GitHub handle, used by anything that reads his public activity. */
+export const GITHUB_USER = 'Harsh251005';

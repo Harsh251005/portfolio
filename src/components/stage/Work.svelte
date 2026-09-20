@@ -8,6 +8,7 @@
   import type { Entry } from '../../lib/brain/types';
   import SystemDiagram from './SystemDiagram.svelte';
   import Reveal from './Reveal.svelte';
+  import Glass from './Glass.svelte';
 
   let { entries }: { entries: Entry[] } = $props();
 
@@ -33,7 +34,8 @@
     {#each entries as entry, i (entry.id)}
       {@const open = openId === entry.id}
       <li class:open>
-        <Reveal delay={i * 70}>
+        <Reveal delay={i * 70} y={26}>
+          <Glass class="row">
           <h3>
             <button
               type="button"
@@ -61,6 +63,7 @@
               <span aria-hidden="true">→</span>
             </a>
           </div>
+          </Glass>
         </Reveal>
       </li>
     {/each}
@@ -87,10 +90,9 @@
     max-width: 18ch;
   }
 
-  .rows { list-style: none; margin: 0; padding: 0; }
+  .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
 
-  li { border-top: 1px solid var(--rule-soft); }
-  li:last-child { border-bottom: 1px solid var(--rule-soft); }
+  li :global(.row .inner) { padding-inline: var(--s-5); }
 
   h3 { margin: 0; font-size: inherit; letter-spacing: 0; }
 

@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
+  import Glass from './Glass.svelte';
 
   let frame: HTMLElement;
   let offset = $state(0);
@@ -48,7 +49,7 @@
     <p class="caption">Borivali East, Mumbai</p>
   </div>
 
-  <div class="copy">
+  <Glass class="copy" lift={false}>
     <p class="label"><span class="bar" aria-hidden="true"></span>The person</p>
     <TextReveal text="Five months out, and not pretending otherwise." tag="h2" />
 
@@ -68,7 +69,7 @@
         The longer version <span aria-hidden="true">→</span>
       </a>
     </Reveal>
-  </div>
+  </Glass>
 </div>
 
 <style>
@@ -79,9 +80,12 @@
     aspect-ratio: 4 / 5;
     max-width: 28rem;
     overflow: hidden;
-    border-radius: var(--radius-lg);
-    background: var(--paper-sunk);
-    border: 1px solid var(--rule);
+    border-radius: var(--glass-radius);
+    background: var(--glass-tint);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
   }
 
   .placeholder {
@@ -114,6 +118,8 @@
 
   .label { display: flex; align-items: center; gap: var(--s-3); }
   .bar { width: 2rem; height: 1px; background: var(--accent); }
+
+  :global(.copy .inner) { padding: var(--s-6); }
 
   .copy :global(h2) {
     margin-top: var(--s-4);

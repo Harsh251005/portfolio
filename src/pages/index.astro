@@ -1,15 +1,15 @@
 ---
 /* The page, as an ordered stack of bands.
 
-   Bands alternate between two neighbouring tones of one mid palette,
-   so the page has rhythm without the eye re-adjusting at every seam.
-   Each band declares its tone and everything inside inherits it —
-   reordering the page means moving these blocks, nothing else. */
+   Bands are transparent frames over one continuous aurora. They own
+   vertical rhythm and an id; the glass panels inside them are what
+   the reader actually reads off. Reordering the page means moving
+   these blocks, nothing else. */
 import Base from '../layouts/Base.astro';
 import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
 
-import DotField from '../components/stage/DotField.svelte';
+import Aurora from '../components/stage/Aurora.svelte';
 import Hero from '../components/stage/Hero.svelte';
 import Marquee from '../components/stage/Marquee.svelte';
 import Capabilities from '../components/stage/Capabilities.svelte';
@@ -45,7 +45,7 @@ const MARQUEE = [
 ---
 
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
-  <DotField client:load />
+  <Aurora client:load />
   <ScrollProgress client:load sections={SECTIONS} />
 
   <Band tone="deep" id="top" flush clear field={1}>
