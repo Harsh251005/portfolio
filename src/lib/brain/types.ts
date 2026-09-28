@@ -24,6 +24,7 @@ export interface Entry {
   /** Plain text of the body, for matching. */
   text: string;
   /* card-specific, all optional */
+  moment?: string;
   tagline?: string;
   plain?: string;
   link?: string;

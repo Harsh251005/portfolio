@@ -42,7 +42,7 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content.** One file per answer. Adding a question means adding a file — no code changes. |
+| `src/content/knowledge/*.md` | **The whole site's content**, nine files. The four projects (`moment` → `plain` → `flow`, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
@@ -51,6 +51,10 @@ place.
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
 | `src/components/stage/CityScape.svelte` | The skyline. Self-contained; delete the one line in `index.astro` and the site is a plain dark page. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and glass setting. Restyling the site should mean editing this file and nothing else. |
+
+**Where detail lives.** The site tells each project as a short story anyone can
+follow. The technical write-up lives in that project's GitHub README, reached by
+the "How it's built" link. Don't add architecture to the site; improve the README.
 
 Each piece is meant to be replaceable on its own. Deleting a knowledge file or a
 whole section shouldn't require touching anything else.

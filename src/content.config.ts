@@ -61,11 +61,15 @@ const knowledge = defineCollection({
     order: z.number().default(0),
 
     /* --- optional, card-specific ------------------------------ */
+    /** project: an everyday moment the reader recognises, told before
+     *  the project itself. It is the reason anyone should care. */
+    moment: z.string().optional(),
     /** project: the one-line version a non-technical reader gets first. */
     tagline: z.string().optional(),
     /** project: what it is, in the plainest words available. */
     plain: z.string().optional(),
-    /** project: real link, or omitted. Never invented. */
+    /** project: its public repo, where the technical detail lives.
+     *  Real link or omitted. Never invented. */
     link: z.string().url().optional(),
     /** list / timeline: the rows. */
     items: z

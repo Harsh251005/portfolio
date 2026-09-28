@@ -1,59 +1,66 @@
 <script lang="ts">
-  /* "What I do" — the plain-English answer, on a light band.
+  /* "The problem I work on" — why any of the projects below matter.
 
-     Each row draws its own rule as it enters, which gives the section
-     a sense of being assembled rather than pasted in. */
+     Driven by the-problem.md: its title is the heading, its body is
+     the intro, its items are the cards. The closing line hands the
+     reader to the work section, which is the answer to this one. */
+  import type { Entry } from '../../lib/brain/types';
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
   import Glass from './Glass.svelte';
 
-  const ITEMS = [
-    {
-      k: 'Talk',
-      title: 'Systems that hold a conversation',
-      body: 'Voice and text agents that answer the phone, understand what someone actually wants, and do it — in their language, at their pace, at eleven at night.',
-    },
-    {
-      k: 'Read',
-      title: 'Systems that read so you do not have to',
-      body: 'Point them at a pile of documents and ask a question. They answer, and they show you the line they got it from — or admit the answer is not in there.',
-    },
-    {
-      k: 'Decide',
-      title: 'Systems that follow the rules exactly',
-      body: 'Where getting it wrong costs money or trust, the rules stay in code and the model only works out what a person meant. It never gets a vote.',
-    },
-    {
-      k: 'Recover',
-      title: 'Systems that survive their own mistakes',
-      body: 'The part everyone skips. It will break at three in the morning — so it has to notice, back out, and tell someone, without a human watching.',
-    },
-  ];
+  let { entry }: { entry: Entry } = $props();
+  const items = $derived(entry?.items ?? []);
 </script>
 
 <div class="page">
   <header class="head">
-    <p class="label"><span class="bar" aria-hidden="true"></span>What I do</p>
-    <TextReveal text="Four kinds of thing, in plain words." tag="h2" />
+    <p class="label"><span class="bar" aria-hidden="true"></span>{entry.short}</p>
+    <TextReveal text={entry.question} tag="h2" />
+    <div class="intro">{@html entry.html}</div>
   </header>
 
   <ol class="grid">
-    {#each ITEMS as item, i (item.k)}
+    {#each items as item, i (item.label)}
       <Reveal delay={i * 90} y={26}>
         <li>
           <Glass class="card">
-            <span class="k">{item.k}</span>
-            <h3>{item.title}</h3>
-            <p>{item.body}</p>
+            <span class="k">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{item.label}</h3>
+            {#if item.body}<p>{item.body}</p>{/if}
           </Glass>
         </li>
       </Reveal>
     {/each}
   </ol>
+
+  <Reveal delay={200}>
+    <p class="close">Closing that gap is my job. Here's what I've built to do it.</p>
+  </Reveal>
 </div>
 
 <style>
-  .head { margin-bottom: var(--s-8); }
+  .head { margin-bottom: var(--s-7); }
+
+  .intro {
+    margin-top: var(--s-5);
+    max-width: 40ch;
+    font-size: var(--t-lg);
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+  }
+
+  .intro :global(p + p) { margin-top: var(--s-3); }
+
+  .close {
+    margin-top: var(--s-7);
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 380;
+    font-style: italic;
+    color: var(--ink);
+    max-width: 30ch;
+  }
 
   .label { display: flex; align-items: center; gap: var(--s-3); }
   .bar { width: 2rem; height: 1px; background: var(--accent); }

@@ -70,22 +70,22 @@
 
   <Glass class="copy" lift={false}>
     <p class="label"><span class="bar" aria-hidden="true"></span>The person</p>
-    <TextReveal text="Five months out, and not pretending otherwise." tag="h2" />
+    <TextReveal text="The person behind it." tag="h2" />
 
     <Reveal delay={120}>
       <p class="lead">
-        I finished a degree in 2026 and spent the time since building things that
-        run rather than things that demo. What I have is four working systems and
-        the scars from each one — not a decade of tenure.
+        I'm Harsh. I live in Borivali East, Mumbai, and I finished my degree in
+        Information Technology in 2026. Since then I've been building the kind of
+        things you just scrolled past.
       </p>
       <p class="body">
-        <span class="todo">⟨ NEEDS YOUR WORDS — what you're like away from a keyboard.
-        This is the paragraph that makes someone want to work with you, and it's
-        the one I can't write. ⟩</span>
+        <span class="todo">⟨ NEEDS YOUR WORDS — two or three sentences on what
+        you're like away from a keyboard. Can be a short version of "Outside of
+        work" in about-me.md. ⟩</span>
       </p>
 
-      <a class="more" href="/ask/outside-of-work">
-        The longer version <span aria-hidden="true">→</span>
+      <a class="more" href="/ask/about-me">
+        More about me <span aria-hidden="true">→</span>
       </a>
     </Reveal>
   </Glass>

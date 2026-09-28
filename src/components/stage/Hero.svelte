@@ -4,7 +4,11 @@
      also telling you something. */
   import Scramble from './Scramble.svelte';
 
-  let { role, location }: { role: string; location: string } = $props();
+  let {
+    role,
+    location,
+    status,
+  }: { role: string; location: string; status?: string } = $props();
 
   let clock = $state('');
 
@@ -33,6 +37,10 @@
       <span class="sep" aria-hidden="true">/</span>
       <span>{location}</span>
       <span class="sep" aria-hidden="true">/</span>
+      {#if status}
+        <span class="status">{status}</span>
+        <span class="sep" aria-hidden="true">/</span>
+      {/if}
       <span class="clock">{clock}<span class="tz">IST</span></span>
     </p>
 
@@ -117,6 +125,8 @@
   }
 
   .sep { opacity: 0.35; }
+
+  .status { color: var(--accent); }
 
   .clock { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .tz { margin-left: 0.4em; opacity: 0.5; }

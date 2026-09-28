@@ -26,7 +26,7 @@
         <span class="bar" aria-hidden="true"></span>
         Things I've built
       </p>
-      <h2>Four systems. Watch one run.</h2>
+      <h2>Four things I've built. Open one to watch it work.</h2>
     </header>
   </Reveal>
 
@@ -46,15 +46,10 @@
               <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <span class="title">
                 {entry.tagline ?? entry.short}
-                {#if !open && entry.flow?.length}
-                  <!-- The closed row previews the path the diagram will
-                       draw, so it reads as a system, not a FAQ entry. -->
-                  <span class="path">
-                    {#each entry.flow as stage, s (s)}
-                      {#if s > 0}<span class="arrow" aria-hidden="true">→</span>{/if}
-                      <span>{stage}</span>
-                    {/each}
-                  </span>
+                {#if entry.moment}
+                  <!-- The everyday moment comes before the project: it is
+                       the reason a non-technical reader cares at all. -->
+                  <span class="moment">{entry.moment}</span>
                 {/if}
               </span>
               <span class="mark" aria-hidden="true"></span>
@@ -70,10 +65,13 @@
               </div>
             {/if}
 
-            <a class="more" href={`/ask/${entry.id}`}>
-              Read the whole story
-              <span aria-hidden="true">→</span>
-            </a>
+            <!-- The site tells the story; the repo holds the detail. -->
+            {#if entry.link}
+              <a class="more" href={entry.link} rel="noreferrer noopener">
+                How it's built
+                <span aria-hidden="true">↗</span>
+              </a>
+            {/if}
           </div>
           </Glass>
         </Reveal>
@@ -97,7 +95,7 @@
     margin-top: var(--s-4);
     font-size: var(--t-2xl);
     font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
-    max-width: 18ch;
+    max-width: 24ch;
   }
 
   .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
@@ -135,19 +133,20 @@
     line-height: var(--leading-snug);
   }
 
-  .path {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35em 0.6em;
+  .moment {
+    display: block;
     margin-top: var(--s-2);
-    font-family: var(--font-mono);
-    font-size: var(--t-xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    max-width: 60ch;
+    font-family: var(--font-body);
+    font-size: var(--t-base);
+    font-weight: 400;
+    font-variation-settings: 'wght' 400;
+    font-style: normal;
+    line-height: var(--leading-body);
     color: var(--ink-faint);
   }
 
-  .path .arrow { color: var(--accent); opacity: 0.7; }
+  .open .moment { color: var(--ink-soft); }
 
   /* A plus that becomes a minus. Two bars, one rotates. */
   .mark {

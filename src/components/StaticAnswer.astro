@@ -21,6 +21,12 @@ const Heading = headingLevel;
 const SUB = { h1: 'h2', h2: 'h3', h3: 'h4' } as const;
 const Sub = SUB[headingLevel];
 
+/* A list's intro reads before its rows, but a folded "more" block
+   belongs after them. Split the body at the first fold. */
+const fold = entry.html.indexOf('<details class="more"');
+const lead = fold === -1 ? entry.html : entry.html.slice(0, fold);
+const rest = fold === -1 ? '' : entry.html.slice(fold);
+
 /** Marks ⟨draft⟩ text the same way the Markdown pipeline does. */
 function mark(text: string) {
   return text
@@ -38,10 +44,11 @@ function mark(text: string) {
 <article class="answer" id={entry.id}>
   <Heading>{entry.question}</Heading>
 
-  {entry.tagline && <p class="tagline">{entry.tagline}</p>}
+  {entry.tagline && entry.tagline !== entry.question && <p class="tagline">{entry.tagline}</p>}
+  {entry.moment && <p class="plain">{entry.moment}</p>}
   {entry.plain && <p class="plain" set:html={mark(entry.plain)} />}
 
-  <div class="prose" set:html={entry.html} />
+  <div class="prose" set:html={lead} />
 
   {entry.items?.length && (
     <ol class="items">
@@ -65,9 +72,11 @@ function mark(text: string) {
     </div>
   )}
 
+  {rest && <div class="prose" set:html={rest} />}
+
   {entry.link && (
     <p class="link">
-      <a href={entry.link} rel="noreferrer noopener">See the code ↗</a>
+      <a href={entry.link} rel="noreferrer noopener">How it's built ↗</a>
     </p>
   )}
 </article>

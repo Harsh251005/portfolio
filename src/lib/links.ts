@@ -10,6 +10,8 @@ export const OWNER = {
   name: 'Harsh Dharnidharka',
   role: 'AI Engineer',
   location: 'Mumbai, India',
+  /** Shown on the first screen. Change or remove when it stops being true. */
+  status: 'Open to work',
   /** Used for the site title and social cards. */
   tagline: 'I build software that makes decisions on its own.',
 };

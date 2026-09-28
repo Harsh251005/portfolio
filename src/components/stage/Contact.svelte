@@ -24,8 +24,8 @@
 
   <Reveal delay={140}>
     <p class="sub">
-      Not just the stack. I'll tell you honestly whether I'm the right person
-      for it — including when I'm not.
+      Not just the tech you use. I'll tell you honestly whether I'm the right
+      person for it, including when I'm not.
     </p>
 
     <ul class="links">

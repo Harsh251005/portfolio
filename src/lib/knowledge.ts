@@ -49,6 +49,7 @@ export async function loadEntries(): Promise<Entry[]> {
         hidden: item.data.hidden,
         html,
         text: toText(html),
+        moment: item.data.moment,
         tagline: item.data.tagline,
         plain: item.data.plain,
         link: item.data.link,
