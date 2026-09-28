@@ -89,8 +89,12 @@ scaling.
 ## Motion
 
 Everything animated is behind `prefers-reduced-motion`. With it on: the skyline
-is drawn once and stays still, nothing flickers, nothing drifts on scroll, and
-the glass panels drop their blur for a solid surface.
+stays still, nothing flickers, nothing drifts on scroll, and the glass panels
+drop their blur for a solid surface.
+
+The skyline is full height only on the first screen and at the footer. In
+between it sinks below the fold and dims, so no paragraph ever scrolls across
+lit windows. With reduced motion it switches position instead of easing.
 
 The skyline follows the actual clock in Mumbai — the sky is a different colour in
 the evening than at 3am — but never reaches daylight, because a bright sky would

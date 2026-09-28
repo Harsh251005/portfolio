@@ -44,7 +44,19 @@
               onclick={() => toggle(entry.id)}
             >
               <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <span class="title">{entry.tagline ?? entry.short}</span>
+              <span class="title">
+                {entry.tagline ?? entry.short}
+                {#if !open && entry.flow?.length}
+                  <!-- The closed row previews the path the diagram will
+                       draw, so it reads as a system, not a FAQ entry. -->
+                  <span class="path">
+                    {#each entry.flow as stage, s (s)}
+                      {#if s > 0}<span class="arrow" aria-hidden="true">→</span>{/if}
+                      <span>{stage}</span>
+                    {/each}
+                  </span>
+                {/if}
+              </span>
               <span class="mark" aria-hidden="true"></span>
             </button>
           </h3>
@@ -71,8 +83,6 @@
 </div>
 
 <style>
-  .work { padding-block: var(--section); }
-
   .head { margin-bottom: var(--s-7); }
 
   .label { display: flex; align-items: center; gap: var(--s-3); }
@@ -118,11 +128,26 @@
   }
 
   .title {
+    display: block;
     font-family: var(--font-display);
     font-size: var(--t-xl);
     font-variation-settings: 'opsz' var(--opsz-display), 'wght' 380;
     line-height: var(--leading-snug);
   }
+
+  .path {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em 0.6em;
+    margin-top: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .path .arrow { color: var(--accent); opacity: 0.7; }
 
   /* A plus that becomes a minus. Two bars, one rotates. */
   .mark {

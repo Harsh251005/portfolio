@@ -148,11 +148,18 @@
   .statement em { color: var(--ink); font-style: italic; }
 
   .cue {
-    margin-top: var(--s-7);
+    margin-top: var(--s-6);
     display: inline-flex;
     align-items: center;
     gap: var(--s-3);
     min-height: var(--tap);
+    padding-inline: var(--s-5);
+    border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--paper) 62%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: border-color 320ms var(--ease), background 320ms var(--ease);
     font-family: var(--font-mono);
     font-size: var(--t-xs);
     letter-spacing: 0.16em;
@@ -161,8 +168,13 @@
     text-decoration: none;
   }
 
+  .cue:hover {
+    border-color: var(--accent);
+    background: color-mix(in oklab, var(--paper) 80%, transparent);
+  }
+
   .cue__line {
-    width: 3.5rem;
+    width: 2.5rem;
     height: 1px;
     background: var(--accent);
     transform-origin: left;

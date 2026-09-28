@@ -76,6 +76,26 @@
     pointer-events: none;
   }
 
+  /* A band of shade behind the label, so it reads as a header rather
+     than printing over whatever card is scrolling underneath. Fades
+     out at its lower edge instead of ending on a hard line. */
+  .rail::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: calc(100% + var(--s-5));
+    background: linear-gradient(
+      var(--paper) 0%,
+      color-mix(in oklab, var(--paper) 88%, transparent) 55%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 420ms var(--ease);
+    z-index: -1;
+  }
+
+  .lifted::before { opacity: 1; }
+
   .bar {
     height: 2px;
     background: var(--accent);

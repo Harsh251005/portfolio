@@ -2,11 +2,14 @@
   /* "How I work" — a sticky heading with principles scrolling past it.
 
      The heading holding still while the list moves is the smoothest
-     scroll device there is, and it costs one CSS property. */
+     scroll device there is, and it costs one CSS property.
+
+     Deliberately not glass. The panels above and below are; a ruled
+     list here breaks the run of cards so the page has a rhythm rather
+     than one surface repeated. */
   import type { Entry } from '../../lib/brain/types';
   import TextReveal from './TextReveal.svelte';
   import Reveal from './Reveal.svelte';
-  import Glass from './Glass.svelte';
 
   let { entry }: { entry: Entry } = $props();
   const items = $derived(entry?.items ?? []);
@@ -23,13 +26,11 @@
     {#each items as item, i (item.label)}
       <Reveal delay={i * 60} y={26}>
         <li>
-          <Glass class="row">
-            <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <div>
-              <h3>{item.label}</h3>
-              {#if item.body}<p>{item.body}</p>{/if}
-            </div>
-          </Glass>
+          <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h3>{item.label}</h3>
+            {#if item.body}<p>{item.body}</p>{/if}
+          </div>
         </li>
       </Reveal>
     {/each}
@@ -59,20 +60,26 @@
     max-width: 32ch;
   }
 
-  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
+  .list { list-style: none; margin: 0; padding: 0; display: grid; border-bottom: 1px solid var(--rule); }
 
-  li :global(.row .inner) {
+  li {
     display: grid;
-    grid-template-columns: 2.5rem 1fr;
+    grid-template-columns: 5.5rem 1fr;
     gap: var(--s-4);
-    padding: var(--s-5);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--rule);
   }
 
+
+  /* Big, thin, outlined numerals: the ornament this section gets
+     instead of a card. */
   .n {
-    font-family: var(--font-mono);
-    font-size: var(--t-xs);
-    color: var(--accent);
-    padding-top: 0.35em;
+    font-family: var(--font-display);
+    font-size: var(--t-2xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 300;
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklab, var(--accent) 70%, transparent);
   }
 
   h3 {
@@ -85,9 +92,12 @@
 
   p { margin-top: var(--s-2); font-size: var(--t-sm); color: var(--ink-soft); max-width: 46ch; }
 
+  @media (width < 40rem) {
+    li { grid-template-columns: 3.5rem 1fr; }
+  }
+
   @media (width >= 60rem) {
     .wrap { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
     .sticky { position: sticky; top: 22vh; }
-    .list { gap: var(--s-4); }
   }
 </style>

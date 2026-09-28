@@ -132,8 +132,23 @@
     const WARM = '#ffd7a0';
     const COOL = '#cfe1ff';
 
-    /** How far rank `i` has drifted at the current scroll position. */
-    const driftOf = (i: number) => RANKS[i].drift * progress;
+    /** How far the city has sunk out of the reading area, 0–1.
+     *
+     *  Composition protects the hero, but the city is fixed and the
+     *  page is not: further down, paragraphs scroll straight across the
+     *  lit windows. So once you leave the hero the city settles below
+     *  the fold, and rises again for the footer, where there is nothing
+     *  left to read over it. `sinkTarget` is where scroll says it
+     *  should be; `sink` eases toward it so it never jumps. */
+    let sink = 0;
+    let sinkTarget = 0;
+
+    /** How far each rank drops when fully sunk, as a share of the
+     *  frame. Near ranks drop further so the parallax holds. */
+    const SINK = [0.16, 0.24, 0.32];
+
+    /** How far rank `i` has moved at the current scroll position. */
+    const driftOf = (i: number) => RANKS[i].drift * progress + SINK[i] * H * sink;
 
     function buildStars() {
       const c = document.createElement('canvas');
@@ -396,6 +411,7 @@
       const dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0;
       lastT = now;
       clock += dt;
+      sink = reduced.matches || !dt ? sinkTarget : sink + (sinkTarget - sink) * Math.min(1, dt * 5);
 
       ctx.clearRect(0, 0, w, h);
 
@@ -457,6 +473,19 @@
 
       drawBeacons();
 
+      // Whatever is still showing of the city while sunk sits under
+      // text, so it goes quiet as well as low.
+      if (sink > 0.01) {
+        const top = H * 0.6;
+        const veil = ctx.createLinearGradient(0, top, 0, h);
+        veil.addColorStop(0, 'transparent');
+        veil.addColorStop(0.45, sky.low);
+        ctx.globalAlpha = sink * 0.8;
+        ctx.fillStyle = veil;
+        ctx.fillRect(0, top, w, h - top);
+        ctx.globalAlpha = 1;
+      }
+
       if (running) raf = requestAnimationFrame(frame);
     }
 
@@ -513,6 +542,17 @@
     function onScroll() {
       const max = document.documentElement.scrollHeight - innerHeight;
       progress = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+
+      const smooth = (x: number) => {
+        const t = Math.min(1, Math.max(0, x));
+        return t * t * (3 - 2 * t);
+      };
+      const leave = smooth((scrollY - innerHeight * 0.15) / (innerHeight * 0.45));
+      const arrive = smooth((scrollY - (max - innerHeight * 0.55)) / (innerHeight * 0.45));
+      sinkTarget = horizon < 1 ? 0 : Math.min(leave, 1 - arrive);
+
+      // A still city has no loop to pick the change up, so draw it here.
+      if (!running && !document.hidden) frame(0);
     }
 
     function onVisibility() {

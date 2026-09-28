@@ -9,6 +9,12 @@
   import type { Link } from '../../lib/links';
 
   let { links }: { links: Link[] } = $props();
+
+  /** What the visitor will actually reach, shown under each label —
+   *  a tile that only says "Email" makes you click to find out. */
+  function handle(href: string): string {
+    return href.replace(/^mailto:/, '').replace(/^https?:\/\/(www\.)?/, '');
+  }
 </script>
 
 <div class="page wrap">
@@ -22,25 +28,25 @@
       for it — including when I'm not.
     </p>
 
-    <Glass class="links-panel" lift={false}>
     <ul class="links">
       {#each links as link (link.label)}
         <li>
-          {#if link.href}
-            <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
-              <span class="what">{link.label}</span>
-              <span class="arrow" aria-hidden="true">→</span>
-            </a>
-          {:else}
-            <span class="missing">
-              <span class="what">{link.label}</span>
-              <span class="todo">⟨ missing ⟩</span>
-            </span>
-          {/if}
+          <Glass class="tile">
+            {#if link.href}
+              <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
+                <span class="what">{link.label}<span class="arrow" aria-hidden="true">→</span></span>
+                <span class="handle">{handle(link.href)}</span>
+              </a>
+            {:else}
+              <span class="missing">
+                <span class="what">{link.label}</span>
+                <span class="handle">⟨ missing ⟩</span>
+              </span>
+            {/if}
+          </Glass>
         </li>
       {/each}
     </ul>
-    </Glass>
   </Reveal>
 </div>
 
@@ -67,39 +73,47 @@
     max-width: 38ch;
   }
 
-  :global(.links-panel) { margin-top: var(--s-7); max-width: 44rem; }
-  :global(.links-panel .inner) { padding-inline: var(--s-5); }
-
   .links {
     list-style: none;
-    margin: 0;
+    margin: var(--s-7) 0 0;
     padding: 0;
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-4);
   }
 
-  li + li { border-top: 1px solid var(--rule-soft); }
+  li :global(.tile) { height: 100%; }
 
   a, .missing {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--s-4);
-    padding-block: var(--s-5);
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-5);
     min-height: var(--tap);
     text-decoration: none;
     color: var(--ink);
-    transition: color 320ms var(--ease), padding-left 420ms var(--ease-out);
+    transition: color 320ms var(--ease);
   }
 
-  a:hover { color: var(--accent); padding-left: var(--s-4); }
+  a:hover { color: var(--accent); }
 
   .what {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     font-family: var(--font-display);
     font-size: var(--t-xl);
     font-variation-settings: 'opsz' var(--opsz-display), 'wght' 380;
   }
 
-  .arrow { transition: transform 420ms var(--ease-out); }
+  .handle {
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+  }
+
+  .arrow { font-size: var(--t-lg); transition: transform 420ms var(--ease-out); }
   a:hover .arrow { transform: translateX(6px); }
 
   .missing { color: var(--ink-faint); }
