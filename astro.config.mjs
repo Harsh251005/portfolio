@@ -15,7 +15,7 @@ export default defineConfig({
   //  Canonical URLs, the sitemap, robots.txt and the social share
   //  tags all read the domain from here and from nowhere else.
   // ────────────────────────────────────────────────────────────────
-  site: 'https://example.com',
+  site: 'https://harsh-dharnidharka.vercel.app',
   integrations: [
     svelte(),
     // og-card is a rendering surface for the share image, not a page.
