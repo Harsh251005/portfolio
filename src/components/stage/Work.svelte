@@ -26,7 +26,7 @@
         <span class="bar" aria-hidden="true"></span>
         Things I've built
       </p>
-      <h2>Four things I've built. Open one to watch it work.</h2>
+      <h2>Three things I've built. Open one to watch it work.</h2>
     </header>
   </Reveal>
 

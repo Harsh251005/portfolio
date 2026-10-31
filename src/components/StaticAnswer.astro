@@ -1,127 +1,133 @@
 ---
-/* Renders one answer without any JavaScript.
+/* The body of one entry, without JavaScript.
 
-   Used by /everything and /ask/[slug]. It mirrors what the Svelte
-   cards show, so a visitor with JS disabled — and every search
-   engine — gets the same content. Kept deliberately plain: the
-   interactive version is where the design effort goes. */
+   Used by /ask/[slug], which owns the page heading, the panel and the
+   diagram. This renders what goes inside: the story, the list rows and
+   any folded extras, in the same visual language as the home page. */
 import type { Entry } from '../lib/brain/types';
 
 interface Props {
   entry: Entry;
-  headingLevel?: 'h1' | 'h2' | 'h3';
 }
 
-const { entry, headingLevel = 'h2' } = Astro.props;
-const Heading = headingLevel;
-
-/* Sub-headings must sit exactly one level below the question, or the
-   document outline skips a level — which screen readers announce as a
-   missing section. */
-const SUB = { h1: 'h2', h2: 'h3', h3: 'h4' } as const;
-const Sub = SUB[headingLevel];
-
-/* A list's intro reads before its rows, but a folded "more" block
-   belongs after them. Split the body at the first fold. */
-const fold = entry.html.indexOf('<details class="more"');
-const lead = fold === -1 ? entry.html : entry.html.slice(0, fold);
-const rest = fold === -1 ? '' : entry.html.slice(fold);
+const { entry } = Astro.props;
 
 /** Marks ⟨draft⟩ text the same way the Markdown pipeline does. */
 function mark(text: string) {
   return text
     .split(/(⟨[^⟩]*⟩)/g)
     .filter(Boolean)
-    .map((part) =>
-      part.startsWith('⟨')
-        ? `<span class="todo">${part}</span>`
-        : part,
-    )
+    .map((part) => (part.startsWith('⟨') ? `<span class="todo">${part}</span>` : part))
     .join('');
 }
+
+/* A list's intro reads before its rows, but a folded "more" block
+   belongs after them. Split the body at the first fold. */
+const fold = entry.html.indexOf('<details class="more"');
+const lead = fold === -1 ? entry.html : entry.html.slice(0, fold);
+const rest = fold === -1 ? '' : entry.html.slice(fold);
 ---
 
-<article class="answer" id={entry.id}>
-  <Heading>{entry.question}</Heading>
-
-  {entry.tagline && entry.tagline !== entry.question && <p class="tagline">{entry.tagline}</p>}
-  {entry.moment && <p class="plain">{entry.moment}</p>}
+<div class="answer">
+  {entry.moment && <p class="moment">{entry.moment}</p>}
   {entry.plain && <p class="plain" set:html={mark(entry.plain)} />}
 
-  <div class="prose" set:html={lead} />
+  {lead && <div class="prose" set:html={lead} />}
 
   {entry.items?.length && (
-    <ol class="items">
-      {entry.items.map((item) => (
+    <ol class="rows">
+      {entry.items.map((item, i) => (
         <li>
-          <Sub>{item.label}</Sub>
-          {item.body && <p set:html={mark(item.body)} />}
+          <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h2>{item.label}</h2>
+            {item.body && <p set:html={mark(item.body)} />}
+          </div>
         </li>
       ))}
     </ol>
   )}
 
-  {entry.sides?.length === 2 && (
-    <div class="sides">
-      {entry.sides.map((side) => (
-        <section>
-          <Sub>{side.label}</Sub>
-          <ul>{side.points.map((point) => <li>{point}</li>)}</ul>
-        </section>
-      ))}
-    </div>
-  )}
-
   {rest && <div class="prose" set:html={rest} />}
-
-  {entry.link && (
-    <p class="link">
-      <a href={entry.link} rel="noreferrer noopener">How it's built ↗</a>
-    </p>
-  )}
-</article>
+</div>
 
 <style>
-  .answer { padding-block: var(--s-7); border-top: var(--hairline) solid var(--rule-soft); }
-
-  h1, h2, h3 {
-    font-size: var(--t-2xl);
-    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
-    max-width: 20ch;
+  .moment {
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-style: italic;
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 350;
+    line-height: var(--leading-snug);
+    color: var(--ink-soft);
+    max-width: 34ch;
   }
 
-  .tagline {
+  .plain {
     margin-top: var(--s-4);
-    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+    max-width: 44ch;
+  }
+
+  .moment + .plain + .prose,
+  .plain + .prose { margin-top: var(--s-6); }
+
+  /* Section headings inside a long story (about-me): each part gets a
+     rule and room above it, so the page reads as chapters. */
+  .prose :global(h2) {
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--rule);
     font-size: var(--t-xl);
     color: var(--ink);
   }
 
-  .plain {
-    margin-top: var(--s-3);
+  .prose > :global(h2:first-child) { margin-top: 0; padding-top: 0; border-top: 0; }
+
+  /* Same ruled list with outlined numerals as How I work on the home
+     page, so a reader moving between the two sees one design. */
+  .rows {
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rows li {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: var(--s-4);
+    padding-block: var(--s-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  .n {
+    font-family: var(--font-display);
+    font-size: var(--t-2xl);
+    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 300;
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklab, var(--accent) 70%, transparent);
+  }
+
+  .rows h2 {
     font-size: var(--t-lg);
+    font-variation-settings: 'opsz' var(--opsz-text), 'wght' 450;
     line-height: var(--leading-snug);
-    color: var(--ink);
-    max-width: var(--measure);
+    letter-spacing: -0.01em;
   }
 
-  .prose { margin-top: var(--s-5); }
-
-  .items, .sides { margin-top: var(--s-5); max-width: var(--measure); }
-  .items { padding-left: var(--s-5); display: grid; gap: var(--s-4); }
-  .sides { display: grid; gap: var(--s-5); }
-
-  .items :global(:is(h2, h3, h4)),
-  .sides :global(:is(h2, h3, h4)) {
-    font-family: var(--font-body);
-    font-size: var(--t-base);
-    font-variation-settings: 'wght' 650;
-    letter-spacing: 0;
+  .rows p {
+    margin-top: var(--s-2);
+    font-size: var(--t-sm);
+    color: var(--ink-soft);
+    max-width: 50ch;
   }
 
-  .items p, .sides li { margin-top: var(--s-2); color: var(--ink-soft); font-size: var(--t-sm); }
-  .sides ul { margin-top: var(--s-3); padding-left: var(--s-5); }
+  .rows + .prose { margin-top: var(--s-5); }
 
-  .link { margin-top: var(--s-4); }
-  .link a { color: var(--accent); font-size: var(--t-sm); }
+  @media (width < 40rem) {
+    .rows li { grid-template-columns: 3.5rem 1fr; }
+  }
 </style>

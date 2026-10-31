@@ -12,7 +12,9 @@ export function remarkPlaceholder() {
       if (!parent || index === null || !node.value.includes('⟨')) return;
 
       const parts = node.value.split(/(⟨[^⟩]*⟩)/g).filter(Boolean);
-      if (parts.length < 2) return;
+      // A paragraph that is nothing but a placeholder splits into one
+      // part, and it still has to be marked.
+      if (!parts.some((part) => part.startsWith('⟨'))) return;
 
       parent.children.splice(
         index,

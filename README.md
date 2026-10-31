@@ -1,8 +1,7 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page over a generated Mumbai skyline, plus a flat
-version of everything and one page per answer for search engines and for anyone
-in a hurry.
+A static site. One scrolling page over a generated Mumbai skyline, plus one
+page per entry (about me, how I work, each project) in the same style.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
 
@@ -42,7 +41,7 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content**, nine files. The four projects (`moment` → `plain` → `flow`, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
+| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain` → `flow`, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
@@ -59,14 +58,12 @@ the "How it's built" link. Don't add architecture to the site; improve the READM
 Each piece is meant to be replaceable on its own. Deleting a knowledge file or a
 whole section shouldn't require touching anything else.
 
-## The three ways in
-
-The scrolling page is the main experience, but it can't be the only one:
+## The two ways in
 
 - `/` — the page.
-- `/everything` — every answer, flat, in one document. Works with JavaScript off.
-  This is what search engines read and what a visitor in a hurry skims.
-- `/ask/<id>` — one static page per answer, so any single answer is linkable.
+- `/ask/<id>` — one page per entry, over the same city (kept low and dim with
+  `CityScape resting`) and glass. Readable with JavaScript off, so it is also
+  what search engines read.
 
 ## The photo
 

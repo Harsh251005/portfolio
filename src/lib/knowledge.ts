@@ -78,13 +78,3 @@ export async function loadEntry(id: string): Promise<Entry | undefined> {
 export async function loadFeatured(): Promise<Entry[]> {
   return (await loadEntries()).filter((e) => e.featured && !e.hidden);
 }
-
-/** Grouped for the Map panel and /everything, in display order. */
-export async function loadGrouped() {
-  const entries = (await loadEntries()).filter((e) => !e.hidden);
-  return GROUPS.map((group) => ({
-    group,
-    label: GROUP_LABELS[group],
-    entries: entries.filter((e) => e.group === group),
-  })).filter((g) => g.entries.length > 0);
-}

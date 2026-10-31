@@ -52,9 +52,12 @@
      *  instead of the whole of it. 1 is the page; the share card uses
      *  a smaller value so the skyline lands inside its own frame. */
     horizon?: number;
+    /** Keep the city sunk and dim for the whole page. For reading
+     *  pages, which have no hero for it to stand behind. */
+    resting?: boolean;
   }
 
-  const { horizon = 1 }: Props = $props();
+  const { horizon = 1, resting = false }: Props = $props();
 
   let canvas: HTMLCanvasElement;
 
@@ -140,8 +143,8 @@
      *  the fold, and rises again for the footer, where there is nothing
      *  left to read over it. `sinkTarget` is where scroll says it
      *  should be; `sink` eases toward it so it never jumps. */
-    let sink = 0;
-    let sinkTarget = 0;
+    let sink = resting ? 1 : 0;
+    let sinkTarget = sink;
 
     /** How far each rank drops when fully sunk, as a share of the
      *  frame. Near ranks drop further so the parallax holds. */
@@ -549,7 +552,7 @@
       };
       const leave = smooth((scrollY - innerHeight * 0.15) / (innerHeight * 0.45));
       const arrive = smooth((scrollY - (max - innerHeight * 0.55)) / (innerHeight * 0.45));
-      sinkTarget = horizon < 1 ? 0 : Math.min(leave, 1 - arrive);
+      sinkTarget = resting ? 1 : horizon < 1 ? 0 : Math.min(leave, 1 - arrive);
 
       // A still city has no loop to pick the change up, so draw it here.
       if (!running && !document.hidden) frame(0);

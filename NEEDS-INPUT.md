@@ -43,7 +43,7 @@ and places it.
 
 - **The domain:** `site:` in `astro.config.mjs`. Sitemap, robots.txt, canonical
   URLs and share tags all read it.
-- **The four GitHub READMEs.** Technical visitors now land there from "How it's
+- **The three GitHub READMEs.** Technical visitors now land there from "How it's
   built", so those READMEs are now part of the site.
 
 ## Settled

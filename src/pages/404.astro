@@ -20,7 +20,7 @@ const featured = await loadFeatured();
       {featured.map((entry) => (
         <li><a href={`/ask/${entry.id}`}>→ {entry.question}</a></li>
       ))}
-      <li><a href="/everything">→ Or read everything in one go</a></li>
+      <li><a href="/">→ Or go back to the start</a></li>
     </ul>
   </div>
 

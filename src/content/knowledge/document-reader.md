@@ -16,7 +16,7 @@ flow:
   - "Answer"
   - "Show the page"
 flowNote: "No page to point at means no answer. It tells you it couldn't find one."
-followups: ["payment-agent", "the-problem"]
+followups: ["receptionist", "the-problem"]
 ---
 
 Ask an ordinary chatbot about a long document and you get a smooth, confident
