@@ -66,17 +66,16 @@
     position: relative;
     min-height: 100svh;
     display: flex;
-    /* Sits high in the frame, in the sky above the skyline crest,
-       rather than centred over the buildings. */
+    /* Sits high in the frame so the ribbon has the lower part of the
+       window to itself. */
     align-items: flex-start;
     padding-top: clamp(5rem, 15vh, 10rem);
     isolation: isolate;
     overflow: hidden;
   }
 
-  /* A soft pool of shade behind the copy. On a short viewport the
-     crest rises into the text block, and this is what keeps it
-     readable without dimming the whole scene. */
+  /* A soft pool of shade behind the copy, so it stays readable over
+     the pools of colour without dimming the whole scene. */
   .hero::before {
     content: '';
     position: absolute;

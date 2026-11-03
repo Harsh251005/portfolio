@@ -14,7 +14,7 @@
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
-import CityScape from '../components/stage/CityScape.svelte';
+import Ribbon from '../components/stage/Ribbon.svelte';
 import { OWNER } from '../lib/links';
 ---
 
@@ -26,7 +26,7 @@ import { OWNER } from '../lib/links';
     <meta name="robots" content="noindex, nofollow" />
   </head>
   <body>
-    <CityScape client:load />
+    <Ribbon client:load />
     <div class="card" id="og">
       <p class="kicker">{OWNER.role} · Mumbai</p>
       <h1>Harsh<br />Dharnidharka</h1>
@@ -43,17 +43,9 @@ import { OWNER } from '../lib/links';
         document.documentElement.style.setProperty('--og-scale', String(s));
         const el = document.getElementById('og');
         el.dataset.capture = `${Math.round(1200 * s)}x${Math.round(630 * s)}`;
-        // Compose the scene into the card rather than the window, so
-        // the skyline lands inside the captured region on any screen.
-        document.documentElement.dataset.horizon = (
-          (630 * s) / innerHeight
-        ).toFixed(3);
       };
       fit();
       addEventListener('resize', fit);
-      // The scene reads the frame at build time; nudge it now that
-      // the value is set.
-      addEventListener('load', () => dispatchEvent(new Event('resize')));
     </script>
   </body>
 </html>

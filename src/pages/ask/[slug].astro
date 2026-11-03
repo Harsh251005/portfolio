@@ -1,14 +1,13 @@
 ---
 /* One page per entry, in the same world as the home page.
 
-   The city sits low and dim behind it (it is a reading page, so
-   there is no hero for the city to stand behind), the entry reads off
-   one glass panel, and related entries are offered as tiles at the
-   end. Static apart from the city and a project's diagram. */
+   The ribbon runs calm behind it, the entry reads off one glass
+   panel, and related entries are offered as tiles at the end.
+   Static apart from the ribbon and a project's diagram. */
 import Base from '../../layouts/Base.astro';
 import Footer from '../../components/Footer.astro';
 import StaticAnswer from '../../components/StaticAnswer.astro';
-import CityScape from '../../components/stage/CityScape.svelte';
+import Ribbon from '../../components/stage/Ribbon.svelte';
 import SystemDiagram from '../../components/stage/SystemDiagram.svelte';
 import { loadEntries, GROUP_LABELS } from '../../lib/knowledge';
 import { OWNER } from '../../lib/links';
@@ -38,7 +37,7 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
   description={description || OWNER.tagline}
   path={`/ask/${entry.id}`}
 >
-  <CityScape client:load resting />
+  <Ribbon client:load />
 
   <div class="layer">
     <div class="page wrap" id="main">
@@ -90,7 +89,7 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
 </Base>
 
 <style>
-  /* Above the fixed city, which sits at z-index 0. */
+  /* Above the fixed ribbon, which sits at z-index 0. */
   .layer {
     position: relative;
     z-index: 1;

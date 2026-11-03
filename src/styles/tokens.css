@@ -148,9 +148,9 @@
    --------------------------------------------------------------- */
 
 :root {
-  /* Dark glass, not light. Over a night city the backdrop is full of
-     bright window lights, and a white wash only raises the floor
-     under pale text. A dark translucent base pushes the scene down
+  /* Dark glass, not light. Behind the panels the backdrop has bright pools
+     of colour and a line of light, and a white wash only raises the
+     floor under pale text. A dark translucent base pushes the scene down
      and lets the copy sit clearly on top — the white edge and the
      highlight are what still read it as glass. */
   --glass-tint:

@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page over a generated Mumbai skyline, plus one
+A static site. One scrolling page over a living ribbon of light, plus one
 page per entry (about me, how I work, each project) in the same style.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
@@ -48,7 +48,7 @@ place.
 | `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
-| `src/components/stage/CityScape.svelte` | The skyline. Self-contained; delete the one line in `index.astro` and the site is a plain dark page. |
+| `src/components/stage/Ribbon.svelte` | The background: a line of light that changes shape to match the section in view (`data-form` on a band; `quiet` fades it over bare text). Self-contained; delete the one line in `index.astro` and the site is a plain dark page. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and glass setting. Restyling the site should mean editing this file and nothing else. |
 
 **Where detail lives.** The site tells each project as a short story anyone can
@@ -61,8 +61,7 @@ whole section shouldn't require touching anything else.
 ## The two ways in
 
 - `/` — the page.
-- `/ask/<id>` — one page per entry, over the same city (kept low and dim with
-  `CityScape resting`) and glass. Readable with JavaScript off, so it is also
+- `/ask/<id>` — one page per entry, over the same ribbon (always calm) and glass. Readable with JavaScript off, so it is also
   what search engines read.
 
 ## The photo
@@ -75,7 +74,7 @@ rather than a gap.
 ## The share card
 
 `public/og.png` is what appears when the link is posted anywhere. It is
-generated from the real fonts and the real skyline rather than drawn by hand, so
+generated from the real fonts and the real page rather than drawn by hand, so
 it can be remade whenever the copy changes:
 
 1. `npm run build && npx serve dist` (or any static server).
@@ -89,17 +88,16 @@ scaling.
 
 ## Motion
 
-Everything animated is behind `prefers-reduced-motion`. With it on: the skyline
-stays still, nothing flickers, nothing drifts on scroll, and the glass panels
-drop their blur for a solid surface.
+Everything animated is behind `prefers-reduced-motion`. With it on: the ribbon
+is drawn still (one frame per place you scroll to), nothing swells or travels,
+and the glass panels drop their blur for a solid surface.
 
-The skyline is full height only on the first screen and at the footer. In
-between it sinks below the fold and dims, so no paragraph ever scrolls across
-lit windows. With reduced motion it switches position instead of easing.
-
-The skyline follows the actual clock in Mumbai — the sky is a different colour in
-the evening than at 3am — but never reaches daylight, because a bright sky would
-put the white text below usable contrast.
+The ribbon takes its shape from whatever sits under the middle of the window:
+the nearest ancestor with `data-form`. Calm is the default; the work section
+asks for `voice`. It also swells briefly with scroll speed, and sits low in the
+hero then rises to the middle of the window as you leave it. Bands with bare
+text and no panel are marked `quiet`, which fades the line right down there so
+it never crosses a paragraph.
 
 ## Content that isn't there on purpose
 

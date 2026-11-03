@@ -13,9 +13,12 @@ interface Props {
   /** Drops the band's surface entirely so the field runs at full
    *  strength behind it. For the hero only. */
   clear?: boolean;
-  /** How present the background field should be here, 0–1. Reading
-   *  sections ask it to recede; the hero lets it run. */
-  field?: number;
+  /** The shape the background ribbon takes while this band is under
+   *  the middle of the window. Unset means calm. */
+  form?: string;
+  /** Fades the ribbon right down while this band is under the middle
+   *  of the window. For bands with bare text and no glass panel. */
+  quiet?: boolean;
   id?: string;
   /** Removes the default vertical padding — for bands that manage
    *  their own, like the hero. */
@@ -25,7 +28,8 @@ interface Props {
 
 const {
   tone = 'deep',
-  field = 1,
+  form,
+  quiet = false,
   clear = false,
   id,
   flush = false,
@@ -37,7 +41,8 @@ const {
   class:list={['band', `tone-${tone}`, { flush, clear }, extra]}
   id={id}
   data-tone={tone}
-  data-field={field}
+  data-form={form}
+  data-quiet={quiet ? '' : undefined}
 >
   <slot />
 </section>

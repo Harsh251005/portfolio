@@ -1,7 +1,7 @@
 ---
 /* The page, as an ordered stack of bands.
 
-   Bands are transparent frames over the city. They own vertical
+   Bands are transparent frames over the ribbon. They own vertical
    rhythm and an id; the glass panels inside them are what the reader
    actually reads off. Reordering the page means moving these blocks,
    nothing else. */
@@ -10,7 +10,7 @@ import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
 import { PORTRAIT } from '../lib/portrait';
 
-import CityScape from '../components/stage/CityScape.svelte';
+import Ribbon from '../components/stage/Ribbon.svelte';
 import Hero from '../components/stage/Hero.svelte';
 import Problem from '../components/stage/Problem.svelte';
 import Work from '../components/stage/Work.svelte';
@@ -39,34 +39,34 @@ const SECTIONS = [
 ---
 
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
-  <CityScape client:load />
+  <Ribbon client:load />
   <ScrollProgress client:load sections={SECTIONS} />
 
-  <Band tone="deep" id="top" flush clear field={1}>
+  <Band tone="deep" id="top" flush clear>
     <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
   </Band>
 
-  <Band tone="soft" id="what" field={0.25}>
+  <Band tone="soft" id="what" quiet>
     <Problem client:visible entry={problem} />
   </Band>
 
-  <Band tone="deep" id="work" field={0.6}>
+  <Band tone="deep" id="work" form="voice">
     <Work client:visible entries={projects} />
   </Band>
 
-  <Band tone="soft" id="approach" field={0.2}>
+  <Band tone="soft" id="approach" quiet>
     <Approach client:visible entry={howIWork} />
   </Band>
 
-  <Band tone="deep" id="about" field={0.45}>
+  <Band tone="deep" id="about">
     <About portrait={PORTRAIT} client:visible />
   </Band>
 
-  <Band tone="soft" id="contact" field={0.8}>
+  <Band tone="soft" id="contact" quiet>
     <Contact client:visible links={LINKS} />
   </Band>
 
-  <Band tone="deep" flush field={0.3}>
+  <Band tone="deep" flush>
     <Footer />
   </Band>
 </Base>
