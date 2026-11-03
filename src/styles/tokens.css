@@ -63,7 +63,7 @@
 
   --tap: 44px;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /* Short and wide: a laptop with browser chrome open, or a phone held
@@ -78,99 +78,41 @@
   }
 }
 
-/* --- Tones ---------------------------------------------------
-   Built for glass. Two requirements drive every value here:
+/* --- Colour ---------------------------------------------------
+   Warm paper, ink, and one red: the red of a cricket ball. No
+   gradients, no glow, no second accent. A page that commits to two
+   colours and a paper tone looks designed; a page with a gradient
+   for every section looks generated.
 
-     1. The ground must be dark and deeply coloured, or the panels
-        have nothing worth refracting and look like grey plastic.
-     2. Text is checked against the *lightest* surface glass ever
-        reaches, not against the base — a panel sitting over a bright
-        part of the aurora is the worst case, and that is where
-        contrast usually fails.
-
-   Sections no longer alternate a surface colour. The aurora provides
-   all the variation now; the bands are transparent and the glass
-   floats over it.
-   --------------------------------------------------------------- */
-
-:root,
-.tone-deep {
-  --paper:        #070a18;
-  --paper-sunk:   #04060f;
-  --paper-raised: #0e1326;
-  --rule:         #232a47;
-  --rule-soft:    #181d33;
-
-  --ink:          #f2f4ff;
-  --ink-soft:     #aab3d4;
-  --ink-faint:    #8b95bb;
-
-  --accent:       #67e8f9;
-  --accent-soft:  #0e2d3a;
-  --accent-ink:   #04060f;
-
-  /* The three light sources behind the glass. Kept far apart in hue
-     so the panels pick up a colour shift as you scroll past them. */
-  --light-1:      #22d3ee;
-  --light-2:      #7c5cff;
-  --light-3:      #f43f5e;
-}
-
-/* One step up. Used where a section wants to feel nearer. */
-.tone-soft {
-  --paper:        #0c1124;
-  --paper-sunk:   #080d1c;
-  --paper-raised: #141a31;
-  --rule:         #2c3457;
-  --rule-soft:    #1f2540;
-
-  --ink:          #f4f6ff;
-  --ink-soft:     #b3bbd9;
-  --ink-faint:    #939cc0;
-
-  --accent:       #7dd3fc;
-  --accent-soft:  #123043;
-  --accent-ink:   #080d1c;
-}
-
-/* --- Glass ---------------------------------------------------
-   A panel is four things layered, and skipping any one of them is
-   what makes glass look like flat plastic:
-
-     the tint    a barely-there white wash
-     the blur    what is behind, softened
-     the edge    a 1px highlight along the top that catches light
-     the ground  a shadow, so it is floating rather than pasted
-
-   Blur is deliberately modest. Large blur radii over large areas are
-   the main cause of scroll jank on this effect, and past about 24px
-   the eye cannot tell the difference anyway.
+   Text is checked against the *darkest* surface it sits on:
+   --ink-faint on --paper is about 5:1, --accent on --paper-raised
+   about 5.7:1.
    --------------------------------------------------------------- */
 
 :root {
-  /* Dark glass, not light. Behind the panels the backdrop has bright pools
-     of colour and a line of light, and a white wash only raises the
-     floor under pale text. A dark translucent base pushes the scene down
-     and lets the copy sit clearly on top — the white edge and the
-     highlight are what still read it as glass. */
-  --glass-tint:
-    linear-gradient(
-      rgba(255, 255, 255, 0.07),
-      rgba(255, 255, 255, 0.02)
-    ),
-    rgba(9, 12, 28, 0.55);
-  --glass-tint-strong:
-    linear-gradient(
-      rgba(255, 255, 255, 0.10),
-      rgba(255, 255, 255, 0.03)
-    ),
-    rgba(9, 12, 28, 0.68);
-  --glass-border:      rgba(255, 255, 255, 0.10);
-  --glass-edge:        rgba(255, 255, 255, 0.28);
-  --glass-blur:        22px;
-  --glass-shadow:
-    0 1px 1px rgba(255, 255, 255, 0.04) inset,
-    0 18px 44px rgba(2, 4, 14, 0.5),
-    0 2px 8px rgba(2, 4, 14, 0.4);
-  --glass-radius: 18px;
+  --paper:        #f3eee4;
+  --paper-sunk:   #e9e2d3;
+  --paper-raised: #fbf8f1;
+  --rule:         #cdc3af;
+  --rule-soft:    #ddd5c4;
+
+  --ink:          #1c1913;
+  --ink-soft:     #4b453a;
+  --ink-faint:    #6a6354;
+
+  --accent:       #b02a1e;
+  --accent-soft:  #f0d9d2;
+  --accent-ink:   #fbf8f1;
+
+  /* A card is a flat sheet of paper with a hard, offset shadow, like
+     something printed and pinned. (The class is still called
+     `.glass` in places; it is not glass any more.) */
+  --glass-tint:        var(--paper-raised);
+  --glass-tint-strong: var(--paper-raised);
+  --glass-border:      var(--ink);
+  --glass-edge:        transparent;
+  --glass-blur:        0px;
+  --glass-shadow:      5px 5px 0 var(--ink);
+  --glass-radius:      6px;
+  --shadow-hard:       5px 5px 0 var(--ink);
 }

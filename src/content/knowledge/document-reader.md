@@ -8,26 +8,8 @@ order: 3
 moment: "Someone hands you a hundred-page PDF and asks you one question about it."
 tagline: "A reader that shows its working"
 plain: "This reads it for you and answers, with the page number behind every part of the answer. If the answer isn't in there, it says so instead of making one up."
+blurb: "Answers questions about a document with the page number, or says it couldn't find it."
 link: "https://github.com/Harsh251005/Evident-AI"
-example:
-  kind: answer
-  caption: "An example, simplified."
-  lines:
-    - who: "You"
-      text: "How much notice do I have to give to end the contract?"
-      me: true
-    - who: "Reader"
-      text: "Sixty days, in writing."
-      tag: "Page 14"
-      state: ok
-    - who: "You"
-      text: "Is there a fee for paying late?"
-      me: true
-    - who: "Reader"
-      text: "I couldn't find that in this document."
-      tag: "Not found"
-      state: stop
-note: "No page to point at means no answer. It tells you it couldn't find one."
 followups: ["receptionist", "the-problem"]
 ---
 

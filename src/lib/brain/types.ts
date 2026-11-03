@@ -31,20 +31,7 @@ export interface Entry {
   items?: { label: string; body?: string }[];
   sides?: { label: string; points: string[] }[];
   attribution?: string;
-  example?: {
-    kind: 'call' | 'answer' | 'log';
-    caption: string;
-    lines: {
-      who: string;
-      text: string;
-      gloss?: string;
-      tag?: string;
-      me: boolean;
-      state?: 'ok' | 'fail' | 'stop';
-    }[];
-  };
-  note?: string;
-  form?: string;
+  blurb?: string;
 }
 
 export type AnswerKind = 'hit' | 'miss';

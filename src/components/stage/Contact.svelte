@@ -1,66 +1,53 @@
 <script lang="ts">
-  /* The end of the page. One instruction, three links, nothing else.
+  /* The end of the page: where I'm headed, and three ways to reach me.
 
-     The heading letters lift on hover — the only decorative motion in
-     the section, and it points at the thing you are meant to click. */
-  import TextReveal from './TextReveal.svelte';
-  import Reveal from './Reveal.svelte';
-  import Glass from './Glass.svelte';
+     Each link is a full-width row. On hover a block of ink fills the
+     row from below and the text turns to paper, so the whole row
+     reads as the thing to press. */
+  import Marker from './Marker.svelte';
   import type { Link } from '../../lib/links';
 
   let { links }: { links: Link[] } = $props();
 
-  /** What the visitor will actually reach, shown under each label —
-   *  a tile that only says "Email" makes you click to find out. */
+  /** What the visitor will actually reach, shown on each row. */
   function handle(href: string): string {
     return href.replace(/^mailto:/, '').replace(/^https?:\/\/(www\.)?/, '');
   }
 </script>
 
-<div class="page wrap">
-  <p class="label"><span class="bar" aria-hidden="true"></span>Talk to me</p>
+<div class="page contact">
+  <p class="label">Talk to me</p>
 
-  <TextReveal text="Tell me what the problem actually is." tag="h2" />
+  <h2>Tell me what the <Marker>problem</Marker> actually is.</h2>
 
-  <Reveal delay={140}>
-    <p class="sub">
-      Not just the tech you use. I'll tell you honestly whether I'm the right
-      person for it, including when I'm not.
-    </p>
+  <p class="sub">
+    I'm looking for an AI engineering role on a team that ships to real users.
+    I'm in Mumbai, and open to remote work or moving for the right team. I'll
+    tell you honestly whether I'm the right person, including when I'm not.
+  </p>
 
-    <ul class="links">
-      {#each links as link (link.label)}
-        <li>
-          <Glass class="tile">
-            {#if link.href}
-              <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
-                <span class="what">{link.label}<span class="arrow" aria-hidden="true">→</span></span>
-                <span class="handle">{handle(link.href)}</span>
-              </a>
-            {:else}
-              <span class="missing">
-                <span class="what">{link.label}</span>
-                <span class="handle">⟨ missing ⟩</span>
-              </span>
-            {/if}
-          </Glass>
-        </li>
-      {/each}
-    </ul>
-  </Reveal>
+  <ul class="rows">
+    {#each links as link (link.label)}
+      <li>
+        {#if link.href}
+          <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
+            <span class="what">{link.label}</span>
+            <span class="handle">{handle(link.href)}</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        {:else}
+          <span class="missing">{link.label} ⟨ missing ⟩</span>
+        {/if}
+      </li>
+    {/each}
+  </ul>
 </div>
 
 <style>
-  .wrap { padding-block: var(--s-6); }
-
-  .label { display: flex; align-items: center; gap: var(--s-3); }
-  .bar { width: 2rem; height: 1px; background: var(--accent); }
-
-  .wrap :global(h2) {
-    margin-top: var(--s-5);
-    font-family: var(--font-display);
-    font-size: var(--t-3xl);
-    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
+  h2 {
+    margin-top: var(--s-4);
+    font-size: clamp(2.25rem, 4.6vw + 1rem, 5.25rem);
+    font-variation-settings: 'opsz' 72, 'wght' 440, 'WONK' 1;
     line-height: 0.98;
     letter-spacing: -0.03em;
     max-width: 14ch;
@@ -68,53 +55,75 @@
 
   .sub {
     margin-top: var(--s-5);
+    max-width: 42ch;
     font-size: var(--t-lg);
     color: var(--ink-soft);
-    max-width: 38ch;
   }
 
-  .links {
+  .rows {
     list-style: none;
-    margin: var(--s-7) 0 0;
+    margin: var(--s-8) 0 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: var(--s-4);
+    border-top: 1.5px solid var(--ink);
   }
 
-  li :global(.tile) { height: 100%; }
+  li { border-bottom: 1.5px solid var(--ink); }
 
-  a, .missing {
+  a {
+    position: relative;
     display: grid;
-    gap: var(--s-2);
-    padding: var(--s-5);
-    min-height: var(--tap);
-    text-decoration: none;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'what arrow' 'handle arrow';
+    align-items: center;
+    column-gap: var(--s-4);
+    padding: var(--s-5) var(--s-3);
+    overflow: hidden;
+    isolation: isolate;
     color: var(--ink);
-    transition: color 320ms var(--ease);
+    text-decoration: none;
+    transition: color 380ms var(--ease);
   }
 
-  a:hover { color: var(--accent); }
+  /* The ink fill. */
+  a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--ink);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 460ms cubic-bezier(0.65, 0, 0.25, 1);
+  }
+
+  a:hover, a:focus-visible { color: var(--paper); }
+  a:hover::before, a:focus-visible::before { transform: scaleY(1); }
 
   .what {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    grid-area: what;
     font-family: var(--font-display);
-    font-size: var(--t-xl);
-    font-variation-settings: 'opsz' var(--opsz-display), 'wght' 380;
+    font-size: clamp(1.75rem, 2.2vw + 1rem, 3.25rem);
+    font-variation-settings: 'opsz' 60, 'wght' 420;
+    line-height: 1.05;
   }
 
   .handle {
-    font-family: var(--font-mono);
-    font-size: var(--t-xs);
-    letter-spacing: 0.04em;
+    grid-area: handle;
+    font-size: var(--t-sm);
     color: var(--ink-soft);
     overflow-wrap: anywhere;
+    transition: color 380ms var(--ease);
   }
 
-  .arrow { font-size: var(--t-lg); transition: transform 420ms var(--ease-out); }
-  a:hover .arrow { transform: translateX(6px); }
+  a:hover .handle, a:focus-visible .handle { color: var(--paper-sunk); }
 
-  .missing { color: var(--ink-faint); }
+  .arrow {
+    grid-area: arrow;
+    font-size: var(--t-2xl);
+    transition: transform 420ms var(--ease-out);
+  }
+
+  a:hover .arrow { transform: translateX(8px); }
+
+  .missing { display: block; padding: var(--s-5) var(--s-3); color: var(--ink-faint); }
 </style>

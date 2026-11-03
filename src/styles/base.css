@@ -127,96 +127,17 @@ a.touch {
 }
 
 /* ---------------------------------------------------------------
-   Glass surfaces.
+   Cards.
 
-   One class, used everywhere a panel is needed, so the material is
-   consistent and there is a single place to change it.
+   One class, used everywhere a panel is needed. A flat sheet of
+   paper, a thin ink border, and a hard offset shadow. (Named
+   `.glass` for historical reasons; the material is paper now.)
    --------------------------------------------------------------- */
 
 .glass {
   position: relative;
   border-radius: var(--glass-radius);
   background: var(--glass-tint);
-  border: 1px solid var(--glass-border);
+  border: 1.5px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-  isolation: isolate;
-  /* Bounds what the compositor has to re-examine when a panel's
-     contents change. With a dozen backdrop-filters on one page this
-     is the difference between smooth and not. */
-  contain: layout paint;
-}
-
-/* Phones do the same blur with far less GPU. Halving the radius is
-   invisible at this size and removes most of the cost. */
-@media (width < 48rem) {
-  :root { --glass-blur: 12px; }
-}
-
-/* Blur is the expensive part and it buys nothing for someone who
-   asked for less motion — they get a plain surface instead. */
-@media (prefers-reduced-motion: reduce) {
-  .glass {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: color-mix(in oklab, var(--paper-raised) 88%, transparent);
-  }
-}
-
-/* The top edge, catching light. Real glass has a bright rim where it
-   meets the light; without this a panel reads as a flat grey box. */
-.glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding-top: 1px;
-  background: linear-gradient(
-    to bottom,
-    var(--glass-edge),
-    transparent 42%
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0.55;
-}
-
-.glass--strong { background: var(--glass-tint-strong); }
-
-/* Where backdrop-filter is unsupported, fall back to an opaque panel
-   rather than a transparent one — unreadable text is worse than a
-   missing effect. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass { background: color-mix(in oklab, var(--paper-raised) 92%, transparent); }
-}
-
-/* ---------------------------------------------------------------
-   Film grain.
-
-   The detail that separates glass from plastic. Large soft gradients
-   band badly on 8-bit displays; a faint noise layer over everything
-   dithers those steps away and gives the whole page a physical
-   surface. Fixed, so it never scrolls with content.
-   --------------------------------------------------------------- */
-
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grain { opacity: 0.25; }
 }

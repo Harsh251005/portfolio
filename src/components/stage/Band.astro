@@ -1,67 +1,24 @@
 ---
-/* A full-width horizontal band of the page.
-
-   Owns two things and nothing else: which of the two surface tones
-   it carries, and the vertical rhythm around it. Everything inside
-   inherits the palette through custom properties, so no child
-   component knows or cares which tone it is sitting on.
-
-   Reordering the page is reordering these in index.astro. */
+/* A full-width horizontal band of the page. Owns the vertical rhythm
+   and an id, nothing else. Reordering the page is reordering these
+   in index.astro. */
 
 interface Props {
-  tone?: 'deep' | 'soft';
-  /** Drops the band's surface entirely so the field runs at full
-   *  strength behind it. For the hero only. */
-  clear?: boolean;
-  /** The shape the background ribbon takes while this band is under
-   *  the middle of the window. Unset means calm. */
-  form?: string;
-  /** Fades the ribbon right down while this band is under the middle
-   *  of the window. For bands with bare text and no glass panel. */
-  quiet?: boolean;
   id?: string;
-  /** Removes the default vertical padding — for bands that manage
+  /** Removes the default vertical padding, for bands that manage
    *  their own, like the hero. */
   flush?: boolean;
   class?: string;
 }
 
-const {
-  tone = 'deep',
-  form,
-  quiet = false,
-  clear = false,
-  id,
-  flush = false,
-  class: extra = '',
-} = Astro.props;
+const { id, flush = false, class: extra = '' } = Astro.props;
 ---
 
-<section
-  class:list={['band', `tone-${tone}`, { flush, clear }, extra]}
-  id={id}
-  data-tone={tone}
-  data-form={form}
-  data-quiet={quiet ? '' : undefined}
->
+<section class:list={['band', { flush }, extra]} id={id}>
   <slot />
 </section>
 
 <style>
-  .band {
-    position: relative;
-    /* Transparent: the aurora behind is the surface now, and the
-       glass panels inside are what the reader actually reads off. */
-    z-index: 1;
-    background: transparent;
-    color: var(--ink);
-    padding-block: var(--section);
-  }
-
+  .band { padding-block: var(--section); }
   .flush { padding-block: 0; }
-
-
-
-  /* No seams between bands — the light behind is continuous, and a
-     rule across it would cut the page into slabs again. */
 </style>

@@ -30,37 +30,9 @@ import { LINKS, OWNER } from '../lib/links';
 
 
 <style>
-  /* The footer is the one place on the page with no panel behind it,
-     and the ribbon can pass behind it. Left bare, the name and the
-     links compete with the line. A scrim gives it the same ground every other block
-     has without adding another backdrop-filter to the stack. */
   .foot {
-    position: relative;
     padding-block: var(--s-6);
     margin-top: auto;
-    isolation: isolate;
-  }
-
-  .foot::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      color-mix(in oklab, var(--paper-sunk) 82%, transparent) 38%,
-      color-mix(in oklab, var(--paper-sunk) 94%, transparent)
-    );
-    /* Bleed past the footer so the fade starts above the rule rather
-       than cutting across it. */
-    margin-block-start: calc(var(--s-8) * -1);
-    pointer-events: none;
-  }
-
-  .inner {
-    border-top: var(--hairline) solid var(--rule);
-    padding-top: var(--s-5);
   }
 
   .inner {
@@ -69,12 +41,14 @@ import { LINKS, OWNER } from '../lib/links';
     justify-content: space-between;
     gap: var(--s-4);
     flex-wrap: wrap;
+    border-top: 1.5px solid var(--ink);
+    padding-top: var(--s-5);
   }
 
   .name {
     font-family: var(--font-display);
-    font-size: var(--t-sm);
-    color: var(--ink-soft);
+    font-size: var(--t-base);
+    color: var(--ink);
   }
 
   ul {
@@ -90,8 +64,8 @@ import { LINKS, OWNER } from '../lib/links';
   a:hover { color: var(--accent); }
 
   .year {
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
     font-size: var(--t-xs);
-    color: var(--ink-soft);
+    color: var(--ink-faint);
   }
 </style>

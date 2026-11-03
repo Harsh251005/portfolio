@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page over a living ribbon of light, plus one
+A static site. One scrolling page on warm paper, plus one
 page per entry (about me, how I work, each project) in the same style.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
@@ -41,15 +41,15 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain` → `example`, plus a `link` to the repo; `form` picks the ribbon's shape), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
+| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain`, a one-line `blurb` for the home-page card, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
 | `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
-| `src/components/stage/Ribbon.svelte` | The background: a line of light that changes shape to match the section in view (`data-form` on a band; `quiet` fades it over bare text). Self-contained; delete the one line in `index.astro` and the site is a plain dark page. |
-| `src/styles/tokens.css` | Every colour, type size, spacing value and glass setting. Restyling the site should mean editing this file and nothing else. |
+| `src/components/stage/Seam.svelte` | The cricket ball that rolls down a stitched line in the left margin as you scroll. Self-contained; delete the one line in `index.astro` and it is gone. |
+| `src/styles/tokens.css` | Every colour, type size, spacing value and card setting. Restyling the site should mean editing this file and nothing else. |
 
 **Where detail lives.** The site tells each project as a short story anyone can
 follow. The technical write-up lives in that project's GitHub README, reached by
@@ -61,7 +61,7 @@ whole section shouldn't require touching anything else.
 ## The two ways in
 
 - `/` — the page.
-- `/ask/<id>` — one page per entry, over the same ribbon (always calm) and glass. Readable with JavaScript off, so it is also
+- `/ask/<id>` — one page per entry, on the same paper, as one card. Readable with JavaScript off, so it is also
   what search engines read.
 
 ## The photo
@@ -88,16 +88,24 @@ scaling.
 
 ## Motion
 
-Everything animated is behind `prefers-reduced-motion`. With it on: the ribbon
-is drawn still (one frame per place you scroll to), nothing swells or travels,
-and the glass panels drop their blur for a solid surface.
+Everything animated is behind `prefers-reduced-motion`. With it on: the ball
+still marks your place but does not spin, the name does not change weight, the
+cards and highlighter marks are simply there, and the link rows do not fill.
 
-The ribbon takes its shape from whatever sits under the middle of the window:
-the nearest ancestor with `data-form`. Calm is the default; the work section
-asks for `voice`. It also swells briefly with scroll speed, and sits low in the
-hero then rises to the middle of the window as you leave it. Bands with bare
-text and no panel are marked `quiet`, which fades the line right down there so
-it never crosses a paragraph.
+What moves, and why it is not a stock effect:
+
+- **The ball** rolls down the stitched seam in the left margin. Its position is
+  how far through the page you are; its spin is the distance scrolled divided by
+  its radius, so it rolls the way a ball does.
+- **The name** gets heavier, letter by letter, while you scroll, and settles
+  when you stop. It is a variable font, so the weight itself animates.
+- **The highlighter** is drawn under a phrase the first time it scrolls into view.
+- **The project cards** are dealt onto the page, each landing tilted and rocking
+  into place in turn.
+- **The contact rows** fill with ink from below on hover.
+
+Every one of them is content that is on the page from the start: the effect
+only decides when it becomes visible, and a timer guarantees it does.
 
 ## Content that isn't there on purpose
 

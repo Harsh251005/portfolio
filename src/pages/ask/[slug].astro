@@ -1,14 +1,11 @@
 ---
 /* One page per entry, in the same world as the home page.
 
-   The ribbon runs calm behind it, the entry reads off one glass
-   panel, and related entries are offered as tiles at the end.
-   Static apart from the ribbon and a project's diagram. */
+   The entry reads off one paper card, and related entries are offered
+   as tiles at the end. Static. */
 import Base from '../../layouts/Base.astro';
 import Footer from '../../components/Footer.astro';
 import StaticAnswer from '../../components/StaticAnswer.astro';
-import Ribbon from '../../components/stage/Ribbon.svelte';
-import Example from '../../components/stage/Example.svelte';
 import { loadEntries, GROUP_LABELS } from '../../lib/knowledge';
 import { OWNER } from '../../lib/links';
 
@@ -37,8 +34,6 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
   description={description || OWNER.tagline}
   path={`/ask/${entry.id}`}
 >
-  <Ribbon client:load />
-
   <div class="layer">
     <div class="page wrap" id="main">
       <a class="back" href="/">
@@ -52,12 +47,6 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
 
       <article class="glass panel">
         <StaticAnswer entry={entry} />
-
-        {entry.example && (
-          <div class="diagram">
-            <Example example={entry.example} note={entry.note} active={true} />
-          </div>
-        )}
 
         {entry.link && (
           <a class="repo" href={entry.link} rel="noreferrer noopener">
@@ -89,8 +78,7 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
 </Base>
 
 <style>
-  /* Above the fixed ribbon, which sits at z-index 0. */
-  .layer {
+    .layer {
     position: relative;
     z-index: 1;
     display: flex;
@@ -107,11 +95,9 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
     min-height: var(--tap);
     margin-top: var(--s-6);
     padding-inline: var(--s-4);
-    border: 1px solid var(--glass-border);
+    border: 1.5px solid var(--ink);
     border-radius: 999px;
-    background: color-mix(in oklab, var(--paper) 55%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--paper-raised);
     font-family: var(--font-mono);
     font-size: var(--t-xs);
     letter-spacing: 0.14em;
@@ -141,8 +127,6 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
     margin-top: var(--s-7);
     padding: clamp(var(--s-5), 4vw, var(--s-8));
   }
-
-  .diagram { margin-top: var(--s-7); }
 
   .repo {
     display: inline-flex;
@@ -189,7 +173,7 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
     transition: transform 520ms var(--ease-out), border-color 520ms var(--ease);
   }
 
-  .tile:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, 0.16); }
+  .tile:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
 
   .tile__kicker {
     grid-column: 1 / -1;

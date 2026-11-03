@@ -32,16 +32,14 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    {/* Matches the first band, so the browser chrome does not flash. */}
-    <meta name="theme-color" content="#070a18" />
+    {/* Matches the page, so the browser chrome does not flash. */}
+    <meta name="theme-color" content="#f3eee4" />
 
   </head>
 
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
-    {/* Sits above everything, catches nothing. */}
-    <div class="grain" aria-hidden="true"></div>
   </body>
 </html>
 

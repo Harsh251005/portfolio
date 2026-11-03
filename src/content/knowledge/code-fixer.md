@@ -8,24 +8,8 @@ order: 2
 moment: "You ask for a small app. The first version crashes, the way first versions always do."
 tagline: "Code that fixes its own mistakes"
 plain: "This one writes the app, runs it, reads its own error, and fixes the broken part. After five tries it stops and tells you, instead of trying forever."
+blurb: "Writes an app, runs it, reads its own errors and fixes them. Stops after five tries."
 link: "https://github.com/Harsh251005/PhoenixAI"
-example:
-  kind: log
-  caption: "An example run, simplified."
-  lines:
-    - who: "Try 1"
-      text: "Writes the app and runs it. It crashes: a missing piece."
-      state: fail
-    - who: "Try 2"
-      text: "Adds the missing piece. It crashes again: a wrong file path."
-      state: fail
-    - who: "Try 3"
-      text: "Fixes the path. The app runs."
-      state: ok
-    - who: "Try 5"
-      text: "The limit. If it still isn't working by here, it stops and tells you."
-      state: stop
-note: "The loop repeats until it works, or until the fifth try. Knowing when to stop is part of the design."
 followups: ["document-reader", "how-i-work"]
 ---
 

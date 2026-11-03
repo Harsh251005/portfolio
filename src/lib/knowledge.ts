@@ -56,9 +56,7 @@ export async function loadEntries(): Promise<Entry[]> {
         items: item.data.items,
         sides: item.data.sides,
         attribution: item.data.attribution,
-        example: item.data.example,
-        note: item.data.note,
-        form: item.data.form,
+        blurb: item.data.blurb,
       };
     }),
   );

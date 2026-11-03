@@ -1,65 +1,45 @@
 ---
-/* The page, as an ordered stack of bands.
-
-   Bands are transparent frames over the ribbon. They own vertical
-   rhythm and an id; the glass panels inside them are what the reader
-   actually reads off. Reordering the page means moving these blocks,
+/* The page, as an ordered stack of bands: who, the person, the work,
+   how to reach me. Reordering the page means moving these blocks,
    nothing else. */
 import Base from '../layouts/Base.astro';
 import Band from '../components/stage/Band.astro';
 import Footer from '../components/Footer.astro';
 import { PORTRAIT } from '../lib/portrait';
 
-import Ribbon from '../components/stage/Ribbon.svelte';
+import Seam from '../components/stage/Seam.svelte';
 import Hero from '../components/stage/Hero.svelte';
-import Work from '../components/stage/Work.svelte';
-import Approach from '../components/stage/Approach.svelte';
 import About from '../components/stage/About.svelte';
+import Work from '../components/stage/Work.svelte';
 import Contact from '../components/stage/Contact.svelte';
-import ScrollProgress from '../components/stage/ScrollProgress.svelte';
 
 import { loadEntries } from '../lib/knowledge';
 import { OWNER, LINKS } from '../lib/links';
 
 const entries = await loadEntries();
 const projects = entries.filter((entry) => entry.card === 'project');
-const howIWork = entries.find((entry) => entry.id === 'how-i-work')!;
-
-const SECTIONS = [
-  { id: 'top', label: 'Harsh Dharnidharka' },
-  { id: 'work', label: "Things I've built" },
-  { id: 'approach', label: 'How I work' },
-  { id: 'about', label: 'The person' },
-  { id: 'contact', label: 'Talk to me' },
-];
-
 ---
 
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
-  <Ribbon client:load />
-  <ScrollProgress client:load sections={SECTIONS} />
+  <Seam client:load />
 
-  <Band tone="deep" id="top" flush clear>
-    <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
+  <Band id="top" flush>
+    <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} portrait={PORTRAIT} />
   </Band>
 
-  <Band tone="deep" id="work">
+  <Band id="about">
+    <About client:visible />
+  </Band>
+
+  <Band id="work">
     <Work client:visible entries={projects} />
   </Band>
 
-  <Band tone="soft" id="approach" quiet>
-    <Approach client:visible entry={howIWork} />
-  </Band>
-
-  <Band tone="deep" id="about">
-    <About portrait={PORTRAIT} client:visible />
-  </Band>
-
-  <Band tone="soft" id="contact" quiet>
+  <Band id="contact">
     <Contact client:visible links={LINKS} />
   </Band>
 
-  <Band tone="deep" flush>
+  <Band flush>
     <Footer />
   </Band>
 </Base>
