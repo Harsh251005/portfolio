@@ -110,7 +110,7 @@ What moves:
   appear under the pointer.
 - **The skills map** starts as noise and scrolling pulls the dots into labelled
   clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest
-  neighbours. The grouping is hand-made from the resume, not computed by a model.
+  neighbours. The grouping is hand-made from the resume and the voice project, not computed by a model.
 - **The education staircase** rises out of the floor as you scroll, each step
   lighter than the last, and sinks back if you scroll up (`Education.svelte`).
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.

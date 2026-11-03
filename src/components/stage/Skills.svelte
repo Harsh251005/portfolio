@@ -4,7 +4,8 @@
      the dots into labelled clusters. Hover or tap a skill and it reaches
      out to its nearest neighbours.
 
-     The grouping is hand-made from the resume, not computed by a model.
+     The grouping is hand-made from the resume and the voice project, not computed
+     by a model.
 
      The skills are real lists from the start, shown as plain groups.
      Script turns that into the map only once it is running, and with
@@ -15,6 +16,7 @@
   const GROUPS = [
     { name: 'Agents', skills: ['LangGraph', 'LangChain', 'OpenAI Agents SDK', 'MCP', 'Agentic workflows', 'Pydantic'] },
     { name: 'Retrieval', skills: ['RAG pipelines', 'Hybrid search', 'BM25', 'Reranking', 'Qdrant', 'Pinecone', 'ChromaDB'] },
+    { name: 'Voice', skills: ['LiveKit', 'Sarvam', 'ElevenLabs', 'Speech-to-text', 'Text-to-speech'] },
     { name: 'Models & evals', skills: ['OpenAI API', 'Groq', 'Hugging Face', 'Sentence-Transformers', 'Prompt engineering', 'LangSmith'] },
     { name: 'Build & ship', skills: ['Python', 'SQL', 'FastAPI', 'Streamlit', 'Docker', 'Git', 'Render', 'Railway'] },
   ];
@@ -108,7 +110,7 @@
       let y = 0;
       const centres = GROUPS.map((g, c) => {
         if (wide) {
-          const spots = [[0.2, 0.28], [0.72, 0.25], [0.27, 0.75], [0.79, 0.76]];
+          const spots = [[0.15, 0.27], [0.5, 0.2], [0.85, 0.28], [0.29, 0.76], [0.74, 0.77]];
           return { x: W * spots[c][0], y: H * spots[c][1] };
         }
         const band = 104 + g.skills.length * 19;
