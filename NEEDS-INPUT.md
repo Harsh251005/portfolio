@@ -7,21 +7,7 @@ gap; each one renders as a marked box on the page.
 
 ## 1. Words only you can write
 
-All in **`src/content/knowledge/about-me.md`**, except the last one. Rough notes
-or bullets are fine; I'll shape them.
-
-- **Where I'm from:** two lines that make Mumbai a place. What do you like about
-  living there? What would an outsider get wrong?
-- **How I got here, part 1:** what first pulled you toward computers. One
-  specific moment.
-- **How I got here, part 2:** the first thing you built because you wanted to,
-  not because it was assigned.
-- **Outside of work:** nothing to do with engineering. A Sunday, something
-  you're oddly into, something you're bad at and do anyway. Specific beats
-  impressive.
-- **`src/components/stage/About.svelte`:** two or three sentences on what you're
-  like away from a keyboard, for the home page. Can be a short version of the
-  one above.
+Done: the About copy was written from your own answers on 2026-11-03.
 
 ## 2. One file to drop in
 

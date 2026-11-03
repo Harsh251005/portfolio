@@ -74,14 +74,13 @@
 
     <Reveal delay={120}>
       <p class="lead">
-        I'm Harsh. I live in Borivali East, Mumbai, and I finished my degree in
-        Information Technology in 2026. Since then I've been building the kind of
-        things you just scrolled past.
+        I'm Harsh, an AI engineer from Borivali East, Mumbai. I studied
+        Information Technology and finished my degree in 2026.
       </p>
       <p class="body">
-        <span class="todo">⟨ NEEDS YOUR WORDS — two or three sentences on what
-        you're like away from a keyboard. Can be a short version of "Outside of
-        work" in about-me.md. ⟩</span>
+        Web development got me started in 11th class. A few months ago I moved
+        into AI and got serious about it. Away from the keyboard I play cricket,
+        and I try to get a little better at something every day.
       </p>
 
       <a class="more" href="/ask/about-me">

@@ -11,28 +11,24 @@ followups: ["working-with-me", "talk-to-me"]
 
 ## Where I'm from
 
-Mumbai. Borivali East, in the north of the city.
-
-⟨ NEEDS YOUR WORDS — two lines that make Mumbai a place, not a pin on a map.
-What do you like about living there? What would an outsider get wrong? ⟩
+Borivali East, in the north of Mumbai. I like the food and the street life here.
 
 I'm happy to work remotely, to meet in person in Mumbai, or to move for the
 right team.
 
 ## How I got here
 
-⟨ NEEDS YOUR WORDS — what first pulled you toward computers? One specific
-moment. ⟩
+Information Technology was a compulsory subject in 11th class, and it got me
+interested in web development. I wasn't serious about it then. I learned by
+trying things, breaking them and looking up how to fix them.
 
-I studied Information Technology and finished my degree in 2026.
-
-⟨ NEEDS YOUR WORDS — the first thing you built because you wanted to, not
-because it was assigned. ⟩
+A few months ago I moved into AI, and that's when I got serious. I finished my
+degree in Information Technology in 2026.
 
 ## Outside of work
 
-⟨ NEEDS YOUR WORDS — nothing to do with engineering. What do you spend a Sunday
-on? What are you oddly into? Specific beats impressive. ⟩
+I play cricket, and I love it. I watch the odd movie. And I try to get a little
+better every day by learning one small new thing.
 
 ## Where I'm headed
 
