@@ -1,15 +1,15 @@
 <script lang="ts">
   /* The first screen: who, what, and a face.
 
-     The name is set in a variable font, and each letter's weight
-     follows the pointer: the nearer a letter is to the cursor, the
-     heavier it gets, and it eases back when the cursor moves on.
-     Attention flows to where you point. On load one wave runs
-     through the name by itself, so the effect announces itself.
-     Touch screens have no cursor, so there the name thickens while
-     you scroll instead.
+     The name arrives two ways at once. Each letter drops in from above,
+     tilted, and bounces to rest; while it falls it is a scrambled
+     symbol, and it resolves into the real letter as it lands. Hover
+     the name and it scrambles and resolves again.
 
-     The text is plain text throughout; only its weight moves. */
+     The letters are ordinary text from the start. The drop is a CSS
+     animation that only runs once the page is marked as running
+     script, and the scramble swaps the text only after that, so
+     without script, or with reduced motion, the name is just there. */
   import { onMount } from 'svelte';
   import TokenStream from './TokenStream.svelte';
 
@@ -26,100 +26,60 @@
   const last = 'Dharnidharka'.split('');
 
   let name: HTMLElement;
-  let heavy = $state(false);
 
-  const REST = 430;
-  const MAX = 850;
-  /** How far the pointer's influence reaches, in px. */
-  const REACH = 170;
+  const GLYPHS = '▮▯░▒▓#@$%&01<>/\\|=+*';
+  /** Matches the CSS: when the first letter starts, and the gap between letters. */
+  const START = 750;
+  const STEP = 65;
+  /** How long a letter stays a symbol before it lands as itself. */
+  const FALL = 520;
 
   onMount(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const letters = Array.from(name.querySelectorAll<HTMLElement>('.ch'));
-    const fine = matchMedia('(pointer: fine)').matches;
+    const real = letters.map((l) => l.textContent ?? '');
+    const timers = new Set<ReturnType<typeof setTimeout>>();
 
-    // Touch: thicken while scrolling, settle when it stops.
-    if (!fine) {
-      let timer: ReturnType<typeof setTimeout>;
-      let lastY = scrollY;
-      const onScroll = () => {
-        if (Math.abs(scrollY - lastY) > 0.5) heavy = true;
-        lastY = scrollY;
-        clearTimeout(timer);
-        timer = setTimeout(() => (heavy = false), 260);
-      };
-      addEventListener('scroll', onScroll, { passive: true });
-      return () => {
-        removeEventListener('scroll', onScroll);
-        clearTimeout(timer);
-      };
-    }
+    // A symbol is not the same width as the letter it hides. Pin each
+    // slot to its letter's width so the name never jitters.
+    // Layout width, not the bounding box: at this moment each letter is
+    // still tilted at the start of its drop, and a tilted box is wider.
+    letters.forEach((l) => (l.style.width = getComputedStyle(l).width));
 
-    name.classList.add('ptr');
-
-    const cur = letters.map(() => REST);
-    let px = -9999;
-    let py = -9999;
-    let raf = 0;
-    let introStart = performance.now() + 900;
-    let intro = true;
-    let moved = false;
-
-    function tick(now: number) {
-      raf = 0;
-      const box = name.getBoundingClientRect();
-
-      // Until the visitor moves, a virtual pointer sweeps the name once.
-      if (intro && !moved) {
-        const k = (now - introStart) / 1500;
-        if (k >= 0 && k <= 1.25) {
-          px = box.left + k * box.width;
-          py = box.top + box.height * 0.5;
-        } else if (k > 1.25) {
-          intro = false;
-          px = py = -9999;
+    /** Show symbols from `delay` ms for `span` ms, then the real letter. */
+    function scramble(i: number, delay: number, span: number) {
+      const el = letters[i];
+      const begin = performance.now() + delay;
+      const tick = () => {
+        if (performance.now() - begin >= span) {
+          el.textContent = real[i];
+          el.classList.remove('glyph');
+          return;
         }
-      }
-
-      let busy = intro && !moved;
-      letters.forEach((el, i) => {
-        const r = el.getBoundingClientRect();
-        const dx = px - (r.left + r.width / 2);
-        const dy = py - (r.top + r.height / 2);
-        const near = Math.exp(-((dx * dx + dy * dy) / (REACH * REACH)));
-        const goal = REST + (MAX - REST) * near;
-        cur[i] += (goal - cur[i]) * 0.18;
-        if (Math.abs(goal - cur[i]) > 0.6) busy = true;
-        el.style.fontVariationSettings = `'opsz' 72, 'wght' ${cur[i].toFixed(1)}, 'SOFT' 0, 'WONK' 1`;
-      });
-
-      if (busy || px > -9000) raf = requestAnimationFrame(tick);
+        el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        el.classList.add('glyph');
+        timers.add(setTimeout(tick, 45));
+      };
+      timers.add(setTimeout(tick, delay));
     }
 
-    const wake = () => {
-      if (!raf) raf = requestAnimationFrame(tick);
+    letters.forEach((_, i) => scramble(i, START + i * STEP, FALL));
+
+    let busy = true;
+    timers.add(setTimeout(() => (busy = false), START + letters.length * STEP + FALL + 300));
+
+    const replay = () => {
+      if (busy) return;
+      busy = true;
+      letters.forEach((_, i) => scramble(i, i * 28, 340 + i * 28));
+      timers.add(setTimeout(() => (busy = false), 340 + letters.length * 28 + 400));
     };
 
-    const onMove = (e: PointerEvent) => {
-      moved = true;
-      px = e.clientX;
-      py = e.clientY;
-      wake();
-    };
-    const onLeave = () => {
-      px = py = -9999;
-      wake();
-    };
-
-    addEventListener('pointermove', onMove, { passive: true });
-    document.documentElement.addEventListener('pointerleave', onLeave);
-    wake();
-
+    name.addEventListener('pointerenter', replay);
     return () => {
-      cancelAnimationFrame(raf);
-      removeEventListener('pointermove', onMove);
-      document.documentElement.removeEventListener('pointerleave', onLeave);
+      name.removeEventListener('pointerenter', replay);
+      timers.forEach(clearTimeout);
     };
   });
 </script>
@@ -134,7 +94,7 @@
         {#if status}<span class="stamp">{status}</span>{/if}
       </p>
 
-      <h1 class:heavy bind:this={name} aria-label="Harsh Dharnidharka">
+      <h1 bind:this={name} aria-label="Harsh Dharnidharka">
         <span class="line" aria-hidden="true">
           {#each first as ch, i (i)}<span class="ch" style={`--i:${i}`}>{ch}</span>{/each}
         </span>
@@ -223,14 +183,35 @@
 
   .ch {
     display: inline-block;
-    font-variation-settings: 'opsz' 72, 'wght' 430, 'SOFT' 0, 'WONK' 1;
-    transition: font-variation-settings 650ms var(--ease-out) calc(var(--i) * 40ms);
+    text-align: center;
+    font-variation-settings: 'wght' 580;
+    transition: color 650ms var(--ease);
   }
 
-  .heavy .ch { font-variation-settings: 'opsz' 72, 'wght' 800, 'SOFT' 0, 'WONK' 1; }
+  /* While it is still a symbol. */
+  .ch.glyph {
+    font-family: var(--font-mono);
+    font-variation-settings: 'wght' 500;
+    color: var(--accent);
+    transition: none;
+  }
 
-  /* With a pointer, weight is set every frame from script. */
-  .ptr .ch { transition: none; }
+  .ch:nth-child(odd)  { --r: -26deg; }
+  .ch:nth-child(even) { --r: 26deg; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .ch {
+      animation: drop 1000ms cubic-bezier(0.25, 0.9, 0.3, 1) both;
+      animation-delay: calc(750ms + var(--i) * 65ms);
+    }
+  }
+
+  @keyframes drop {
+    0%   { opacity: 0; transform: translateY(-160%) rotate(var(--r)); }
+    55%  { opacity: 1; transform: translateY(9%) rotate(calc(var(--r) * -0.18)); }
+    75%  { transform: translateY(-4%) rotate(calc(var(--r) * 0.06)); }
+    100% { opacity: 1; transform: none; }
+  }
 
   .statement {
     margin-top: var(--s-6);

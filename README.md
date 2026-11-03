@@ -48,6 +48,7 @@ place.
 | `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
+| `src/components/stage/Contact.svelte` | The contact section, including the colour flood. |
 | `src/components/stage/TokenStream.svelte` | The hero sentence, which arrives piece by piece the way a model writes it. Pure CSS; the text is real text from the start. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and card setting. Restyling the site should mean editing this file and nothing else. |
 
@@ -88,31 +89,28 @@ scaling.
 
 ## Motion
 
-Everything animated is behind `prefers-reduced-motion`. With it on: the hero
-sentence is simply there, the name does not change weight, nothing is scanned,
-read or leaned, and the link rows do not fill.
+Everything animated is behind `prefers-reduced-motion`. With it on, the name and
+hero sentence are simply there, and the contact section stays dark, without the
+flood.
 
 What moves:
 
-- **The hero name** is a variable font whose letters get heavier the nearer they
-  are to your pointer, and ease back as it moves on. One wave runs through it on
-  load so the effect announces itself. On touch screens it thickens while you
-  scroll instead.
+- **The name** drops in letter by letter, tilted, and bounces to rest. While each
+  letter falls it is a scrambled symbol, and it resolves into the real letter as
+  it lands. Hover the name and it scrambles and resolves again.
 - **The hero sentence** streams in like a model writing it: small pieces, uneven
   speed, a longer beat after a full stop, the newest piece briefly lit. Long
   words arrive in two halves, as a tokeniser would cut them.
-- **Scanner reveals.** Headings, cards and link rows are uncovered by a thin
-  acid-green line that sweeps down them as they scroll into view
-  (`Scan.svelte`, reusable around anything).
-- **The About text** is read as you scroll: words near a focus line below the
-  middle of the window are bright and tinted, words far from it fade back
-  (`Read.svelte`).
-- **The project cards** lean and fan slightly with how fast you scroll and
-  settle when you stop. On hover each shows an attention map of its description,
-  every word lit in proportion to its weight. Words wrapped in `*stars*` in a
-  project's `blurb` get full weight; the rest get a small uneven one.
+- **The contact section flood.** The section pins to the window; as you scroll,
+  acid green floods up from the bottom of the screen in a growing circle and the
+  content inverts to black on green exactly where the circle reaches (a second,
+  inverted copy of the content is revealed by the circle). When it is complete
+  the green layer becomes the real one, so the links and their hover fill work.
+- **The project cards** show an attention map of their description on hover:
+  every word lit in proportion to its weight, sweeping left to right. Words
+  wrapped in `*stars*` in a project's `blurb` get full weight; the rest get a
+  small uneven one. On touch screens it is shown at rest.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
-- **The contact rows** fill with light from below on hover.
 
 Every one of them is on the page from the start. An entrance is a CSS animation
 that only runs when the page has marked itself as running script (`.js` on

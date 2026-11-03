@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   /* The work: three cards, each a title, a line or two, and a link to
      the code. The detail lives in each project's README.
-
-     Each card is uncovered by a scanner line as it scrolls into view
-     (see Scan.svelte). */
+ */
   import type { Entry } from '../../lib/brain/types';
   import Marker from './Marker.svelte';
-  import Scan from './Scan.svelte';
 
   let { entries }: { entries: Entry[] } = $props();
 
@@ -43,81 +39,34 @@
   }
 
 
-  /* Inertia. The row of cards leans a little with how fast you are
-     scrolling, and each card lags a touch more than the one before,
-     so a quick scroll makes them fan and a stop lets them settle. */
-  let deck: HTMLElement;
-
-  onMount(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const cards = Array.from(deck.querySelectorAll<HTMLElement>('.slot'));
-    let lastY = scrollY;
-    let v = 0;
-    let shown = 0;
-    let raf = 0;
-    let near = false;
-
-    const io = new IntersectionObserver(([entry]) => (near = entry.isIntersecting), {
-      rootMargin: '20% 0px',
-    });
-    io.observe(deck);
-
-    function frame() {
-      const dy = scrollY - lastY;
-      lastY = scrollY;
-      // Velocity, smoothed so the lean eases in and out.
-      v += (dy - v) * 0.2;
-      shown += (v - shown) * 0.25;
-
-      if (near) {
-        const lean = Math.max(-1, Math.min(1, shown / 40));
-        cards.forEach((el, i) => {
-          const lag = 1 + i * 0.35;
-          el.style.transform = `translate3d(0, ${(-lean * 22 * lag).toFixed(2)}px, 0) rotate(${(lean * 1.7 * lag).toFixed(3)}deg)`;
-        });
-      }
-      raf = requestAnimationFrame(frame);
-    }
-
-    raf = requestAnimationFrame(frame);
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-    };
-  });
 </script>
 
 <div class="page work">
-  <Scan>
-    <p class="label">Things I've built</p>
-    <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
-    <p class="sub">Three things I built for the second part.</p>
-  </Scan>
+  <p class="label">Things I've built</p>
+  <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
+  <p class="sub">Three things I built for the second part.</p>
 
-  <ol class="deck" bind:this={deck}>
+  <ol class="deck">
     {#each entries as entry, i (entry.id)}
       <li class="slot">
-        <Scan delay={i * 180} class="fill">
-          <div class="card glass">
-            <div class="top">
-              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <span class="hint" aria-hidden="true">attention</span>
-            </div>
-            <h3>{entry.tagline ?? entry.short}</h3>
-            <p>
-              {#each weigh(entry.blurb ?? entry.plain ?? '') as word, k (k)}<span
-                  class="w"
-                  style={`--w:${word.w}; --k:${k}`}>{word.t}</span
-                >{/each}
-            </p>
-            {#if entry.link}
-              <a href={entry.link} rel="noreferrer noopener">
-                How it's built <span aria-hidden="true">↗</span>
-              </a>
-            {/if}
+        <div class="card glass">
+          <div class="top">
+            <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="hint" aria-hidden="true">attention</span>
           </div>
-        </Scan>
+          <h3>{entry.tagline ?? entry.short}</h3>
+          <p>
+            {#each weigh(entry.blurb ?? entry.plain ?? '') as word, k (k)}<span
+                class="w"
+                style={`--w:${word.w}; --k:${k}`}>{word.t}</span
+              >{/each}
+          </p>
+          {#if entry.link}
+            <a href={entry.link} rel="noreferrer noopener">
+              How it's built <span aria-hidden="true">↗</span>
+            </a>
+          {/if}
+        </div>
       </li>
     {/each}
   </ol>
@@ -143,8 +92,7 @@
     gap: var(--s-7);
   }
 
-  .slot { display: grid; will-change: transform; }
-  .slot :global(.fill) { height: 100%; }
+  .slot { display: grid; }
 
   .card {
     height: 100%;
