@@ -6,7 +6,7 @@
      and the diagram only animates while open, which keeps four
      simultaneous animations off the compositor. */
   import type { Entry } from '../../lib/brain/types';
-  import SystemDiagram from './SystemDiagram.svelte';
+  import Example from './Example.svelte';
   import Reveal from './Reveal.svelte';
   import Glass from './Glass.svelte';
 
@@ -21,19 +21,20 @@
 
 <div class="work page">
   <Reveal>
-    <header class="head">
+    <header class="head" data-quiet>
       <p class="label">
         <span class="bar" aria-hidden="true"></span>
         Things I've built
       </p>
-      <h2>Three things I've built. Open one to watch it work.</h2>
+      <h2>AI works in the demo. Then real people use it.</h2>
+      <p class="sub">Three things I built for the second part. Open one to see it in action.</p>
     </header>
   </Reveal>
 
   <ol class="rows">
     {#each entries as entry, i (entry.id)}
       {@const open = openId === entry.id}
-      <li class:open>
+      <li class:open data-form={entry.form}>
         <Reveal delay={i * 70} y={26}>
           <Glass class="row">
           <h3>
@@ -57,20 +58,22 @@
           </h3>
 
           <div class="panel" id={`panel-${entry.id}`} hidden={!open}>
-            <p class="plain">{entry.plain}</p>
+            <div class="story">
+              <p class="plain">{entry.plain}</p>
 
-            {#if entry.flow?.length}
-              <div class="diagram-slot">
-                <SystemDiagram stages={entry.flow} note={entry.flowNote} active={open} />
+              <!-- The site tells the story; the repo holds the detail. -->
+              {#if entry.link}
+                <a class="more" href={entry.link} rel="noreferrer noopener">
+                  How it's built
+                  <span aria-hidden="true">↗</span>
+                </a>
+              {/if}
+            </div>
+
+            {#if entry.example}
+              <div class="example-slot">
+                <Example example={entry.example} note={entry.note} active={open} />
               </div>
-            {/if}
-
-            <!-- The site tells the story; the repo holds the detail. -->
-            {#if entry.link}
-              <a class="more" href={entry.link} rel="noreferrer noopener">
-                How it's built
-                <span aria-hidden="true">↗</span>
-              </a>
             {/if}
           </div>
           </Glass>
@@ -96,6 +99,13 @@
     font-size: var(--t-2xl);
     font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400;
     max-width: 24ch;
+  }
+
+  .sub {
+    margin-top: var(--s-4);
+    max-width: 44ch;
+    font-size: var(--t-lg);
+    color: var(--ink-soft);
   }
 
   .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
@@ -177,25 +187,32 @@
 
   .panel[hidden] { display: none; }
 
-  .plain {
-    max-width: 46ch;
-    font-size: var(--t-lg);
-    line-height: var(--leading-snug);
-    color: var(--ink);
+  /* Story on the left, the real thing on the right. Stacks on a
+     narrow screen. */
+  .panel {
+    display: grid;
+    gap: var(--s-6);
     margin-left: calc(2.5rem + var(--s-3));
   }
 
-  .diagram-slot {
-    margin-top: var(--s-7);
-    margin-left: calc(2.5rem + var(--s-3));
+  .plain {
+    max-width: 40ch;
+    font-size: var(--t-lg);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .example-slot { min-width: 0; }
+
+  @media (width >= 60rem) {
+    .panel { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: var(--s-8); }
   }
 
   .more {
     display: inline-flex;
     align-items: center;
     gap: var(--s-2);
-    margin-top: var(--s-6);
-    margin-left: calc(2.5rem + var(--s-3));
+    margin-top: var(--s-5);
     min-height: var(--tap);
     font-family: var(--font-mono);
     font-size: var(--t-xs);
@@ -213,6 +230,6 @@
   @media (width < 40rem) {
     button { grid-template-columns: 2rem 1fr 1.25rem; }
     .title { font-size: var(--t-lg); }
-    .plain, .diagram-slot, .more { margin-left: 0; }
+    .panel { margin-left: 0; }
   }
 </style>

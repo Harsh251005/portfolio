@@ -50,12 +50,12 @@
     </h1>
 
     <p class="statement">
-      I build software that makes decisions on its own —
-      <em>and then I make sure it makes the right ones.</em>
+      I build AI that answers phones, reads documents and fixes its own code —
+      <em>and I make sure it holds up.</em>
     </p>
 
     <a class="cue" href="#work">
-      <span>See what that means</span>
+      <span>See what I've built</span>
       <span class="cue__line" aria-hidden="true"></span>
     </a>
   </div>

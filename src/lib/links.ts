@@ -13,7 +13,7 @@ export const OWNER = {
   /** Shown on the first screen. Change or remove when it stops being true. */
   status: 'Open to work',
   /** Used for the site title and social cards. */
-  tagline: 'I build software that makes decisions on its own.',
+  tagline: 'I build AI that answers phones, reads documents and fixes its own code.',
 };
 
 export interface Link {

@@ -82,12 +82,33 @@ const knowledge = defineCollection({
       .optional(),
     /** quote: attribution, if any. */
     attribution: z.string().optional(),
-    /** project: the stages a request passes through, in order.
-     *  Rendered as a live animated diagram — a non-technical visitor
-     *  watches the flow rather than reading about it. 3-5 stages. */
-    flow: z.array(z.string()).optional(),
-    /** project: the single sentence shown under the diagram. */
-    flowNote: z.string().optional(),
+    /** project: a small, honest picture of the thing working — a call,
+     *  an answer with its source, a retry log. Always an illustration,
+     *  and says so in `caption`. Replaces a generic stage diagram. */
+    example: z
+      .object({
+        kind: z.enum(['call', 'answer', 'log']),
+        caption: z.string(),
+        lines: z.array(
+          z.object({
+            who: z.string(),
+            text: z.string(),
+            /** English meaning, when the line is in another language. */
+            gloss: z.string().optional(),
+            /** A small chip: a page number, an outcome. */
+            tag: z.string().optional(),
+            /** True for the visitor's side of a conversation. */
+            me: z.boolean().default(false),
+            state: z.enum(['ok', 'fail', 'stop']).optional(),
+          }),
+        ),
+      })
+      .optional(),
+    /** project: the shape the background ribbon takes while this
+     *  project is on screen. Unset means calm. */
+    form: z.string().optional(),
+    /** project: the single sentence shown under the example. */
+    note: z.string().optional(),
     /** Excluded from search engines and /everything when true. */
     hidden: z.boolean().default(false),
   }),

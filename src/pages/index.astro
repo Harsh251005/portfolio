@@ -12,7 +12,6 @@ import { PORTRAIT } from '../lib/portrait';
 
 import Ribbon from '../components/stage/Ribbon.svelte';
 import Hero from '../components/stage/Hero.svelte';
-import Problem from '../components/stage/Problem.svelte';
 import Work from '../components/stage/Work.svelte';
 import Approach from '../components/stage/Approach.svelte';
 import About from '../components/stage/About.svelte';
@@ -25,11 +24,9 @@ import { OWNER, LINKS } from '../lib/links';
 const entries = await loadEntries();
 const projects = entries.filter((entry) => entry.card === 'project');
 const howIWork = entries.find((entry) => entry.id === 'how-i-work')!;
-const problem = entries.find((entry) => entry.id === 'the-problem')!;
 
 const SECTIONS = [
   { id: 'top', label: 'Harsh Dharnidharka' },
-  { id: 'what', label: 'The problem' },
   { id: 'work', label: "Things I've built" },
   { id: 'approach', label: 'How I work' },
   { id: 'about', label: 'The person' },
@@ -46,11 +43,7 @@ const SECTIONS = [
     <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
   </Band>
 
-  <Band tone="soft" id="what" quiet>
-    <Problem client:visible entry={problem} />
-  </Band>
-
-  <Band tone="deep" id="work" form="voice">
+  <Band tone="deep" id="work">
     <Work client:visible entries={projects} />
   </Band>
 

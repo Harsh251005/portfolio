@@ -41,7 +41,7 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain` → `flow`, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
+| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain` → `example`, plus a `link` to the repo; `form` picks the ribbon's shape), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |

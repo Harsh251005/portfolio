@@ -6,18 +6,18 @@ group: how-i-think
 card: list
 order: 1
 items:
-  - label: "Plan until the plan is boring"
-    body: "Most of the cost of building something is deciding what to build. An hour arguing about the design beats a week undoing the wrong one."
-  - label: "Build the smallest thing that works"
-    body: "Not a mockup. The smallest version that really works from start to finish. Then grow it."
-  - label: "Know how you'll spot it breaking"
-    body: "Before the clever part, build the thing that tells you when the clever part has stopped working."
-  - label: "Write down why"
-    body: "Six weeks later nobody remembers why a decision was made, me included. Code is easy to rewrite. The reasoning isn't."
+  - label: "It says when it doesn't know"
+    body: "The document reader gives a page number, or says it couldn't find the answer. It never fills the gap with a guess."
+  - label: "It knows when to stop"
+    body: "The code fixer gets five tries. A system left alone will keep paying to repeat the same mistake."
+  - label: "It checks itself"
+    body: "Questions with known answers run after every change. If the answers get worse, the change is rejected."
+  - label: "A person can step in"
+    body: "Where a failure costs someone an appointment or money, a human has to be able to take over. The clinic sees every booking the receptionist makes."
 followups: ["working-with-me", "the-problem"]
 ---
 
-Four habits that took me longer to learn than they should have:
+Four things I make sure of in everything I build:
 
 :::more[And four things I won't build]
 - **Something that hides what it is.** If a machine is talking to you, you

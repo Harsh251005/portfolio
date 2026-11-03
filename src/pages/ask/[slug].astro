@@ -8,7 +8,7 @@ import Base from '../../layouts/Base.astro';
 import Footer from '../../components/Footer.astro';
 import StaticAnswer from '../../components/StaticAnswer.astro';
 import Ribbon from '../../components/stage/Ribbon.svelte';
-import SystemDiagram from '../../components/stage/SystemDiagram.svelte';
+import Example from '../../components/stage/Example.svelte';
 import { loadEntries, GROUP_LABELS } from '../../lib/knowledge';
 import { OWNER } from '../../lib/links';
 
@@ -53,9 +53,9 @@ const description = (entry.moment ?? entry.plain ?? entry.text).slice(0, 155).tr
       <article class="glass panel">
         <StaticAnswer entry={entry} />
 
-        {entry.flow?.length && (
+        {entry.example && (
           <div class="diagram">
-            <SystemDiagram client:visible stages={entry.flow} note={entry.flowNote} active={true} />
+            <Example example={entry.example} note={entry.note} active={true} />
           </div>
         )}
 

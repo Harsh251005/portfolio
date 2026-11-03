@@ -18,8 +18,8 @@
 <div class="page wrap">
   <div class="sticky">
     <p class="label"><span class="bar" aria-hidden="true"></span>How I work</p>
-    <TextReveal text="Four habits that took too long to learn." tag="h2" />
-    <p class="sub">Nothing exotic. They are just the ones that survived contact with something breaking.</p>
+    <TextReveal text="Four things I make sure of." tag="h2" />
+    <p class="sub">You can see each one in the projects above.</p>
   </div>
 
   <ol class="list">
@@ -55,7 +55,7 @@
 
   .sub {
     margin-top: var(--s-4);
-    font-size: var(--t-sm);
+    font-size: var(--t-base);
     color: var(--ink-soft);
     max-width: 32ch;
   }
@@ -90,7 +90,7 @@
     letter-spacing: -0.01em;
   }
 
-  p { margin-top: var(--s-2); font-size: var(--t-sm); color: var(--ink-soft); max-width: 46ch; }
+  p { margin-top: var(--s-2); font-size: var(--t-base); color: var(--ink-soft); max-width: 48ch; }
 
   @media (width < 40rem) {
     li { grid-template-columns: 3.5rem 1fr; }
