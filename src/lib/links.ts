@@ -22,6 +22,9 @@ export interface Link {
   external?: boolean;
 }
 
+/** The resume PDF, served from public/. Replace the file to update it. */
+export const RESUME = '/Harsh_Dharnidharka_Resume.pdf';
+
 export const LINKS: Link[] = [
   { label: 'Email', href: 'mailto:dharnidharkaharsh@gmail.com' },
   { label: 'GitHub', href: 'https://github.com/Harsh251005', external: true },
@@ -30,6 +33,7 @@ export const LINKS: Link[] = [
     href: 'https://www.linkedin.com/in/harsh-dharnidharka',
     external: true,
   },
+  { label: 'Resume', href: RESUME },
 ];
 
 /** GitHub handle, used by anything that reads his public activity. */

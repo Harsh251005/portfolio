@@ -11,7 +11,8 @@
      script, and the scramble swaps the text only after that, so
      without script, or with reduced motion, the name is just there. */
   import { onMount } from 'svelte';
-  import TokenStream from './TokenStream.svelte';
+  import Marker from './Marker.svelte';
+  import { RESUME } from '../../lib/links';
 
   interface Props {
     role: string;
@@ -103,16 +104,14 @@
       </h1>
 
       <p class="statement">
-        <TokenStream
-          start={700}
-          parts={[
-            { text: 'I build AI that answers phones, reads documents and fixes its own code. ' },
-            { text: 'And I make sure it holds up.', mark: true },
-          ]}
-        />
+        I build AI that answers phones, reads documents and fixes its own code.
+        <Marker delay={1900}>And I make sure it holds up.</Marker>
       </p>
 
-      <a class="cue" href="#work">See what I've built <span aria-hidden="true">↓</span></a>
+      <div class="cues">
+        <a class="cue" href="#work">See what I've built <span aria-hidden="true">↓</span></a>
+        <a class="cue" href={RESUME}>Resume <span aria-hidden="true">↗</span></a>
+      </div>
     </div>
 
   </div>
@@ -187,6 +186,18 @@
     }
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .statement,
+    :global(.js) .cues {
+      animation: settle 1000ms var(--ease-out) 1100ms both;
+    }
+  }
+
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
   @keyframes drop {
     0%   { opacity: 0; transform: translateY(-160%) rotate(var(--r)); }
     55%  { opacity: 1; transform: translateY(9%) rotate(calc(var(--r) * -0.18)); }
@@ -204,8 +215,14 @@
     color: var(--ink-soft);
   }
 
-  .cue {
+  .cues {
     margin-top: var(--s-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-6);
+  }
+
+  .cue {
     display: inline-flex;
     align-items: center;
     gap: var(--s-2);

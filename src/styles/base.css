@@ -149,3 +149,19 @@ a.touch {
   border: 1.5px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
+
+/* ---------------------------------------------------------------
+   The quiet entrance. See src/lib/motion/reveal.ts.
+   --------------------------------------------------------------- */
+
+.reveal-armed [data-reveal] {
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
+  transition-delay: calc(var(--d, 0) * 110ms);
+}
+
+.reveal-armed [data-reveal]:not(.in) {
+  opacity: 0;
+  transform: translateY(22px);
+}

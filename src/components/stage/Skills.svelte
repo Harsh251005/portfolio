@@ -375,7 +375,7 @@
   <div class="stage">
     <div class="page inner">
       <p class="label">Skills</p>
-      <h2>What I work with, <Marker>mapped by meaning.</Marker></h2>
+      <h2>What I work with, <Marker>and what goes together.</Marker></h2>
       <p class="sub">Close together means used together. Point at a skill to see its neighbours.</p>
 
       <div class="map" bind:this={map}>
@@ -485,7 +485,7 @@
 
   /* ---------- the hold ---------- */
 
-  .skills:global(.pinned) { height: 260vh; }
+  .skills:global(.pinned) { height: 205vh; }
 
   .skills:global(.pinned) .stage {
     position: sticky;

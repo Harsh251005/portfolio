@@ -512,7 +512,7 @@
 
   /* ---------- the hold ---------- */
 
-  .work:global(.pinned) { height: 280vh; }
+  .work:global(.pinned) { height: 220vh; }
 
   .work:global(.pinned) .stage {
     position: sticky;

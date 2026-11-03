@@ -17,6 +17,8 @@ Done: the About copy was written from your own answers on 2026-11-03.
   the habit had won" are inferred from your resume, not your words.
 - **The skills map:** the Voice cluster comes from your clinic project, not your
   resume. The grouping is hand-made, so don't describe it as real embeddings.
+- **The resume PDF** in `public/` has no phone number. It still mentions karate,
+  which you took off the site.
 - **"Open to work"** on the first screen (`status` in `src/lib/links.ts`).
   Remove it once you've got a job.
 

@@ -1,13 +1,8 @@
 <script lang="ts">
   /* Education as a staircase: school, junior college, degree, and an
      empty step for whatever comes next. Readable at a glance, because
-     higher means later. Each step is lighter than the one before, so
-     the climb is also a walk from dark into light.
-
-     The steps rise out of the floor as you scroll, and sink back if you
-     scroll up. They are fully built by default (--u is 1 in the CSS);
-     script only takes them down once it can bring them back. */
-  import { onMount } from 'svelte';
+     higher means later. Each step is lighter than the one before. */
+  import { reveal } from '../../lib/motion/reveal';
   import Marker from './Marker.svelte';
 
   const STEPS = [
@@ -15,77 +10,15 @@
     { when: '2021 – 2023', what: 'Junior college · Commerce', where: 'Thakur College of Science and Commerce', place: 'Maharashtra Board' },
     { when: '2023 – 2026', what: 'B.Sc. Information Technology', where: 'Thakur Shyamnarayan Degree College', place: 'University of Mumbai' },
   ];
-
-  let root: HTMLElement;
-
-  onMount(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const clamp = (x: number) => Math.min(1, Math.max(0, x));
-    const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
-    const cols = Array.from(root.querySelectorAll<HTMLElement>('.col'));
-    const floor = root.querySelector<HTMLElement>('.stairs')!;
-    const target = cols.map(() => 0);
-    const current = cols.map(() => 0);
-
-    const measure = () => {
-      const wide = innerWidth >= 960;
-      const p = clamp((innerHeight * 0.95 - floor.getBoundingClientRect().top) / (innerHeight * 0.55));
-      cols.forEach((c, i) => {
-        target[i] = wide
-          ? clamp((p - i * 0.16) / 0.52)
-          : clamp((innerHeight * 0.98 - c.getBoundingClientRect().top) / (innerHeight * 0.35));
-      });
-    };
-
-    const paint = (i: number) => cols[i].style.setProperty('--u', ease(current[i]).toFixed(4));
-
-    let raf = 0;
-    let last = 0;
-    const tick = (now: number) => {
-      raf = 0;
-      const dt = last ? Math.min(64, now - last) : 16;
-      last = now;
-      const pull = 1 - Math.exp(-dt / 120);
-      let moving = false;
-      cols.forEach((_, i) => {
-        const gap = target[i] - current[i];
-        if (gap === 0) return;
-        current[i] = Math.abs(gap) < 0.0006 ? target[i] : current[i] + gap * pull;
-        paint(i);
-        if (current[i] !== target[i]) moving = true;
-      });
-      if (moving) raf = requestAnimationFrame(tick);
-      else last = 0;
-    };
-    const wake = () => {
-      measure();
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-
-    measure();
-    cols.forEach((_, i) => {
-      current[i] = target[i];
-      paint(i);
-    });
-
-    addEventListener('scroll', wake, { passive: true });
-    addEventListener('resize', wake, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      removeEventListener('scroll', wake);
-      removeEventListener('resize', wake);
-    };
-  });
 </script>
 
-<div class="page edu" bind:this={root}>
+<div class="page edu" use:reveal>
   <p class="label">Education</p>
   <h2>Three steps up. <Marker>The next one's open.</Marker></h2>
 
   <ol class="stairs">
     {#each STEPS as step, i (step.where)}
-      <li class="col" style={`--i:${i}`}>
+      <li class="col" data-reveal style={`--d:${i}`}>
         <div class="step">
           <p class="when">{step.when}</p>
           <p class="where">{step.where}</p>
@@ -93,7 +26,7 @@
         </div>
       </li>
     {/each}
-    <li class="col next" style="--i:3">
+    <li class="col next" data-reveal style="--d:3">
       <a class="step" href="#contact">
         <p class="when">Next</p>
         <p class="where">Your team? <span aria-hidden="true">↓</span></p>
@@ -130,8 +63,6 @@
     padding: var(--s-5);
     border-top: 3px solid var(--accent);
     color: var(--ink);
-    transform: translateX(calc((var(--u, 1) - 1) * 100%));
-    will-change: transform;
   }
 
   /* Night lifting as the climb goes up. */
@@ -186,11 +117,5 @@
     .col:nth-child(2) { height: 60%; }
     .col:nth-child(3) { height: 80%; }
     .col:nth-child(4) { height: 100%; }
-
-    .step { transform: translateY(calc((1 - var(--u, 1)) * 100%)); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .step { transform: none; }
   }
 </style>

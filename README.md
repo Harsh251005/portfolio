@@ -46,7 +46,6 @@ place.
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
-| `src/components/stage/TokenStream.svelte` | The hero sentence, which arrives piece by piece the way a model writes it. Pure CSS; the text is real text from the start. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and card setting. Restyling the site should mean editing this file and nothing else. |
 
 **Where detail lives.** The site tells each project as a short story anyone can
@@ -90,9 +89,7 @@ What moves:
 - **The name** drops in letter by letter, tilted, and bounces to rest. While each
   letter falls it is a scrambled symbol, and it resolves into the real letter as
   it lands. Hover the name and it scrambles and resolves again.
-- **The hero sentence** streams in like a model writing it: small pieces, uneven
-  speed, a longer beat after a full stop, the newest piece briefly lit. Long
-  words arrive in two halves, as a tokeniser would cut them.
+- **The hero sentence** settles in after the name lands.
 - **The project cards** start as one face-down dark deck. Scrolling opens it: on a
   wide screen the section holds while the cards lift, turn over and settle into
   three columns, one after another. On a narrow or short screen there is no hold
@@ -103,19 +100,22 @@ What moves:
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
   the card tilts toward the pointer with moonlight along its edge.
-- **The About section** inks its headline in: a wave of variable-font weight runs
-  through it, and letters near the pointer swell afterwards. Each column then rises, a moonlit rule draws across it, and
-  its words come into focus.
+- **About and Education** fade and rise once as they come into view
+  (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
 - **The skills map** starts as noise and scrolling pulls the dots into labelled
   clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest
   neighbours. The grouping is hand-made from the resume and the voice project, not computed by a model.
-- **The education staircase** rises out of the floor as you scroll, each step
-  lighter than the last, and sinks back if you scroll up (`Education.svelte`).
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 
 Every one of them is on the page from the start. An entrance is a CSS animation
 that only runs when the page has marked itself as running script (`.js` on
 `<html>`), so without script, or with reduced motion, nothing is hidden.
+
+## The resume
+
+`public/Harsh_Dharnidharka_Resume.pdf` is served as-is and is public once deployed.
+This copy has the phone number removed. Replace the file to update it, and check
+any new copy for personal details first.
 
 ## Content that isn't there on purpose
 
