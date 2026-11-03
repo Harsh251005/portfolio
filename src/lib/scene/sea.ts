@@ -41,7 +41,7 @@ const rng = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0
 /** Where the moon sits, in screen pixels. */
 function moonSpot(w: number, h: number) {
   const narrow = w < h;
-  return { x: w * (narrow ? 0.8 : 0.885), y: h * HORIZON * (narrow ? 0.76 : 0.42), r: Math.min(w, h) * (narrow ? 0.07 : 0.062) };
+  return { x: w * (narrow ? 0.8 : 0.885), y: h * HORIZON * (narrow ? 0.88 : 0.42), r: Math.min(w, h) * (narrow ? 0.07 : 0.062) };
 }
 
 /* ---------- the water ---------- */
