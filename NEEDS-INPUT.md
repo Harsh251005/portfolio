@@ -11,8 +11,7 @@ Done: the About copy was written from your own answers on 2026-11-03.
 
 ## 2. One file to drop in
 
-**A photo of you** → `src/images/portrait.jpg`. The build finds it, sizes it
-and places it.
+(The photo was removed from the site on 2026-11-03, on your call.)
 
 ## 3. Check these are yours
 

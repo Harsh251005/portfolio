@@ -1,5 +1,5 @@
 <script lang="ts">
-  /* The first screen: who, what, and a face.
+  /* The first screen: who, and what.
 
      The name arrives two ways at once. Each letter drops in from above,
      tilted, and bounces to rest; while it falls it is a scrambled
@@ -12,16 +12,14 @@
      without script, or with reduced motion, the name is just there. */
   import { onMount } from 'svelte';
   import TokenStream from './TokenStream.svelte';
-  import Portrait from './Portrait.svelte';
 
   interface Props {
     role: string;
     location: string;
     status?: string;
-    portrait?: { src: string; width: number; height: number } | null;
   }
 
-  const { role, location, status, portrait = null }: Props = $props();
+  const { role, location, status }: Props = $props();
 
   const first = 'Harsh'.split('');
   const last = 'Dharnidharka'.split('');
@@ -86,7 +84,7 @@
 </script>
 
 <section class="hero" id="main">
-  <div class="page grid">
+  <div class="page">
     <div class="copy">
       <p class="eyebrow">
         <span>{role}</span>
@@ -117,14 +115,6 @@
       <a class="cue" href="#work">See what I've built <span aria-hidden="true">↓</span></a>
     </div>
 
-    <figure class="portrait">
-      {#if portrait}
-        <Portrait src={portrait.src} width={portrait.width} height={portrait.height} alt="Harsh Dharnidharka" />
-      {:else}
-        <!-- No photo yet. Drop one at src/images/portrait.jpg. -->
-        <div class="placeholder"><span>photo<br />goes here</span></div>
-      {/if}
-    </figure>
   </div>
 </section>
 
@@ -135,8 +125,6 @@
     align-items: center;
     padding-block: clamp(5rem, 12vh, 8rem) var(--s-8);
   }
-
-  .grid { display: grid; gap: var(--s-8); align-items: center; }
 
   .eyebrow {
     display: flex;
@@ -232,25 +220,7 @@
 
   .cue:hover { color: var(--accent); }
 
-  .portrait { margin: 0; position: relative; justify-self: start; width: min(100%, 20rem); }
-
-  .placeholder {
-    aspect-ratio: 4 / 5;
-    border: 1.5px solid var(--rule);
-    border-radius: var(--glass-radius);
-    display: grid;
-    place-items: center;
-    text-align: center;
-    font-size: var(--t-sm);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    background: repeating-linear-gradient(135deg, transparent 0 10px, var(--rule-soft) 10px 11px);
-  }
-
   @media (width >= 60rem) {
-    .grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.8fr); }
-    .portrait { justify-self: end; }
     .statement { font-size: var(--t-2xl); max-width: 26ch; }
   }
 </style>

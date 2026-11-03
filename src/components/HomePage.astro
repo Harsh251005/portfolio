@@ -5,7 +5,6 @@
 import Base from '../layouts/Base.astro';
 import Band from './stage/Band.astro';
 import Footer from './Footer.astro';
-import { PORTRAIT } from '../lib/portrait';
 
 import SeaScene from './stage/SeaScene.svelte';
 import Hero from './stage/Hero.svelte';
@@ -27,7 +26,7 @@ const projects = entries.filter((entry) => entry.card === 'project');
   <SeaScene client:load />
 
   <Band id="top" flush>
-    <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} portrait={PORTRAIT} />
+    <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
   </Band>
 
   <Band id="about">

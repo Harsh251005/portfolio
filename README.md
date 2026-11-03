@@ -44,7 +44,6 @@ place.
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
-| `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
 | `src/components/stage/TokenStream.svelte` | The hero sentence, which arrives piece by piece the way a model writes it. Pure CSS; the text is real text from the start. |
@@ -56,13 +55,6 @@ the "How it's built" link. Don't add architecture to the site; improve the READM
 
 Each piece is meant to be replaceable on its own. Deleting a knowledge file or a
 whole section shouldn't require touching anything else.
-
-## The photo
-
-Drop a file at `src/images/portrait.jpg` — `.jpeg`, `.png` and `.webp` also
-work. The build finds it, sizes it, hashes it and puts it on the About section.
-No other file changes. Remove it and the section falls back to a drawn frame
-rather than a gap.
 
 ## The share card
 
@@ -88,7 +80,7 @@ What moves:
 
 - **The moonlit sea** sits fixed behind the whole page (`src/lib/scene/sea.ts`). The
   water is a WebGL shader, so the moon's path comes from real reflection; the sky is
-  a 2D canvas with stars, clouds, a boat and the odd shooting star. The path leans
+  a 2D canvas with stars, clouds, a sailing boat and the odd shooting star. The path leans
   toward the cursor. Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
@@ -111,9 +103,6 @@ What moves:
 - **The About section** inks its headline in: a wave of variable-font weight runs
   through it, and letters near the pointer swell afterwards. Each column then rises, a lime rule draws across it, and
   its words come into focus.
-- **The photo** arrives as a grid of lime symbols picked by the photo's brightness,
-  then a wave resolves it into the real image (`Portrait.svelte`). The same symbols
-  appear under the pointer.
 - **The skills map** starts as noise and scrolling pulls the dots into labelled
   clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest
   neighbours. The grouping is hand-made from the resume and the voice project, not computed by a model.
