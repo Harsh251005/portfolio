@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page on neutral black with light cards and one acid-green accent.
+A static site. One scrolling page over a moonlit sea, with light cards and one acid-green accent.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
 
@@ -86,6 +86,12 @@ hero sentence are simply there.
 
 What moves:
 
+- **The moonlit sea** sits fixed behind the whole page (`src/lib/scene/sea.ts`). The
+  water is a WebGL shader, so the moon's path comes from real reflection; the sky is
+  a 2D canvas with stars, clouds, a boat and the odd shooting star. The path leans
+  toward the cursor. Scrolling never changes the scene. Colours live in one palette
+  (`NIGHT`). With reduced motion it is a still frame, and without script the page
+  stays plain dark.
 - **The name** drops in letter by letter, tilted, and bounces to rest. While each
   letter falls it is a scrambled symbol, and it resolves into the real letter as
   it lands. Hover the name and it scrambles and resolves again.
