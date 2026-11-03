@@ -89,21 +89,28 @@ scaling.
 ## Motion
 
 Everything animated is behind `prefers-reduced-motion`. With it on: the hero
-sentence is simply there, the name does not change weight, the cards and
-highlighter marks are static, and the link rows do not fill.
+sentence is simply there, the name does not change weight, nothing is scanned,
+read or leaned, and the link rows do not fill.
 
 What moves:
 
+- **The hero name** is a variable font whose letters get heavier the nearer they
+  are to your pointer, and ease back as it moves on. One wave runs through it on
+  load so the effect announces itself. On touch screens it thickens while you
+  scroll instead.
 - **The hero sentence** streams in like a model writing it: small pieces, uneven
   speed, a longer beat after a full stop, the newest piece briefly lit. Long
   words arrive in two halves, as a tokeniser would cut them.
-- **The name** gets heavier, letter by letter, while you scroll, and settles
-  when you stop (a variable font, so the weight itself animates).
-- **The project cards** are dealt onto the page in turn, and on hover each shows
-  an attention map of its description: every word lights in proportion to its
-  weight, sweeping left to right. Words wrapped in `*stars*` in a project's
-  `blurb` get full weight; the rest get a small uneven one. On touch screens it
-  is shown at rest, since there is no hover.
+- **Scanner reveals.** Headings, cards and link rows are uncovered by a thin
+  acid-green line that sweeps down them as they scroll into view
+  (`Scan.svelte`, reusable around anything).
+- **The About text** is read as you scroll: words near a focus line below the
+  middle of the window are bright and tinted, words far from it fade back
+  (`Read.svelte`).
+- **The project cards** lean and fan slightly with how fast you scroll and
+  settle when you stop. On hover each shows an attention map of its description,
+  every word lit in proportion to its weight. Words wrapped in `*stars*` in a
+  project's `blurb` get full weight; the rest get a small uneven one.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 - **The contact rows** fill with light from below on hover.
 

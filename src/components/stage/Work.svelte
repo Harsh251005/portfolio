@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   /* The work: three cards, each a title, a line or two, and a link to
      the code. The detail lives in each project's README.
 
@@ -41,6 +42,50 @@
     return out;
   }
 
+
+  /* Inertia. The row of cards leans a little with how fast you are
+     scrolling, and each card lags a touch more than the one before,
+     so a quick scroll makes them fan and a stop lets them settle. */
+  let deck: HTMLElement;
+
+  onMount(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const cards = Array.from(deck.querySelectorAll<HTMLElement>('.slot'));
+    let lastY = scrollY;
+    let v = 0;
+    let shown = 0;
+    let raf = 0;
+    let near = false;
+
+    const io = new IntersectionObserver(([entry]) => (near = entry.isIntersecting), {
+      rootMargin: '20% 0px',
+    });
+    io.observe(deck);
+
+    function frame() {
+      const dy = scrollY - lastY;
+      lastY = scrollY;
+      // Velocity, smoothed so the lean eases in and out.
+      v += (dy - v) * 0.2;
+      shown += (v - shown) * 0.25;
+
+      if (near) {
+        const lean = Math.max(-1, Math.min(1, shown / 40));
+        cards.forEach((el, i) => {
+          const lag = 1 + i * 0.35;
+          el.style.transform = `translate3d(0, ${(-lean * 22 * lag).toFixed(2)}px, 0) rotate(${(lean * 1.7 * lag).toFixed(3)}deg)`;
+        });
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  });
 </script>
 
 <div class="page work">
@@ -50,7 +95,7 @@
     <p class="sub">Three things I built for the second part.</p>
   </Scan>
 
-  <ol class="deck">
+  <ol class="deck" bind:this={deck}>
     {#each entries as entry, i (entry.id)}
       <li class="slot">
         <Scan delay={i * 180} class="fill">
@@ -98,7 +143,7 @@
     gap: var(--s-7);
   }
 
-  .slot { display: grid; }
+  .slot { display: grid; will-change: transform; }
   .slot :global(.fill) { height: 100%; }
 
   .card {
