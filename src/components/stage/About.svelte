@@ -3,6 +3,7 @@
      lives in the hero now; this is just the story. */
   import Marker from './Marker.svelte';
   import Scan from './Scan.svelte';
+  import Read from './Read.svelte';
 </script>
 
 <div class="page about">
@@ -12,19 +13,16 @@
     <h2>I didn't pick computers. <Marker>My school did.</Marker></h2>
   </Scan>
 
-  <Scan delay={120}><div class="cols">
-    <p>
-      Information Technology was a compulsory subject in 11th class, and it
-      pulled me into web development. I wasn't serious about it. I kept trying
-      things, breaking them, and working out why. A few months ago I pointed
-      all of that at AI, and for the first time I got serious.
-    </p>
-    <p>
-      I finished my degree in Information Technology in 2026. Away from the
-      keyboard I play cricket, and I love it. I try to get a little better at
-      something every day by learning one small new thing.
-    </p>
-  </div></Scan>
+  <Scan delay={120}>
+    <div class="cols">
+      <Read
+        text="Information Technology was a compulsory subject in 11th class, and it pulled me into web development. I wasn't serious about it. I kept trying things, breaking them, and working out why. A few months ago I pointed all of that at AI, and for the first time I got serious."
+      />
+      <Read
+        text="I finished my degree in Information Technology in 2026. Away from the keyboard I play cricket, and I love it. I try to get a little better at something every day by learning one small new thing."
+      />
+    </div>
+  </Scan>
 
   <a class="more" href="/ask/about-me">More about me <span aria-hidden="true">→</span></a>
 </div>
@@ -50,7 +48,7 @@
     color: var(--ink-soft);
   }
 
-  .cols p { max-width: 36ch; }
+  .cols :global(p) { max-width: 36ch; }
 
   .more {
     display: inline-flex;
