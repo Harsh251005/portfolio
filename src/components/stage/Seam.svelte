@@ -63,8 +63,8 @@
   <span class="line red" bind:this={trail}></span>
   <svg class="ball" bind:this={ball} viewBox="0 0 24 24">
     <circle cx="12" cy="12" r="11" fill="var(--accent)" />
-    <path d="M3.4 8.2 C9 13.6 15 13.6 20.6 8.2" fill="none" stroke="var(--paper-raised)" stroke-width="1.1" stroke-dasharray="1.7 1.5" />
-    <path d="M2.7 11.2 C8.8 16.8 15.2 16.8 21.3 11.2" fill="none" stroke="var(--paper-raised)" stroke-width="1.1" stroke-dasharray="1.7 1.5" />
+    <path d="M3.4 8.2 C9 13.6 15 13.6 20.6 8.2" fill="none" stroke="var(--accent-ink)" stroke-width="1.1" stroke-dasharray="1.7 1.5" />
+    <path d="M2.7 11.2 C8.8 16.8 15.2 16.8 21.3 11.2" fill="none" stroke="var(--accent-ink)" stroke-width="1.1" stroke-dasharray="1.7 1.5" />
   </svg>
 </div>
 

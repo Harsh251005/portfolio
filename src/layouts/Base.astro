@@ -9,14 +9,17 @@ interface Props {
   description: string;
   /** Path only, e.g. "/everything". Joined to `site` for canonical. */
   path?: string;
+  /** A design direction under review (data-theme on <html>). */
+  theme?: 'a' | 'b' | 'c';
 }
 
-const { title, description, path = '/' } = Astro.props;
+const { title, description, path = '/', theme } = Astro.props;
+const THEME_COLOUR = { a: '#121211', b: '#0b1713', c: '#eceff3' } as const;
 const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +36,8 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {/* Matches the page, so the browser chrome does not flash. */}
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content={theme ? THEME_COLOUR[theme] : '#f3eee4'} />
+    {theme && <meta name="robots" content="noindex, nofollow" />}
 
   </head>
 

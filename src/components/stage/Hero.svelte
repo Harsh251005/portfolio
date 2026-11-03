@@ -70,7 +70,6 @@
     </div>
 
     <figure class="portrait">
-      <span class="tape" aria-hidden="true"></span>
       <div class="frame">
         {#if portrait}
           <img
@@ -104,8 +103,8 @@
     align-items: center;
     gap: var(--s-3);
     flex-wrap: wrap;
-    font-size: var(--t-sm);
-    font-variation-settings: 'wght' 600;
+    font-family: var(--font-label);
+    font-size: var(--t-xs);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -113,7 +112,7 @@
 
   .dot { width: 0.3rem; height: 0.3rem; border-radius: 50%; background: var(--accent); }
 
-  /* A rubber stamp, slightly off-square. */
+  /* A small status tag. */
   .stamp {
     margin-left: var(--s-2);
     padding: 0.2rem 0.6rem;
@@ -121,13 +120,12 @@
     border-radius: 3px;
     color: var(--accent);
     font-size: var(--t-xs);
-    transform: rotate(-3deg);
   }
 
   h1 {
     margin-top: var(--s-5);
     font-family: var(--font-display);
-    font-size: clamp(2.75rem, 5.2vw + 1.6rem, 7rem);
+    font-size: calc(clamp(2.75rem, 5.2vw + 1.6rem, 7rem) * var(--hero-scale));
     line-height: 0.92;
     letter-spacing: -0.03em;
     color: var(--ink);
@@ -175,11 +173,10 @@
   .frame {
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 1.5px solid var(--ink);
-    border-radius: 6px;
+    border: 1.5px solid var(--glass-border);
+    border-radius: var(--glass-radius);
     background: var(--paper-sunk);
     box-shadow: var(--shadow-hard);
-    transform: rotate(2deg);
   }
 
   .frame img { width: 100%; height: 100%; object-fit: cover; }
@@ -194,19 +191,6 @@
     text-transform: uppercase;
     color: var(--ink-faint);
     background: repeating-linear-gradient(135deg, transparent 0 10px, var(--rule-soft) 10px 11px);
-  }
-
-  .tape {
-    position: absolute;
-    top: -0.9rem;
-    left: 50%;
-    z-index: 1;
-    width: 5.5rem;
-    height: 1.6rem;
-    translate: -50% 0;
-    rotate: -4deg;
-    background: color-mix(in oklab, var(--accent-soft) 82%, var(--paper));
-    border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
   }
 
   @media (width >= 60rem) {

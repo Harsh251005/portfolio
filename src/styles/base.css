@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  background: var(--paper);
+  background: var(--grid), var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: var(--t-base);
@@ -106,7 +106,7 @@ a.touch {
 
 /* Small caps label — used for eyebrows and section marks. */
 .label {
-  font-family: var(--font-body);
+  font-family: var(--font-label);
   font-size: var(--t-xs);
   font-variation-settings: 'wght' 600;
   letter-spacing: 0.14em;

@@ -12,8 +12,8 @@
 
   let { entries }: { entries: Entry[] } = $props();
 
-  /** A resting tilt per card, so they sit like pinned paper. */
-  const TILT = [-1.4, 0.9, -0.6];
+  /** Which way each card leans as it arrives. It rests square. */
+  const LEAN = [-2.5, 1.8, -1.5];
 
   let deck: HTMLElement;
   let armed = $state(false);
@@ -49,7 +49,7 @@
 
   <ol class="deck" class:armed class:dealt bind:this={deck}>
     {#each entries as entry, i (entry.id)}
-      <li class="card" style={`--r:${TILT[i % TILT.length]}deg; --i:${i}`}>
+      <li class="card" style={`--lean:${LEAN[i % LEAN.length]}deg; --i:${i}`}>
         <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
         <h3>{entry.tagline ?? entry.short}</h3>
         <p>{entry.blurb ?? entry.plain}</p>
@@ -89,21 +89,21 @@
     gap: var(--s-3);
     padding: var(--s-6);
     background: var(--paper-raised);
-    border: 1.5px solid var(--ink);
-    border-radius: 6px;
+    border: 1.5px solid var(--glass-border);
+    border-radius: var(--glass-radius);
     box-shadow: var(--shadow-hard);
-    transform: rotate(var(--r));
-    transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 420ms var(--ease-out);
+    transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out), border-color 420ms var(--ease-out);
   }
 
   .card:hover {
-    transform: rotate(0deg) translate(-3px, -3px);
-    box-shadow: 9px 9px 0 var(--accent);
+    transform: translate(-3px, -3px);
+    box-shadow: var(--card-hover);
+    border-color: var(--accent);
   }
 
   .num {
-    font-family: var(--font-display);
-    font-size: var(--t-2xl);
+    font-family: var(--font-label);
+    font-size: var(--t-lg);
     font-variation-settings: 'opsz' 72, 'wght' 300;
     line-height: 1;
     color: var(--accent);
@@ -139,12 +139,12 @@
      card lands in turn and rocks into its resting angle. */
   .armed .card {
     opacity: 0;
-    transform: translate3d(0, 5rem, 0) rotate(calc(var(--r) * 6));
+    transform: translate3d(0, 4rem, 0) rotate(var(--lean));
   }
 
   .armed.dealt .card {
     opacity: 1;
-    transform: rotate(var(--r));
+    transform: none;
     transition:
       opacity 400ms var(--ease-out) calc(var(--i) * 190ms),
       transform 900ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 190ms),
@@ -152,7 +152,7 @@
   }
 
   .armed.dealt .card:hover {
-    transform: rotate(0deg) translate(-3px, -3px);
+    transform: translate(-3px, -3px);
     transition-delay: 0s;
   }
 
