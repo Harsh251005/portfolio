@@ -1,10 +1,15 @@
 <script lang="ts">
   /* The first screen: who, what, and a face.
 
-     The name is set in a variable font and gets heavier while you
-     scroll, letter by letter, then settles when you stop — like ink
-     pressing into paper. The text is plain text the whole time; the
-     weight is the only thing that moves. */
+     The name is set in a variable font, and each letter's weight
+     follows the pointer: the nearer a letter is to the cursor, the
+     heavier it gets, and it eases back when the cursor moves on.
+     Attention flows to where you point. On load one wave runs
+     through the name by itself, so the effect announces itself.
+     Touch screens have no cursor, so there the name thickens while
+     you scroll instead.
+
+     The text is plain text throughout; only its weight moves. */
   import { onMount } from 'svelte';
   import TokenStream from './TokenStream.svelte';
 
@@ -20,24 +25,101 @@
   const first = 'Harsh'.split('');
   const last = 'Dharnidharka'.split('');
 
+  let name: HTMLElement;
   let heavy = $state(false);
+
+  const REST = 430;
+  const MAX = 850;
+  /** How far the pointer's influence reaches, in px. */
+  const REACH = 170;
 
   onMount(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let timer: ReturnType<typeof setTimeout>;
-    let lastY = scrollY;
 
-    function onScroll() {
-      if (Math.abs(scrollY - lastY) > 0.5) heavy = true;
-      lastY = scrollY;
-      clearTimeout(timer);
-      timer = setTimeout(() => (heavy = false), 260);
+    const letters = Array.from(name.querySelectorAll<HTMLElement>('.ch'));
+    const fine = matchMedia('(pointer: fine)').matches;
+
+    // Touch: thicken while scrolling, settle when it stops.
+    if (!fine) {
+      let timer: ReturnType<typeof setTimeout>;
+      let lastY = scrollY;
+      const onScroll = () => {
+        if (Math.abs(scrollY - lastY) > 0.5) heavy = true;
+        lastY = scrollY;
+        clearTimeout(timer);
+        timer = setTimeout(() => (heavy = false), 260);
+      };
+      addEventListener('scroll', onScroll, { passive: true });
+      return () => {
+        removeEventListener('scroll', onScroll);
+        clearTimeout(timer);
+      };
     }
 
-    addEventListener('scroll', onScroll, { passive: true });
+    name.classList.add('ptr');
+
+    const cur = letters.map(() => REST);
+    let px = -9999;
+    let py = -9999;
+    let raf = 0;
+    let introStart = performance.now() + 900;
+    let intro = true;
+    let moved = false;
+
+    function tick(now: number) {
+      raf = 0;
+      const box = name.getBoundingClientRect();
+
+      // Until the visitor moves, a virtual pointer sweeps the name once.
+      if (intro && !moved) {
+        const k = (now - introStart) / 1500;
+        if (k >= 0 && k <= 1.25) {
+          px = box.left + k * box.width;
+          py = box.top + box.height * 0.5;
+        } else if (k > 1.25) {
+          intro = false;
+          px = py = -9999;
+        }
+      }
+
+      let busy = intro && !moved;
+      letters.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        const dx = px - (r.left + r.width / 2);
+        const dy = py - (r.top + r.height / 2);
+        const near = Math.exp(-((dx * dx + dy * dy) / (REACH * REACH)));
+        const goal = REST + (MAX - REST) * near;
+        cur[i] += (goal - cur[i]) * 0.18;
+        if (Math.abs(goal - cur[i]) > 0.6) busy = true;
+        el.style.fontVariationSettings = `'opsz' 72, 'wght' ${cur[i].toFixed(1)}, 'SOFT' 0, 'WONK' 1`;
+      });
+
+      if (busy || px > -9000) raf = requestAnimationFrame(tick);
+    }
+
+    const wake = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      moved = true;
+      px = e.clientX;
+      py = e.clientY;
+      wake();
+    };
+    const onLeave = () => {
+      px = py = -9999;
+      wake();
+    };
+
+    addEventListener('pointermove', onMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    wake();
+
     return () => {
-      removeEventListener('scroll', onScroll);
-      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      removeEventListener('pointermove', onMove);
+      document.documentElement.removeEventListener('pointerleave', onLeave);
     };
   });
 </script>
@@ -52,7 +134,7 @@
         {#if status}<span class="stamp">{status}</span>{/if}
       </p>
 
-      <h1 class:heavy aria-label="Harsh Dharnidharka">
+      <h1 class:heavy bind:this={name} aria-label="Harsh Dharnidharka">
         <span class="line" aria-hidden="true">
           {#each first as ch, i (i)}<span class="ch" style={`--i:${i}`}>{ch}</span>{/each}
         </span>
@@ -137,7 +219,7 @@
     min-width: 0;
   }
 
-  .line { display: block; overflow-wrap: anywhere; }
+  .line { display: block; white-space: nowrap; }
 
   .ch {
     display: inline-block;
@@ -146,6 +228,9 @@
   }
 
   .heavy .ch { font-variation-settings: 'opsz' 72, 'wght' 800, 'SOFT' 0, 'WONK' 1; }
+
+  /* With a pointer, weight is set every frame from script. */
+  .ptr .ch { transition: none; }
 
   .statement {
     margin-top: var(--s-6);
