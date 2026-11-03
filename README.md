@@ -99,10 +99,15 @@ What moves:
 - **The hero sentence** streams in like a model writing it: small pieces, uneven
   speed, a longer beat after a full stop, the newest piece briefly lit. Long
   words arrive in two halves, as a tokeniser would cut them.
-- **The project cards** show an attention map of their description on hover:
-  every word lit in proportion to its weight, sweeping left to right. Words
-  wrapped in `*stars*` in a project's `blurb` get full weight; the rest get a
-  small uneven one. On touch screens it is shown at rest.
+- **The project cards** write themselves as they appear: the title and text arrive
+  piece by piece, then a sweep of attention crosses the text once, every word lit
+  in proportion to its weight. Words wrapped in `*stars*` in a project's `blurb`
+  get full weight; the rest get a small uneven one. On hover the same map is
+  held, and the card tilts toward the pointer with a lime light along its edge.
+  Giant outlined numerals sit behind the cards and drift at their own speed as
+  you scroll, and each card rises into place with a spring. `Work.svelte` also
+  has a `stack` mode (the section pins and each card slides up over the last,
+  which shrinks and dims), shown at `/stack` until one is chosen.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 
 Every one of them is on the page from the start. An entrance is a CSS animation
