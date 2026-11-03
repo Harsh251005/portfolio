@@ -2,29 +2,31 @@
   /* The work: three cards, each a title, a line or two, and a link to
      the code. The detail lives in each project's README.
 
-     Two layouts, same cards:
-       row    three columns. Giant numerals sit behind and drift at their
-              own speed; each card rises into place with a spring.
-       stack  the section pins and the cards stack: each new one slides
-              up over the last, which shrinks and dims behind it.
+     The cards start as one face-down dark deck. Scrolling opens it: on
+     a wide screen the section holds still while the cards lift, turn
+     over into the light and settle into three columns, one after
+     another. On a narrow or short screen there is no hold, and each
+     card turns over by itself as it comes up the page.
 
-     In both, a card writes itself when it appears (title and text
-     arrive piece by piece, then a sweep of attention crosses the
-     text once), and tilts toward the pointer with a lime edge light.
+     All of it follows the scroll, forwards and back, through a damped
+     value so it has weight instead of copying each wheel tick. As a
+     card's face comes up, a band of light crosses it and its words come
+     into focus; then a sweep of attention crosses the text once, and the
+     words that matter stay marked.
 
-     All of it is plain content from the start. Script marks cards as
-     "armed" only after it is running, reveals them as they scroll
-     into view, and a poll covers observers that never fire. */
+     All of it is plain content from the start: a flat row of cards.
+     Script takes that away only once it is running, and with reduced
+     motion it never does. */
   import { onMount } from 'svelte';
   import type { Entry } from '../../lib/brain/types';
   import Marker from './Marker.svelte';
 
-  let { entries, mode = 'row' }: { entries: Entry[]; mode?: 'row' | 'stack' } = $props();
+  let { entries }: { entries: Entry[] } = $props();
 
   /** Words a model would barely look at. */
   const STOP = new Set(['a','an','the','in','and','or','of','it','its','to','is','as','with','on','for','at','by','into','but','their','them']);
 
-  interface Word { t: string; w: number }
+  interface Word { t: string; w: number; strong: boolean }
 
   /** Splits a blurb into words, each with a weight 0–1: how hard a
    *  reader (or a model) would look at it. Words wrapped in *stars*
@@ -34,18 +36,25 @@
   function weigh(blurb: string): Word[] {
     const out: Word[] = [];
     let n = 0;
+    let spaced = true;
     for (const part of blurb.split(/(\*[^*]+\*)/)) {
       const strong = part.startsWith('*');
       const text = strong ? part.slice(1, -1) : part;
       for (const piece of text.split(/(\s+)/)) {
         if (!piece) continue;
         if (/^\s+$/.test(piece)) {
-          out.push({ t: piece, w: 0 });
+          spaced = true;
           continue;
         }
+        // Punctuation right after a starred phrase belongs to its last word.
+        if (!spaced && out.length) {
+          out[out.length - 1].t += piece;
+          continue;
+        }
+        spaced = false;
         const bare = piece.replace(/[^\w']/g, '').toLowerCase();
         const base = STOP.has(bare) ? 0.04 : 0.12 + (((n * 37) % 7) / 7) * 0.2;
-        out.push({ t: piece, w: strong ? 1 : base });
+        out.push({ t: piece, w: strong ? 1 : base, strong });
         n++;
       }
     }
@@ -54,28 +63,159 @@
 
   const pad = (n: number) => String(n).padStart(2, '0');
 
+  /** Scroll positions, as fractions of the hold, for the deck's timeline. */
+  const FIRST = 0.06;
+  const GAP = 0.2;
+  const SPAN = 0.46;
+
+  /** How long the motion takes to catch up with the scroll, in ms. */
+  const LAG = 110;
+
   let root: HTMLElement;
 
   onMount(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const clamp = (x: number) => Math.min(1, Math.max(0, x));
-    const ease = (t: number) => t * t * (3 - 2 * t);
-    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
-    cards.forEach((c) => c.classList.add('armed'));
+    const ease = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
+
+    const deck = root.querySelector<HTMLElement>('.deck')!;
+    const page = root.querySelector<HTMLElement>('.page')!;
+    const slots = Array.from(root.querySelectorAll<HTMLElement>('.slot'));
+    const flips = slots.map((s) => s.querySelector<HTMLElement>('.flip')!);
+    const cards = slots.map((s) => s.querySelector<HTMLElement>('[data-card]')!);
+    const n = slots.length;
+
     root.classList.add('armed');
 
-    const cleanup: Array<() => void> = [];
+    const target = slots.map(() => 0);
+    const current = slots.map(() => -1);
+    const forced = slots.map(() => false);
+    let toCentre: Array<{ x: number; y: number }> = [];
+    let pinned = false;
+
+    /* ---- which layout fits, and how far each card travels ---- */
+    const layout = () => {
+      root.classList.add('pinned');
+      pinned = innerWidth >= 960 && page.offsetHeight <= innerHeight - 16;
+      root.classList.toggle('pinned', pinned);
+
+      const midX = deck.offsetWidth / 2;
+      const midY = deck.offsetHeight / 2;
+      toCentre = slots.map((s) => ({
+        x: midX - (s.offsetLeft + s.offsetWidth / 2),
+        y: midY - (s.offsetTop + s.offsetHeight / 2),
+      }));
+      slots.forEach((s, i) => (s.style.zIndex = pinned ? String(n - i) : ''));
+    };
+
+    /* ---- what the scroll asks for ---- */
+    const measure = () => {
+      const r = root.getBoundingClientRect();
+      const p = pinned ? clamp(-r.top / (r.height - innerHeight)) : 0;
+      slots.forEach((s, i) => {
+        if (forced[i]) {
+          target[i] = 1;
+        } else if (pinned) {
+          target[i] = clamp((p - (FIRST + i * GAP)) / SPAN);
+        } else {
+          const top = s.getBoundingClientRect().top;
+          target[i] = clamp((innerHeight * 0.96 - top) / (innerHeight * 0.55));
+        }
+      });
+    };
+
+    /* ---- one card, at one point along its turn ---- */
+    const paint = (i: number) => {
+      const u = ease(current[i]);
+      const flip = flips[i];
+
+      if (u >= 0.999) {
+        flip.style.transform = '';
+      } else {
+        const k = 1 - u;
+        const arc = Math.sin(Math.PI * u);
+        const spread = i - (n - 1) / 2;
+        if (pinned) {
+          const x = (toCentre[i].x + spread * 18) * k;
+          const y = (toCentre[i].y + Math.abs(spread) * 8) * k - arc * 12;
+          const turn = (spread > 0 ? -180 : 180) * k;
+          flip.style.transform =
+            `perspective(2000px) translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${(arc * 60).toFixed(1)}px) ` +
+            `rotateZ(${(spread * 5 * k).toFixed(2)}deg) rotateY(${turn.toFixed(2)}deg)`;
+        } else {
+          flip.style.transform =
+            `perspective(1100px) translate3d(0, ${(k * 70 - arc * 16).toFixed(1)}px, ${(arc * 80).toFixed(1)}px) ` +
+            `rotateY(${(180 * k).toFixed(2)}deg)`;
+        }
+      }
+
+      // The band of light crosses while the face comes up.
+      flip.style.setProperty('--sh', `${(clamp((u - 0.5) * 2) * 120 - 60).toFixed(1)}%`);
+      if (u > 0.55) cards[i].classList.add('live');
+    };
+
+    /* ---- the damped follow; it sleeps once everything has settled ---- */
+    let raf = 0;
+    let last = 0;
+    const tick = (now: number) => {
+      raf = 0;
+      const dt = last ? Math.min(64, now - last) : 16;
+      last = now;
+      const pull = 1 - Math.exp(-dt / LAG);
+      let moving = false;
+      for (let i = 0; i < n; i++) {
+        const gap = target[i] - current[i];
+        if (gap === 0) continue;
+        current[i] = Math.abs(gap) < 0.0006 ? target[i] : current[i] + gap * pull;
+        paint(i);
+        if (current[i] !== target[i]) moving = true;
+      }
+      if (moving) raf = requestAnimationFrame(tick);
+      else last = 0;
+    };
+    const wake = () => {
+      measure();
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    /** Jump straight to where the scroll says, with no catching up. */
+    const settle = () => {
+      layout();
+      measure();
+      for (let i = 0; i < n; i++) {
+        current[i] = target[i];
+        paint(i);
+      }
+    };
+
+    settle();
+    document.fonts?.ready.then(settle);
+
+    addEventListener('scroll', wake, { passive: true });
+    addEventListener('resize', settle, { passive: true });
+    document.addEventListener('visibilitychange', wake);
+
+    // Tabbing to a link on a face-down card has to turn that card over.
+    const focus = (e: FocusEvent) => {
+      const i = slots.findIndex((s) => s.contains(e.target as Node));
+      if (i >= 0) {
+        forced[i] = true;
+        wake();
+      }
+    };
+    root.addEventListener('focusin', focus);
 
     /* ---- tilt toward the pointer, with a lime edge light ---- */
+    const cleanup: Array<() => void> = [];
     if (matchMedia('(pointer: fine)').matches) {
       cards.forEach((card) => {
         const move = (e: PointerEvent) => {
           const r = card.getBoundingClientRect();
           const x = e.clientX - r.left;
           const y = e.clientY - r.top;
-          card.style.setProperty('--ry', `${((x / r.width - 0.5) * 11).toFixed(2)}deg`);
-          card.style.setProperty('--rx', `${(-(y / r.height - 0.5) * 9).toFixed(2)}deg`);
+          card.style.setProperty('--ry', `${((x / r.width - 0.5) * 9).toFixed(2)}deg`);
+          card.style.setProperty('--rx', `${(-(y / r.height - 0.5) * 7).toFixed(2)}deg`);
           card.style.setProperty('--mx', `${x}px`);
           card.style.setProperty('--my', `${y}px`);
         };
@@ -92,133 +232,19 @@
       });
     }
 
-    if (mode === 'row') {
-      const slots = Array.from(root.querySelectorAll<HTMLElement>('.slot'));
-      const ghosts = slots.map((s) => s.querySelector<HTMLElement>('.ghost')!);
-      const revealed = new Set<HTMLElement>();
-
-      const reveal = (slot: HTMLElement) => {
-        if (revealed.has(slot)) return;
-        revealed.add(slot);
-        slot.classList.add('live');
-        slot.querySelector('[data-card]')?.classList.add('live');
-      };
-
-      const io = new IntersectionObserver(
-        (list) => list.forEach((e) => e.isIntersecting && reveal(e.target as HTMLElement)),
-        { threshold: 0.25 },
-      );
-      slots.forEach((s) => io.observe(s));
-
-      // Observers can fail to fire (a background tab, say): check by hand too.
-      const poll = setInterval(() => {
-        slots.forEach((s) => {
-          const r = s.getBoundingClientRect();
-          if (r.top < innerHeight * 0.85 && r.bottom > 0) reveal(s);
-        });
-        if (revealed.size === slots.length) clearInterval(poll);
-      }, 500);
-
-      // Giant numerals drift against the scroll, each at its own rate.
-      let raf = 0;
-      const drift = () => {
-        raf = 0;
-        slots.forEach((s, i) => {
-          const r = s.getBoundingClientRect();
-          const dy = r.top + r.height / 2 - innerHeight / 2;
-          ghosts[i].style.transform = `translate3d(0, ${(dy * (0.16 + i * 0.09)).toFixed(1)}px, 0)`;
-        });
-      };
-      const schedule = () => {
-        if (!raf) raf = requestAnimationFrame(drift);
-      };
-      drift();
-      addEventListener('scroll', schedule, { passive: true });
-      addEventListener('resize', schedule, { passive: true });
-
-      cleanup.push(() => {
-        io.disconnect();
-        clearInterval(poll);
-        cancelAnimationFrame(raf);
-        removeEventListener('scroll', schedule);
-        removeEventListener('resize', schedule);
-      });
-    } else {
-      /* ---- stack: the section pins, cards slide up over each other ---- */
-      const wrap = root.querySelector<HTMLElement>('.stackwrap')!;
-      const sheets = Array.from(root.querySelectorAll<HTMLElement>('.sheet'));
-      wrap.classList.add('pinned');
-      const n = sheets.length;
-      let raf = 0;
-
-      const paint = () => {
-        raf = 0;
-        const r = wrap.getBoundingClientRect();
-        const p = clamp(-r.top / (r.height - innerHeight));
-        // How far along each card's arrival is. Card 0 is already there.
-        const u = sheets.map((_, i) => (i === 0 ? 1 : clamp(p * (n - 1) - (i - 1))));
-
-        sheets.forEach((sheet, i) => {
-          // How many later cards have covered this one, fractionally.
-          let covered = 0;
-          for (let j = i + 1; j < n; j++) covered += ease(u[j]);
-          const rise = (1 - ease(u[i])) * innerHeight * 0.85;
-          sheet.style.transform = `translate3d(0, ${(rise - covered * 20).toFixed(1)}px, 0) scale(${(1 - covered * 0.05).toFixed(4)})`;
-          sheet.style.filter = covered > 0 ? `brightness(${(1 - covered * 0.4).toFixed(3)})` : '';
-          const card = sheet.querySelector('[data-card]');
-          const shown = i === 0 ? r.top < innerHeight * 0.5 : u[i] > 0.35;
-          if (shown) card?.classList.add('live');
-        });
-      };
-      const schedule = () => {
-        if (!raf) raf = requestAnimationFrame(paint);
-      };
-      paint();
-      addEventListener('scroll', schedule, { passive: true });
-      addEventListener('resize', schedule, { passive: true });
-      cleanup.push(() => {
-        cancelAnimationFrame(raf);
-        removeEventListener('scroll', schedule);
-        removeEventListener('resize', schedule);
-        wrap.classList.remove('pinned');
-      });
-    }
-
-    return () => cleanup.forEach((fn) => fn());
+    return () => {
+      cancelAnimationFrame(raf);
+      removeEventListener('scroll', wake);
+      removeEventListener('resize', settle);
+      document.removeEventListener('visibilitychange', wake);
+      root.removeEventListener('focusin', focus);
+      cleanup.forEach((fn) => fn());
+    };
   });
 </script>
 
-{#snippet card(entry: Entry, i: number)}
-  {@const title = (entry.tagline ?? entry.short).split(/(\s+)/).filter(Boolean)}
-  {@const words = weigh(entry.blurb ?? entry.plain ?? '')}
-  <div
-    class="card glass"
-    data-card
-    style={`--base:${mode === 'row' ? i * 160 + 300 : 150}ms; --n:${title.length + words.length}`}
-  >
-    <div class="top">
-      <span class="num" aria-hidden="true">{pad(i + 1)}</span>
-      <span class="hint" aria-hidden="true">attention</span>
-    </div>
-    <h3>
-      {#each title as t, k (k)}<span class="gen" style={`--k:${k}`}>{t}</span>{/each}
-    </h3>
-    <p>
-      {#each words as word, k (k)}<span
-          class="w gen"
-          style={`--w:${word.w}; --k:${title.length + k}`}>{word.t}</span
-        >{/each}
-    </p>
-    {#if entry.link}
-      <a href={entry.link} rel="noreferrer noopener">
-        How it's built <span aria-hidden="true">↗</span>
-      </a>
-    {/if}
-  </div>
-{/snippet}
-
-<div class="work" bind:this={root} style={`--count:${entries.length}`}>
-  {#if mode === 'row'}
+<div class="work" bind:this={root}>
+  <div class="stage">
     <div class="page">
       <p class="label">Things I've built</p>
       <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
@@ -226,30 +252,41 @@
 
       <ol class="deck">
         {#each entries as entry, i (entry.id)}
-          <li class="slot" style={`--rd:${i * 160}ms`}>
-            <span class="ghost" aria-hidden="true">{pad(i + 1)}</span>
-            {@render card(entry, i)}
+          {@const title = (entry.tagline ?? entry.short).split(/\s+/).filter(Boolean)}
+          {@const words = weigh(entry.blurb ?? entry.plain ?? '')}
+          <li class="slot">
+            <div class="flip">
+              <div class="back" aria-hidden="true">
+                <span class="back-num">{pad(i + 1)}</span>
+              </div>
+
+              <div class="card glass" data-card style={`--n:${title.length + words.length}`}>
+                <div class="top">
+                  <span class="num" aria-hidden="true">{pad(i + 1)}</span>
+                  <span class="hint" aria-hidden="true">attention</span>
+                </div>
+                <h3>
+                  {#each title as t, k (k)}<span class="gen" style={`--k:${k}`}>{t}</span>{' '}{/each}
+                </h3>
+                <p>
+                  {#each words as word, k (k)}<span
+                      class="w gen"
+                      style={`--w:${word.w}; --rest:${word.strong ? 1 : 0}; --k:${title.length + k}`}>{word.t}</span
+                    >{' '}{/each}
+                </p>
+                {#if entry.link}
+                  <a href={entry.link} rel="noreferrer noopener">
+                    How it's built <span aria-hidden="true">↗</span>
+                  </a>
+                {/if}
+                <span class="sheen" aria-hidden="true"></span>
+              </div>
+            </div>
           </li>
         {/each}
       </ol>
     </div>
-  {:else}
-    <div class="stackwrap">
-      <div class="stickyst">
-        <div class="page">
-          <p class="label">Things I've built</p>
-          <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
-        </div>
-        <div class="page">
-          <ol class="pile">
-            {#each entries as entry, i (entry.id)}
-              <li class="sheet" style={`z-index:${i + 1}`}>{@render card(entry, i)}</li>
-            {/each}
-          </ol>
-        </div>
-      </div>
-    </div>
-  {/if}
+  </div>
 </div>
 
 <style>
@@ -265,37 +302,59 @@
   .sub { margin-top: var(--s-4); font-size: var(--t-lg); color: var(--ink-soft); }
 
   .deck {
+    position: relative;
     list-style: none;
     margin: var(--s-8) 0 0;
     padding: 0;
     display: grid;
     gap: var(--s-7);
-    perspective: 1100px;
   }
 
   .slot { position: relative; display: grid; }
 
-  /* The giant numeral behind each card. */
-  .ghost {
+  .flip {
+    position: relative;
+    height: 100%;
+    transform-style: preserve-3d;
+  }
+
+  :global(.armed) .flip { will-change: transform; }
+
+  /* ---------- the face-down side ---------- */
+
+  .back { display: none; }
+
+  :global(.armed) .back {
     position: absolute;
-    left: -0.04em;
-    top: -0.62em;
-    z-index: 0;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: var(--s-5) var(--s-6);
+    overflow: hidden;
+    background: var(--paper-raised);
+    border: 1.5px solid color-mix(in oklab, var(--accent) 45%, transparent);
+    border-radius: var(--glass-radius);
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    pointer-events: none;
+  }
+
+  .back-num {
     font-family: var(--font-display);
-    font-size: clamp(7rem, 15vw, 14rem);
-    font-weight: 700;
+    font-size: clamp(7rem, 11vw, 11rem);
     font-variation-settings: 'wght' 700;
-    line-height: 1;
+    line-height: 0.8;
     letter-spacing: -0.05em;
     color: transparent;
-    -webkit-text-stroke: 1.5px color-mix(in oklab, var(--ink) 20%, transparent);
-    pointer-events: none;
-    will-change: transform;
+    -webkit-text-stroke: 1.5px var(--accent);
   }
+
+  /* ---------- the face ---------- */
 
   .card {
     position: relative;
-    z-index: 1;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -304,10 +363,11 @@
     border: 1.5px solid var(--glass-border);
     border-radius: var(--glass-radius);
     box-shadow: var(--shadow-hard);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
       translate(var(--tx, 0px), var(--ty, 0px));
-    transition: transform 160ms ease-out, box-shadow 420ms var(--ease-out);
-    will-change: transform;
+    transition: transform 320ms var(--ease-out), box-shadow 420ms var(--ease-out);
   }
 
   .card:hover {
@@ -334,6 +394,28 @@
   }
 
   .card:hover::after { opacity: 1; }
+
+  /* The band of light that crosses the face as it turns up. */
+  .sheen {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .sheen::before {
+    content: '';
+    position: absolute;
+    inset: -20% -60%;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      color-mix(in oklab, #d7ff3a 85%, transparent) 50%,
+      transparent 60%
+    );
+    transform: translateX(var(--sh, 60%));
+  }
 
   .top { display: flex; justify-content: space-between; align-items: baseline; }
 
@@ -364,13 +446,15 @@
 
   .card p { color: var(--ink-soft); font-size: var(--t-base); max-width: 32ch; }
 
+  /* Only the words that matter stay marked at rest. */
   .w {
     border-radius: 2px;
     padding-block: 0.04em;
-    transition: background-color 420ms var(--ease) calc(var(--k) * 12ms);
+    background-color: color-mix(in oklab, var(--card-accent) calc(var(--rest) * 34%), transparent);
+    transition: background-color 420ms var(--ease) calc(var(--k) * 10ms);
   }
 
-  /* Hover: the same attention map, held. */
+  /* Hover: the whole attention map, held. */
   .card:hover .w {
     background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent);
   }
@@ -393,102 +477,60 @@
   .card a:hover { color: var(--accent); }
 
   @media (hover: none) {
-    .w { background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 30%), transparent); }
     .hint { opacity: 1; }
   }
 
-  /* ---------- the entrance ---------- */
+  /* ---------- words coming into focus ---------- */
 
-  /* Row: each slot rises with a spring. */
-  .slot:global(.armed):not(:global(.live)) { opacity: 0; transform: translateY(80px); }
-  :global(.armed) .slot { will-change: transform, opacity; }
-  .slot:global(.live) { animation: rise 1000ms cubic-bezier(0.3, 1.35, 0.4, 1) var(--rd) backwards; }
+  :global(.armed) .gen { display: inline-block; }
 
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(80px); }
-    to   { opacity: 1; transform: none; }
-  }
-
-  /* The card writes itself: title and text arrive piece by piece... */
-  .card:global(.armed):not(:global(.live)) .gen { opacity: 0; }
+  :global(.armed) .card:not(:global(.live)) .gen { opacity: 0; }
 
   .card:global(.live) .gen {
-    animation:
-      gen-in 1ms linear backwards,
-      gen-lit 800ms ease-out;
-    animation-delay: calc(var(--base) + var(--k) * 42ms), calc(var(--base) + var(--k) * 42ms);
+    animation: focus-in 760ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    animation-delay: calc(120ms + var(--k) * 26ms);
   }
 
-  /* ...then a sweep of attention crosses the text, once. */
+  /* Then a sweep of attention crosses the text, once. */
   .card:global(.live) .w {
     animation:
-      gen-in 1ms linear backwards,
-      gen-lit 800ms ease-out,
+      focus-in 760ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards,
       heat 1500ms ease-in-out;
     animation-delay:
-      calc(var(--base) + var(--k) * 42ms),
-      calc(var(--base) + var(--k) * 42ms),
-      calc(var(--base) + var(--n) * 42ms + 350ms + var(--k) * 34ms);
+      calc(120ms + var(--k) * 26ms),
+      calc(var(--n) * 26ms + 700ms + var(--k) * 30ms);
   }
 
-  @keyframes gen-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  @keyframes gen-lit {
-    from { background-color: color-mix(in oklab, var(--card-accent) 55%, transparent); }
-    to   { background-color: transparent; }
+  @keyframes focus-in {
+    from { opacity: 0; filter: blur(5px); transform: translateY(0.45em); }
+    to   { opacity: 1; filter: blur(0); transform: none; }
   }
 
   @keyframes heat {
-    0%   { background-color: transparent; }
-    40%  { background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent); }
-    100% { background-color: transparent; }
+    40% { background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 46%), transparent); }
   }
 
-  /* ---------- stack layout ---------- */
+  /* ---------- the hold ---------- */
 
-  .pile { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-6); }
+  .work:global(.pinned) { height: 280vh; }
 
-  .stackwrap:global(.pinned) { height: calc(100svh * (var(--count) + 0.8)); }
-
-  .stackwrap:global(.pinned) .stickyst {
+  .work:global(.pinned) .stage {
     position: sticky;
     top: 0;
-    height: 100svh;
-    overflow: hidden;
-    display: grid;
-    align-content: center;
-    gap: var(--s-6);
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  .stackwrap:global(.pinned) h2 { font-size: clamp(1.75rem, 3vw + 0.8rem, 3.4rem); }
-
-  .stackwrap:global(.pinned) .pile {
-    display: block;
-    position: relative;
-    height: min(54vh, 26rem);
-  }
-
-  .stackwrap:global(.pinned) .sheet {
-    position: absolute;
-    inset: 0;
-    will-change: transform, filter;
-    transform-origin: 50% 100%;
-  }
-
-  .stackwrap:global(.pinned) .sheet .card { height: 100%; padding: var(--s-6) var(--s-7); }
-  .stackwrap:global(.pinned) .sheet h3 { font-size: clamp(1.6rem, 2.6vw + 0.6rem, 2.6rem); }
-  .stackwrap:global(.pinned) .sheet .card p { font-size: var(--t-lg); max-width: 38ch; }
+  .work:global(.pinned) .deck { margin-top: var(--s-6); }
 
   @media (width >= 60rem) {
     .deck { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
-    .slot:nth-child(2) { margin-top: var(--s-7); }
+    .slot:nth-child(2) { margin-top: var(--s-6); }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .card, .card:hover { transform: none; transition: none; }
-    .ghost { transform: none !important; }
   }
 </style>

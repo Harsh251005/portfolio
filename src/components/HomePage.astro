@@ -18,13 +18,9 @@ import { OWNER, LINKS } from '../lib/links';
 const entries = await loadEntries();
 const projects = entries.filter((entry) => entry.card === 'project');
 
-interface Props { workMode?: 'row' | 'stack'; path?: string; preview?: boolean; }
-const { workMode = 'row', path = '/', preview = false } = Astro.props;
-
 ---
 
-
-<Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path={path} noindex={preview}>
+<Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
   <Band id="top" flush>
     <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} portrait={PORTRAIT} />
   </Band>
@@ -34,7 +30,7 @@ const { workMode = 'row', path = '/', preview = false } = Astro.props;
   </Band>
 
   <Band id="work">
-    <Work client:load entries={projects} mode={workMode} />
+    <Work client:load entries={projects} />
   </Band>
 
   <Band id="contact">
