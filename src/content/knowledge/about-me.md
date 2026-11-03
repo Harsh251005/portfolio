@@ -18,19 +18,24 @@ right team.
 
 ## How I got here
 
-I didn't pick computers. My school did. Information Technology was a compulsory
-subject in 11th class, and it pulled me into web development.
+On paper, I was headed for balance sheets. I studied commerce in junior college.
+Off paper, I was building web pages, breaking them, and working out why they
+broke. By 2023 the habit had won, and I went to study IT instead.
 
-I wasn't serious about it. I kept trying things, breaking them, and working out
-why they broke. No plan, just a lot of trial and error.
+A few months ago I pointed that habit at AI, and for the first time I got serious.
+Everything on this site came out of that.
 
-A few months ago I pointed all of that at AI, and for the first time I got
-serious. Everything on this site came out of that. I finished my degree in
-Information Technology in 2026.
+## Education
+
+- **B.Sc. Information Technology**, Thakur Shyamnarayan Degree College, University
+  of Mumbai, 2023 to 2026
+- **Junior college (Commerce)**, Thakur College of Science and Commerce, 2021 to 2023
+- **School (ICSE)**, RBK School, Mira Road, until 2021
 
 ## Outside of work
 
-I play cricket, and I love it. I watch the odd movie. And I try to get a little
+I won gold at the National Karate Championship, representing Maharashtra. These
+days I play cricket, and I love it. I watch the odd movie. And I try to get a little
 better every day by learning one small new thing.
 
 ## Where I'm headed

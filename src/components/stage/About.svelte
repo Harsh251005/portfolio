@@ -1,25 +1,32 @@
 <script lang="ts">
   /* The person. A big opening line, then the short version. Photo
-     lives in the hero now; this is just the story. */
+     lives in the hero; education has its own section. */
   import Marker from './Marker.svelte';
 </script>
 
 <div class="page about">
   <p class="label">About me</p>
 
-  <h2>I didn't pick computers. <Marker>My school did.</Marker></h2>
+  <h2>Commerce student. Karate gold medallist. <Marker>AI engineer.</Marker></h2>
 
   <div class="cols">
     <p>
-      Information Technology was a compulsory subject in 11th class, and it
-      pulled me into web development. I wasn't serious about it. I kept trying
-      things, breaking them, and working out why. A few months ago I pointed
-      all of that at AI, and for the first time I got serious.
+      <strong>On paper, I was headed for balance sheets.</strong> I studied
+      commerce in junior college. Off paper, I was building web pages, breaking
+      them, and working out why they broke. By 2023 the habit had won, and I went
+      to study IT instead.
     </p>
     <p>
-      I finished my degree in Information Technology in 2026. Away from the
-      keyboard I play cricket, and I love it. I try to get a little better at
-      something every day by learning one small new thing.
+      <strong>Then I pointed that habit at AI.</strong> A few months ago, and for
+      the first time, I got serious. Now I build things that have to work with a
+      real person on the other end: a receptionist that answers a clinic's phone,
+      a coder that reads its own errors and knows when to stop.
+    </p>
+    <p>
+      <strong>The gold came from the mat.</strong> I won it at the National Karate
+      Championship, representing Maharashtra. Karate teaches what most AI demos
+      skip: it only counts against someone who isn't cooperating. These days I play
+      cricket, and I try to learn one small new thing every day.
     </p>
   </div>
 
@@ -27,27 +34,32 @@
 </div>
 
 <style>
-  .about { max-width: 60rem; }
-
   h2 {
     margin-top: var(--s-4);
     font-size: clamp(2.25rem, 4.6vw + 1rem, 5.25rem);
-    font-variation-settings: 'opsz' 72, 'wght' 440, 'WONK' 1;
+    font-variation-settings: 'wght' 560;
     line-height: 0.98;
-    letter-spacing: -0.03em;
-    max-width: 14ch;
+    letter-spacing: -0.035em;
+    max-width: 16ch;
   }
 
   .cols {
     margin-top: var(--s-7);
     display: grid;
-    gap: var(--s-5);
+    gap: var(--s-6);
     font-size: var(--t-lg);
     line-height: 1.55;
     color: var(--ink-soft);
   }
 
-  .cols p { max-width: 36ch; }
+  .cols p { max-width: 38ch; }
+
+  strong {
+    display: block;
+    margin-bottom: var(--s-2);
+    color: var(--ink);
+    font-variation-settings: 'wght' 640;
+  }
 
   .more {
     display: inline-flex;
@@ -64,7 +76,7 @@
 
   .more:hover { color: var(--accent); }
 
-  @media (width >= 56rem) {
-    .cols { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
+  @media (width >= 60rem) {
+    .cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
   }
 </style>

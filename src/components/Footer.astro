@@ -1,20 +1,29 @@
 ---
-/* Sitewide footer. Links live in one place — src/lib/links.ts —
-   so they are never duplicated across pages. */
+/* Sitewide footer, and the one place on the site with the ways to reach
+   me. Links live in src/lib/links.ts so they are never duplicated. */
 import { LINKS, OWNER } from '../lib/links';
+
+const ICONS: Record<string, string> = {
+  Email: 'M2 5h20v14H2zM2 6l10 7 10-7',
+  GitHub:
+    'M9 19c-4 1.2-4-2-6-2.5m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.600 4.600 0 0 0-1.300-3.200 4.300 4.300 0 0 0-.1-3.200s-1.100-.3-3.500 1.300a12 12 0 0 0-6.200 0C6.500 2.800 5.400 3.100 5.400 3.100a4.300 4.300 0 0 0-.1 3.200A4.600 4.600 0 0 0 4 9.500c0 4.600 2.700 5.700 5.500 6-.6.6-.6 1.200-.5 2V21',
+  LinkedIn: 'M4 9h4v12H4zM6 3.500v.1M12 21V9h4v2c1-1.500 2.500-2.300 4-2 1.500.3 2 1.700 2 4v8h-4v-7c0-1.500-.5-2.300-2-2.300s-2 1-2 2.300v7z',
+};
 ---
 
 <footer class="foot">
   <div class="page inner">
-    <p class="name">{OWNER.name}</p>
-
-    <nav aria-label="Elsewhere">
-      <ul class="touch-list">
-        {LINKS.map((link) => (
+    <nav aria-label="Ways to reach me">
+      <ul>
+        {LINKS.map((link, i) => (
           <li>
             {link.href ? (
-              <a href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
+              <a class:list={['btn', { primary: i === 0 }]} href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d={ICONS[link.label]} />
+                </svg>
                 {link.label}
+                <span class="arrow" aria-hidden="true">↗</span>
               </a>
             ) : (
               <span class="todo" title="Add this in src/lib/links.ts">{link.label} ⟨missing⟩</span>
@@ -24,48 +33,74 @@ import { LINKS, OWNER } from '../lib/links';
       </ul>
     </nav>
 
-    <p class="year">{new Date().getFullYear()}</p>
+    <div class="line">
+      <p>{OWNER.name}</p>
+      <p>{new Date().getFullYear()}</p>
+    </div>
   </div>
 </footer>
 
-
 <style>
   .foot {
-    padding-block: var(--s-6);
+    padding-block: var(--s-5) var(--s-6);
     margin-top: auto;
   }
 
-  .inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--s-4);
-    flex-wrap: wrap;
-    border-top: 1.5px solid var(--ink);
-    padding-top: var(--s-5);
-  }
-
-  .name {
-    font-family: var(--font-display);
-    font-size: var(--t-base);
-    color: var(--ink);
-  }
-
   ul {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: var(--s-4);
     list-style: none;
+    margin: 0;
     padding: 0;
-    font-size: var(--t-sm);
   }
 
-  a { color: var(--ink); }
-  a:hover { color: var(--accent); }
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 4rem;
+    padding: var(--s-3) var(--s-5);
+    border: 1.5px solid var(--accent);
+    border-radius: var(--glass-radius);
+    color: var(--ink);
+    font-size: var(--t-lg);
+    font-variation-settings: 'wght' 620;
+    text-decoration: none;
+    transition:
+      transform 260ms var(--ease-out),
+      box-shadow 260ms var(--ease-out),
+      background-color 260ms var(--ease),
+      color 260ms var(--ease);
+  }
 
-  .year {
-    font-family: var(--font-body);
+  .primary { background: var(--accent); color: var(--paper); }
+
+  .btn:hover,
+  .btn:focus-visible {
+    background: var(--accent);
+    color: var(--paper);
+    transform: translate(-3px, -3px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .arrow { margin-left: auto; transition: transform 260ms var(--ease-out); }
+  .btn:hover .arrow { transform: translate(3px, -3px); }
+
+  .line {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
     font-size: var(--t-xs);
     color: var(--ink-faint);
+  }
+
+  @media (width >= 40rem) {
+    ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .arrow { transition: none; }
+    .btn:hover, .btn:focus-visible { transform: none; }
   }
 </style>

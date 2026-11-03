@@ -12,6 +12,7 @@
      without script, or with reduced motion, the name is just there. */
   import { onMount } from 'svelte';
   import TokenStream from './TokenStream.svelte';
+  import Portrait from './Portrait.svelte';
 
   interface Props {
     role: string;
@@ -117,20 +118,12 @@
     </div>
 
     <figure class="portrait">
-      <div class="frame">
-        {#if portrait}
-          <img
-            src={portrait.src}
-            width={portrait.width}
-            height={portrait.height}
-            alt="Harsh Dharnidharka"
-            decoding="async"
-          />
-        {:else}
-          <!-- No photo yet. Drop one at src/images/portrait.jpg. -->
-          <div class="placeholder"><span>photo<br />goes here</span></div>
-        {/if}
-      </div>
+      {#if portrait}
+        <Portrait src={portrait.src} width={portrait.width} height={portrait.height} alt="Harsh Dharnidharka" />
+      {:else}
+        <!-- No photo yet. Drop one at src/images/portrait.jpg. -->
+        <div class="placeholder"><span>photo<br />goes here</span></div>
+      {/if}
     </figure>
   </div>
 </section>
@@ -241,19 +234,10 @@
 
   .portrait { margin: 0; position: relative; justify-self: start; width: min(100%, 20rem); }
 
-  .frame {
+  .placeholder {
     aspect-ratio: 4 / 5;
-    overflow: hidden;
     border: 1.5px solid var(--rule);
     border-radius: var(--glass-radius);
-    background: var(--paper-sunk);
-    box-shadow: var(--shadow-hard);
-  }
-
-  .frame img { width: 100%; height: 100%; object-fit: cover; }
-
-  .placeholder {
-    height: 100%;
     display: grid;
     place-items: center;
     text-align: center;

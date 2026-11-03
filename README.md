@@ -109,6 +109,11 @@ What moves:
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
   the card tilts toward the pointer with a lime light along its edge.
+- **The photo** arrives as a grid of lime symbols picked by the photo's brightness,
+  then a wave resolves it into the real image (`Portrait.svelte`). The same symbols
+  appear under the pointer.
+- **The education staircase** rises out of the floor as you scroll, each step
+  lighter than the last, and sinks back if you scroll up (`Education.svelte`).
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 
 Every one of them is on the page from the start. An entrance is a CSS animation
