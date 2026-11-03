@@ -2,13 +2,11 @@
   /* The work: three cards, each a title, a line or two, and a link to
      the code. The detail lives in each project's README.
 
-     The cards are dealt onto the page like scorecards: each one
-     arrives tilted and settles with a small overshoot, in turn.
-     They are on the page from the start; the entrance only changes
-     when they become visible, and a timer guarantees it. */
-  import { onMount } from 'svelte';
+     Each card is uncovered by a scanner line as it scrolls into view
+     (see Scan.svelte). */
   import type { Entry } from '../../lib/brain/types';
   import Marker from './Marker.svelte';
+  import Scan from './Scan.svelte';
 
   let { entries }: { entries: Entry[] } = $props();
 
@@ -43,60 +41,38 @@
     return out;
   }
 
-  /** Which way each card leans as it arrives. It rests square. */
-  const LEAN = [-2.5, 1.8, -1.5];
-
-  let deck: HTMLElement;
-  let armed = $state(false);
-  let dealt = $state(false);
-
-  onMount(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (typeof IntersectionObserver === 'undefined') return;
-
-    armed = true;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          dealt = true;
-          io.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(deck);
-    const bail = setTimeout(() => (dealt = true), 3000);
-    return () => {
-      io.disconnect();
-      clearTimeout(bail);
-    };
-  });
 </script>
 
 <div class="page work">
-  <p class="label">Things I've built</p>
-  <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
-  <p class="sub">Three things I built for the second part.</p>
+  <Scan>
+    <p class="label">Things I've built</p>
+    <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
+    <p class="sub">Three things I built for the second part.</p>
+  </Scan>
 
-  <ol class="deck" class:armed class:dealt bind:this={deck}>
+  <ol class="deck">
     {#each entries as entry, i (entry.id)}
-      <li class="card glass" style={`--lean:${LEAN[i % LEAN.length]}deg; --i:${i}`}>
-        <div class="top">
-          <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <span class="hint" aria-hidden="true">attention</span>
-        </div>
-        <h3>{entry.tagline ?? entry.short}</h3>
-        <p>
-          {#each weigh(entry.blurb ?? entry.plain ?? '') as word, k (k)}<span
-              class="w"
-              style={`--w:${word.w}; --k:${k}`}>{word.t}</span
-            >{/each}
-        </p>
-        {#if entry.link}
-          <a href={entry.link} rel="noreferrer noopener">
-            How it's built <span aria-hidden="true">↗</span>
-          </a>
-        {/if}
+      <li class="slot">
+        <Scan delay={i * 180} class="fill">
+          <div class="card glass">
+            <div class="top">
+              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="hint" aria-hidden="true">attention</span>
+            </div>
+            <h3>{entry.tagline ?? entry.short}</h3>
+            <p>
+              {#each weigh(entry.blurb ?? entry.plain ?? '') as word, k (k)}<span
+                  class="w"
+                  style={`--w:${word.w}; --k:${k}`}>{word.t}</span
+                >{/each}
+            </p>
+            {#if entry.link}
+              <a href={entry.link} rel="noreferrer noopener">
+                How it's built <span aria-hidden="true">↗</span>
+              </a>
+            {/if}
+          </div>
+        </Scan>
       </li>
     {/each}
   </ol>
@@ -122,7 +98,11 @@
     gap: var(--s-7);
   }
 
+  .slot { display: grid; }
+  .slot :global(.fill) { height: 100%; }
+
   .card {
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: var(--s-3);
@@ -208,30 +188,9 @@
 
   .card a:hover { color: var(--accent); }
 
-  /* The deal. Before: stacked low and over-tilted, hidden. After: each
-     card lands in turn and rocks into its resting angle. */
-  .armed .card {
-    opacity: 0;
-    transform: translate3d(0, 4rem, 0) rotate(var(--lean));
-  }
-
-  .armed.dealt .card {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity 400ms var(--ease-out) calc(var(--i) * 190ms),
-      transform 900ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 190ms),
-      box-shadow 420ms var(--ease-out);
-  }
-
-  .armed.dealt .card:hover {
-    transform: translate(-3px, -3px);
-    transition-delay: 0s;
-  }
-
   @media (width >= 60rem) {
     .deck { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
-    .card:nth-child(2) { margin-top: var(--s-7); }
+    .slot:nth-child(2) { margin-top: var(--s-7); }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -5,6 +5,7 @@
      row from below and the text turns to paper, so the whole row
      reads as the thing to press. */
   import Marker from './Marker.svelte';
+  import Scan from './Scan.svelte';
   import type { Link } from '../../lib/links';
 
   let { links }: { links: Link[] } = $props();
@@ -16,17 +17,19 @@
 </script>
 
 <div class="page contact">
-  <p class="label">Talk to me</p>
+  <Scan>
+    <p class="label">Talk to me</p>
 
-  <h2>Tell me what the <Marker>problem</Marker> actually is.</h2>
+    <h2>Tell me what the <Marker>problem</Marker> actually is.</h2>
 
-  <p class="sub">
-    I'm looking for an AI engineering role on a team that ships to real users.
-    I'm in Mumbai, and open to remote work or moving for the right team. I'll
-    tell you honestly whether I'm the right person, including when I'm not.
-  </p>
+    <p class="sub">
+      I'm looking for an AI engineering role on a team that ships to real users.
+      I'm in Mumbai, and open to remote work or moving for the right team. I'll
+      tell you honestly whether I'm the right person, including when I'm not.
+    </p>
+  </Scan>
 
-  <ul class="rows">
+  <Scan delay={150}><ul class="rows">
     {#each links as link (link.label)}
       <li>
         {#if link.href}
@@ -40,7 +43,7 @@
         {/if}
       </li>
     {/each}
-  </ul>
+  </ul></Scan>
 </div>
 
 <style>

@@ -2,14 +2,17 @@
   /* The person. A big opening line, then the short version. Photo
      lives in the hero now; this is just the story. */
   import Marker from './Marker.svelte';
+  import Scan from './Scan.svelte';
 </script>
 
 <div class="page about">
-  <p class="label">About me</p>
+  <Scan>
+    <p class="label">About me</p>
 
-  <h2>I didn't pick computers. <Marker>My school did.</Marker></h2>
+    <h2>I didn't pick computers. <Marker>My school did.</Marker></h2>
+  </Scan>
 
-  <div class="cols">
+  <Scan delay={120}><div class="cols">
     <p>
       Information Technology was a compulsory subject in 11th class, and it
       pulled me into web development. I wasn't serious about it. I kept trying
@@ -21,7 +24,7 @@
       keyboard I play cricket, and I love it. I try to get a little better at
       something every day by learning one small new thing.
     </p>
-  </div>
+  </div></Scan>
 
   <a class="more" href="/ask/about-me">More about me <span aria-hidden="true">→</span></a>
 </div>
