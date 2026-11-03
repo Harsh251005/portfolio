@@ -4,12 +4,8 @@ import { glob } from 'astro/loaders';
 /* ---------------------------------------------------------------
    One knowledge entry = one answer = one Markdown file.
 
-   This collection is the site's single source of truth. Three
-   things consume it and none of them own it:
-     1. the Thread      (tap a question, unfold this answer)
-     2. /everything     (all of them, flattened and linear)
-     3. /ask/[slug]     (one real URL per answer)
-   A fourth will later: the LLM's retrieval corpus.
+   The home page reads the projects from this collection. The rest
+   is kept for a future agent's retrieval corpus.
 
    Adding a question to the site means adding a file here. No code
    changes anywhere.

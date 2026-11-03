@@ -1,9 +1,10 @@
 <script lang="ts">
   /* The person: what I am now, then the short version.
 
-     The headline decodes when it scrolls into view, with the same symbols
-     as the name and the photo, and decodes again on hover. Then each
-     column rises, a lime rule draws across its top, and its words come
+     The headline is inked in: a wave of weight runs through it, each letter
+     growing from a hairline to heavy and lime, then settling. Afterwards the
+     letters near the pointer swell, which only a variable font can do. Each
+     column then rises, a lime rule draws across its top, and its words come
      into focus one by one.
 
      It is all plain text from the start. Script hides it only once it can
@@ -30,10 +31,11 @@
     },
   ];
 
-  const GLYPHS = '▮▯░▒▓#@$%&01<>/\\|=+*';
-  /** Gap between letters, and how long each stays a symbol, in ms. */
-  const STEP = 22;
-  const HOLD = 420;
+  /** Resting weight of the headline, and how heavy it swells near the pointer. */
+  const WEIGHT = 560;
+  const SWELL = 900;
+  /** How far the swell reaches from the pointer, in px. */
+  const REACH = 170;
 
   const words = (s: string) => s.split(/\s+/).filter(Boolean);
 
@@ -52,48 +54,22 @@
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const letters = Array.from(heading.querySelectorAll<HTMLElement>('.ch'));
-    const real = letters.map((l) => l.textContent ?? '');
     const cols = Array.from(root.querySelectorAll<HTMLElement>('.col'));
-    const timers = new Set<ReturnType<typeof setTimeout>>();
-    let busy = false;
 
     root.classList.add('armed');
 
-    const decode = (step: number, hold: number) => {
-      if (busy) return;
-      busy = true;
-      // A symbol is not as wide as its letter: hold each slot still.
-      letters.forEach((l) => (l.style.width = getComputedStyle(l).width));
-
-      letters.forEach((el, i) => {
-        const begin = performance.now() + i * step;
-        const tick = () => {
-          if (performance.now() - begin >= hold) {
-            el.textContent = real[i];
-            el.classList.remove('glyph');
-            return;
-          }
-          el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-          el.classList.add('glyph');
-          timers.add(setTimeout(tick, 45));
-        };
-        timers.add(setTimeout(tick, i * step));
-      });
-
-      timers.add(
-        setTimeout(() => {
-          // Back to natural widths, so a later resize can't leave them stale.
-          letters.forEach((l) => (l.style.width = ''));
-          busy = false;
-        }, letters.length * step + hold + 120),
-      );
+    // A heavier letter is a wider letter. Hold every slot at its resting
+    // width so the weight can change without the line reflowing.
+    const pin = () => {
+      letters.forEach((l) => (l.style.width = ''));
+      const sizes = letters.map((l) => getComputedStyle(l).width);
+      letters.forEach((l, i) => (l.style.width = sizes[i]));
     };
+    pin();
+    document.fonts?.ready.then(pin);
+    addEventListener('resize', pin, { passive: true });
 
-    const showHeading = () => {
-      if (heading.classList.contains('live')) return;
-      heading.classList.add('live');
-      decode(STEP, HOLD);
-    };
+    const showHeading = () => heading.classList.add('live');
     const showCol = (c: HTMLElement) => c.classList.add('live');
 
     const io = new IntersectionObserver(
@@ -121,14 +97,30 @@
       }
     }, 500);
 
-    const replay = () => decode(14, 300);
-    heading.addEventListener('pointerenter', replay);
+    /* ---- the letters near the pointer swell ---- */
+    const swell = (e: PointerEvent) => {
+      letters.forEach((l) => {
+        const r = l.getBoundingClientRect();
+        const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+        const k = Math.max(0, 1 - d / REACH);
+        l.style.fontVariationSettings = `'wght' ${Math.round(WEIGHT + (SWELL - WEIGHT) * k * k)}`;
+      });
+    };
+    const rest = () => letters.forEach((l) => (l.style.fontVariationSettings = ''));
+    const fine = matchMedia('(pointer: fine)').matches;
+    if (fine) {
+      heading.addEventListener('pointermove', swell);
+      heading.addEventListener('pointerleave', rest);
+    }
 
     return () => {
       io.disconnect();
       clearInterval(poll);
-      timers.forEach(clearTimeout);
-      heading.removeEventListener('pointerenter', replay);
+      removeEventListener('resize', pin);
+      if (fine) {
+        heading.removeEventListener('pointermove', swell);
+        heading.removeEventListener('pointerleave', rest);
+      }
     };
   });
 </script>
@@ -145,7 +137,7 @@
   <h2 bind:this={heading} aria-label={`${HEAD} ${MARKED}`}>
     <span aria-hidden="true">
       {@render spelled(headLetters)}
-      <Marker>{@render spelled(markLetters)}</Marker>
+      <Marker delay={1500}>{@render spelled(markLetters)}</Marker>
     </span>
   </h2>
 
@@ -178,13 +170,10 @@
   }
 
   .word { display: inline-block; white-space: nowrap; }
-  .ch { display: inline-block; text-align: center; }
-
-  /* While it is still a symbol. */
-  .ch:global(.glyph) {
-    font-family: var(--font-mono);
-    font-variation-settings: 'wght' 500;
-    color: var(--accent);
+  .ch {
+    display: inline-block;
+    text-align: center;
+    transition: font-variation-settings 260ms var(--ease-out);
   }
 
   .cols {
@@ -218,11 +207,15 @@
 
   :global(.armed) h2:not(:global(.live)) .ch { opacity: 0; }
 
-  h2:global(.live) .ch { animation: letter-in 1ms linear calc(var(--i) * 22ms) backwards; }
+  h2:global(.live) .ch {
+    animation: ink-in 1300ms cubic-bezier(0.3, 0.6, 0.2, 1) calc(var(--i) * 30ms) backwards;
+  }
 
-  @keyframes letter-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  @keyframes ink-in {
+    0%   { opacity: 0; font-variation-settings: 'wght' 100; color: var(--ink); }
+    30%  { opacity: 1; font-variation-settings: 'wght' 100; color: var(--ink); }
+    62%  { font-variation-settings: 'wght' 900; color: var(--accent); }
+    100% { opacity: 1; font-variation-settings: 'wght' 560; color: var(--ink); }
   }
 
   :global(.armed) .gen { display: inline-block; }

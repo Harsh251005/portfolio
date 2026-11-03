@@ -1,7 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page on neutral black with light cards and one acid-green accent, plus one
-page per entry (about me, how I work, each project) in the same style.
+A static site. One scrolling page on neutral black with light cards and one acid-green accent.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
 
@@ -41,7 +40,7 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content**, seven files. The three projects (`moment` → `plain`, a one-line `blurb` for the home-page card, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `talk-to-me`. |
+| `src/content/knowledge/*.md` | The three projects (`blurb` for the home-page card, plus a `link` to the repo). The other files (`the-problem`, `how-i-work`, `working-with-me`, `talk-to-me`) aren't shown anywhere: they are kept only for a future agent, read by `src/lib/brain/`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
@@ -57,12 +56,6 @@ the "How it's built" link. Don't add architecture to the site; improve the READM
 
 Each piece is meant to be replaceable on its own. Deleting a knowledge file or a
 whole section shouldn't require touching anything else.
-
-## The two ways in
-
-- `/` — the page.
-- `/ask/<id>` — one page per entry, on the same black, as one light card. Readable with JavaScript off, so it is also
-  what search engines read.
 
 ## The photo
 
@@ -109,12 +102,15 @@ What moves:
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
   the card tilts toward the pointer with a lime light along its edge.
-- **The About section** decodes its headline with the same symbols as the name
-  (and again on hover); each column then rises, a lime rule draws across it, and
+- **The About section** inks its headline in: a wave of variable-font weight runs
+  through it, and letters near the pointer swell afterwards. Each column then rises, a lime rule draws across it, and
   its words come into focus.
 - **The photo** arrives as a grid of lime symbols picked by the photo's brightness,
   then a wave resolves it into the real image (`Portrait.svelte`). The same symbols
   appear under the pointer.
+- **The skills map** starts as noise and scrolling pulls the dots into labelled
+  clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest
+  neighbours. The grouping is hand-made from the resume, not computed by a model.
 - **The education staircase** rises out of the floor as you scroll, each step
   lighter than the last, and sinks back if you scroll up (`Education.svelte`).
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.

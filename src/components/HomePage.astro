@@ -1,5 +1,5 @@
 ---
-/* The page, as an ordered stack of bands: who, the person, the work, education,
+/* The page, as an ordered stack of bands: who, the person, the work, skills, education,
    how to reach me. Reordering the page means moving these blocks,
    nothing else. */
 import Base from '../layouts/Base.astro';
@@ -10,6 +10,7 @@ import { PORTRAIT } from '../lib/portrait';
 import Hero from './stage/Hero.svelte';
 import About from './stage/About.svelte';
 import Work from './stage/Work.svelte';
+import Skills from './stage/Skills.svelte';
 import Education from './stage/Education.svelte';
 import Contact from './stage/Contact.svelte';
 
@@ -32,6 +33,10 @@ const projects = entries.filter((entry) => entry.card === 'project');
 
   <Band id="work">
     <Work client:load entries={projects} />
+  </Band>
+
+  <Band id="skills">
+    <Skills client:load />
   </Band>
 
   <Band id="education">

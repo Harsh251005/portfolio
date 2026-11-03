@@ -6,9 +6,8 @@ import type { Entry } from './brain/types';
    Loads the knowledge collection and flattens it into plain Entry
    objects that are safe to send to the browser.
 
-   Everything that displays knowledge goes through here: the Thread,
-   the Map, /everything, /ask/[slug]. None of them read the
-   collection directly, so the shape can change in one place.
+   Everything that displays knowledge goes through here, so the shape
+   can change in one place.
    --------------------------------------------------------------- */
 
 export { GROUPS, GROUP_LABELS };

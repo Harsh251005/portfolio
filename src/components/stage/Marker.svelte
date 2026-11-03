@@ -6,7 +6,7 @@
      once it can bring it back, and a timer always brings it back. */
   import { onMount } from 'svelte';
 
-  let { children }: { children?: any } = $props();
+  let { children, delay = 350 }: { children?: any; delay?: number } = $props();
 
   let el: HTMLElement;
   let armed = $state(false);
@@ -21,14 +21,14 @@
       ([entry]) => {
         if (entry.isIntersecting) {
           // Let the eye land on the words before the pen arrives.
-          setTimeout(() => (shown = true), 350);
+          setTimeout(() => (shown = true), delay);
           io.disconnect();
         }
       },
       { threshold: 0.9 },
     );
     io.observe(el);
-    const bail = setTimeout(() => (shown = true), 3000);
+    const bail = setTimeout(() => (shown = true), delay + 2650);
     return () => {
       io.disconnect();
       clearTimeout(bail);
