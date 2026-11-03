@@ -11,19 +11,22 @@ followups: ["working-with-me", "talk-to-me"]
 
 ## Where I'm from
 
-Borivali East, in the north of Mumbai. I like the food and the street life here.
+Borivali East, in the north of Mumbai.
 
 I'm happy to work remotely, to meet in person in Mumbai, or to move for the
 right team.
 
 ## How I got here
 
-Information Technology was a compulsory subject in 11th class, and it got me
-interested in web development. I wasn't serious about it then. I learned by
-trying things, breaking them and looking up how to fix them.
+I didn't pick computers. My school did. Information Technology was a compulsory
+subject in 11th class, and it pulled me into web development.
 
-A few months ago I moved into AI, and that's when I got serious. I finished my
-degree in Information Technology in 2026.
+I wasn't serious about it. I kept trying things, breaking them, and working out
+why they broke. No plan, just a lot of trial and error.
+
+A few months ago I pointed all of that at AI, and for the first time I got
+serious. Everything on this site came out of that. I finished my degree in
+Information Technology in 2026.
 
 ## Outside of work
 
@@ -32,8 +35,18 @@ better every day by learning one small new thing.
 
 ## Where I'm headed
 
-I want to get really good at this: good enough that you can hand me a vague
-problem and a hard limit, and I come back with something that holds up.
+I'm looking for an AI engineering role on a team that ships to real users. I'm
+in Mumbai, and I'm open to remote work or moving for the right team.
 
-The way there is building things real people depend on, inside a team that
-ships. Longer term, I want to build things of my own.
+Here is what I can already do, end to end:
+
+- **Answer a phone.** A voice receptionist that books appointments in Hindi and
+  English.
+- **Show its sources.** A document reader that points to the page behind every
+  answer.
+- **Fix its own code, then stop.** A coder that retries from its own errors and
+  knows when to quit.
+
+What I want next is to be the person you can hand a vague problem and a hard
+limit, like a budget, a deadline or a response time, and who comes back with
+something that holds up. Longer term, I want to build products of my own.
