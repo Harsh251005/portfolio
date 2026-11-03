@@ -140,10 +140,10 @@ a.touch {
   --ink: var(--card-ink);
   --ink-soft: var(--card-soft);
   --ink-faint: var(--card-faint);
-  --accent: var(--card-accent);
-  --accent-soft: #dbe1ff;
+  --accent: var(--card-accent-text);
+  --accent-soft: color-mix(in oklab, var(--card-accent) 38%, transparent);
   --rule: var(--card-rule);
-  --paper-sunk: #e0e4ea;
+  --paper-sunk: #e0e0d8;
   color: var(--ink);
   position: relative;
   border-radius: var(--glass-radius);

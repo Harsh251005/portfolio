@@ -163,14 +163,14 @@
 
   .card:hover .w,
   .card:focus-within .w {
-    background-color: color-mix(in oklab, var(--accent) calc(var(--w) * 42%), transparent);
+    background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent);
   }
 
   .card:hover .hint,
   .card:focus-within .hint { opacity: 1; }
 
   @media (hover: none) {
-    .w { background-color: color-mix(in oklab, var(--accent) calc(var(--w) * 26%), transparent); }
+    .w { background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 30%), transparent); }
     .hint { opacity: 1; }
   }
 
@@ -179,7 +179,7 @@
     font-size: var(--t-lg);
     font-variation-settings: 'opsz' 72, 'wght' 300;
     line-height: 1;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   h3 {

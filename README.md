@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page on a slate ground with light cards, plus one
+A static site. One scrolling page on neutral black with light cards and one acid-green accent, plus one
 page per entry (about me, how I work, each project) in the same style.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
@@ -61,7 +61,7 @@ whole section shouldn't require touching anything else.
 ## The two ways in
 
 - `/` — the page.
-- `/ask/<id>` — one page per entry, on the same slate, as one light card. Readable with JavaScript off, so it is also
+- `/ask/<id>` — one page per entry, on the same black, as one light card. Readable with JavaScript off, so it is also
   what search engines read.
 
 ## The photo

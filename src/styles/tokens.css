@@ -79,14 +79,15 @@
 }
 
 /* --- Colour ---------------------------------------------------
-   Between light and dark: a slate ground with light cards on it, so
-   both tones are on screen at once. One accent, a cobalt, brightened
-   for the dark ground and left at full strength on the cards. No
-   gradients, no glow.
+   Carbon and acid. A neutral black ground (no blue in it), light
+   cards on top of it, and one acid yellow-green. Flat everywhere:
+   no gradients, no glow, no second accent.
 
-   Contrast, checked: --ink-faint on --paper about 5:1, --accent on
-   --paper about 4.7:1; on the cards, --card-soft about 8:1 and
-   --card-accent about 7.5:1.
+   The acid is bright enough to be an outline, a shadow or a
+   highlight, but too pale to be text on a light card, so cards use
+   a darker olive (--card-accent-text) wherever the accent has to be
+   read. Contrast, checked: --ink-faint on --paper about 5.9:1,
+   --card-accent-text on --card-bg about 5.9:1.
    --------------------------------------------------------------- */
 
 :root {
@@ -94,28 +95,29 @@
   --font-label:   var(--font-mono);
   --hero-scale:   0.86;
 
-  --paper:        #2a3140;
-  --paper-sunk:   #222834;
-  --paper-raised: #343c4e;
-  --rule:         #4a5468;
-  --rule-soft:    #3a4256;
+  --paper:        #0e0f10;
+  --paper-sunk:   #080909;
+  --paper-raised: #1a1b1d;
+  --rule:         #34363a;
+  --rule-soft:    #24262a;
 
-  --ink:          #eef1f6;
-  --ink-soft:     #c3cad8;
-  --ink-faint:    #9aa4b8;
+  --ink:          #f2f2ee;
+  --ink-soft:     #b9bab5;
+  --ink-faint:    #8e908a;
 
-  --accent:       #7f97ff;
-  --accent-soft:  #3a4670;
-  --accent-ink:   #0d0f14;
+  --accent:       #d7ff3a;
+  --accent-soft:  #3b4712;
+  --accent-ink:   #0e0f10;
 
-  /* The light sheets that sit on the slate. Anything inside a card
+  /* The light sheets that sit on the black. Anything inside a card
      takes its colours from these, not from the page's. */
-  --card-bg:      #eef1f6;
-  --card-ink:     #0d0f14;
-  --card-soft:    #3d4452;
-  --card-faint:   #5d6575;
-  --card-accent:  #1f3df5;
-  --card-rule:    #c3cad6;
+  --card-bg:           #ecece6;
+  --card-ink:          #0e0f10;
+  --card-soft:         #3d3d3d;
+  --card-faint:        #666666;
+  --card-accent:       #9bbd1a;
+  --card-accent-text:  #4d6100;
+  --card-rule:         #cfcfc7;
 
   --glass-tint:        var(--card-bg);
   --glass-tint-strong: var(--card-bg);
