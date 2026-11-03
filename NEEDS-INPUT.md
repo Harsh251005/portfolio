@@ -22,8 +22,6 @@ and places it.
   Remove it once you've got a job.
 - **`working-with-me.md`** and its folded "What I'm still working on" section:
   I wrote your weaknesses. If you wouldn't say it in an interview, cut it.
-- **"Where I'm headed"** in `about-me.md`: says you want to build your own
-  things longer term. Too much, or not enough?
 
 ## 4. Before deploying
 
@@ -37,4 +35,4 @@ and places it.
 - Links are real: email, GitHub, LinkedIn, and one repo per project.
 - No metrics anywhere, on your instruction.
 - Project detail lives on GitHub, not on the site (2026-09-28).
-- Open to relocating, written into `about-me.md`.
+- Open to relocating, written into `Contact.svelte`.

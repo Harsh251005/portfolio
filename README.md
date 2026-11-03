@@ -41,7 +41,7 @@ place.
 
 | Path | What it is |
 |---|---|
-| `src/content/knowledge/*.md` | **The whole site's content**, eight files. The three projects (`moment` → `plain`, a one-line `blurb` for the home-page card, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `about-me`, `talk-to-me`. |
+| `src/content/knowledge/*.md` | **The whole site's content**, seven files. The three projects (`moment` → `plain`, a one-line `blurb` for the home-page card, plus a `link` to the repo), `the-problem`, `how-i-work`, `working-with-me`, `talk-to-me`. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
@@ -109,6 +109,9 @@ What moves:
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
   the card tilts toward the pointer with a lime light along its edge.
+- **The About section** decodes its headline with the same symbols as the name
+  (and again on hover); each column then rises, a lime rule draws across it, and
+  its words come into focus.
 - **The photo** arrives as a grid of lime symbols picked by the photo's brightness,
   then a wave resolves it into the real image (`Portrait.svelte`). The same symbols
   appear under the pointer.
