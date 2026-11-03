@@ -20,7 +20,7 @@
   h2 {
     margin-top: var(--s-4);
     font-size: clamp(2.25rem, 4.6vw + 1rem, 5.25rem);
-    font-variation-settings: 'opsz' 72, 'wght' 440, 'WONK' 1;
+    font-variation-settings: 'wght' 440;
     line-height: 0.98;
     letter-spacing: -0.03em;
     max-width: 14ch;

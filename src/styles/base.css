@@ -29,7 +29,7 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-variation-settings: 'opsz' var(--opsz-display), 'wght' 400, 'SOFT' 0;
+  font-variation-settings: 'wght' 400;
   line-height: var(--leading-tight);
   letter-spacing: -0.015em;
   text-wrap: balance;

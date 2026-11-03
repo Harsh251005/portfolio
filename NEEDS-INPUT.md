@@ -9,20 +9,18 @@ gap; each one renders as a marked box on the page.
 
 Done: the About copy was written from your own answers on 2026-11-03.
 
-## 2. One file to drop in
+## 2. Check these are yours
 
-(The photo was removed from the site on 2026-11-03, on your call.)
-
-## 3. Check these are yours
-
-- **The hero line:** *"I build software that makes decisions on its own — and
-  then I make sure it makes the right ones."* It's also on the share card.
+- **The hero line:** *"I build AI that answers phones, reads documents and fixes
+  its own code. And I make sure it holds up."* It's also on the share card.
+- **The About copy:** "On paper, I was headed for balance sheets" and "By 2023
+  the habit had won" are inferred from your resume, not your words.
+- **The skills map:** the Voice cluster comes from your clinic project, not your
+  resume. The grouping is hand-made, so don't describe it as real embeddings.
 - **"Open to work"** on the first screen (`status` in `src/lib/links.ts`).
   Remove it once you've got a job.
-- **`working-with-me.md`** and its folded "What I'm still working on" section:
-  I wrote your weaknesses. If you wouldn't say it in an interview, cut it.
 
-## 4. Before deploying
+## 3. Before deploying
 
 - **The domain:** `site:` in `astro.config.mjs`. Sitemap, robots.txt, canonical
   URLs and share tags all read it.
@@ -35,3 +33,11 @@ Done: the About copy was written from your own answers on 2026-11-03.
 - No metrics anywhere, on your instruction.
 - Project detail lives on GitHub, not on the site (2026-09-28).
 - Open to relocating, written into `Contact.svelte`.
+- Single page, no photo, no karate (2026-11-03).
+
+## Later
+
+- The sea adapts to the visitor's real time of day. All colours are in `NIGHT` in
+  `src/lib/scene/sea.ts`.
+- `src/content/knowledge/` non-project files and `src/lib/brain/` aren't shown on
+  the site. They are kept for a possible AI agent; delete them if that's dropped.

@@ -14,6 +14,7 @@
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
+import SeaScene from '../components/stage/SeaScene.svelte';
 import { OWNER } from '../lib/links';
 ---
 
@@ -25,12 +26,13 @@ import { OWNER } from '../lib/links';
     <meta name="robots" content="noindex, nofollow" />
   </head>
   <body>
+    <SeaScene client:load />
     <div class="card" id="og">
       <p class="kicker">{OWNER.role} · Mumbai</p>
       <h1>Harsh<br />Dharnidharka</h1>
       <p class="line">
         I build AI that answers phones, reads documents
-        and fixes its own code — and I make sure it holds up.
+        and fixes its own code. And I make sure it holds up.
       </p>
     </div>
 
@@ -81,10 +83,10 @@ import { OWNER } from '../lib/links';
   h1 {
     margin: 0;
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 44, 'wght' 380, 'SOFT' 0, 'WONK' 1;
-    font-size: 96px;
-    line-height: 0.98;
-    letter-spacing: -0.02em;
+    font-variation-settings: 'wght' 560;
+    font-size: 92px;
+    line-height: 0.96;
+    letter-spacing: -0.03em;
     color: var(--ink);
   }
 
@@ -92,7 +94,7 @@ import { OWNER } from '../lib/links';
     margin: 30px 0 0;
     max-width: 30ch;
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 20, 'wght' 300;
+    font-variation-settings: 'wght' 380;
     font-size: 26px;
     line-height: 1.45;
     color: var(--ink-soft);

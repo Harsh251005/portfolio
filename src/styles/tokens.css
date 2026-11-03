@@ -5,8 +5,7 @@
 
 :root {
   /* --- Type ----------------------------------------------------
-     Fraunces carries voice; Archivo carries information. */
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+     Archivo throughout; --font-display is set with the colours below. */
   --font-body:    'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 
@@ -23,11 +22,6 @@
   --leading-tight: 1.05;
   --leading-snug:  1.25;
   --leading-body:  1.6;
-
-  /* Fraunces optical size. Kept well below the 144 maximum: the high
-     end thins horizontal strokes until capitals lose their crossbars. */
-  --opsz-display: 44;
-  --opsz-text:    14;
 
   /* --- Space ---------------------------------------------------
      A 4px-rooted scale. Section rhythm is fluid so phone layouts

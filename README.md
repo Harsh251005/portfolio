@@ -62,14 +62,17 @@ whole section shouldn't require touching anything else.
 generated from the real fonts and the real page rather than drawn by hand, so
 it can be remade whenever the copy changes:
 
-1. `npm run build && npx serve dist` (or any static server).
-2. Open `/og-card/`. It sizes itself to your window and reports the exact region
-   to capture in the `data-capture` attribute on `#og`.
-3. Screenshot that region from the top-left corner.
-4. Scale it to 1200×630 and save it over `public/og.png`.
+Capture it from the build, because the dev server would add its toolbar:
 
-On a window at least 1200×700 the card renders at 1:1 and step 3 needs no
-scaling.
+```
+npm run build
+python3 -m http.server 4329 -d dist &
+google-chrome --headless --no-sandbox --enable-unsafe-swiftshader --hide-scrollbars \
+  --window-size=1200,630 --virtual-time-budget=6000 \
+  --screenshot=public/og.png http://localhost:4329/og-card/
+```
+
+The card shows the real sea scene behind the name and tagline.
 
 ## Motion
 

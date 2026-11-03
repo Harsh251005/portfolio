@@ -199,7 +199,7 @@
     max-width: 30ch;
     font-family: var(--font-display);
     font-size: var(--t-xl);
-    font-variation-settings: 'opsz' 28, 'wght' 380;
+    font-variation-settings: 'wght' 380;
     line-height: 1.3;
     color: var(--ink-soft);
   }
