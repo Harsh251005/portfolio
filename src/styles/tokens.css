@@ -79,15 +79,12 @@
 }
 
 /* --- Colour ---------------------------------------------------
-   Carbon and acid. A neutral black ground (no blue in it), light
-   cards on top of it, and one acid yellow-green. Flat everywhere:
-   no gradients, no glow, no second accent.
-
-   The acid is bright enough to be an outline, a shadow or a
-   highlight, but too pale to be text on a light card, so cards use
-   a darker olive (--card-accent-text) wherever the accent has to be
-   read. Contrast, checked: --ink-faint on --paper about 5.9:1,
-   --card-accent-text on --card-bg about 5.9:1.
+   Moonlight. Everything is drawn from the sea scene behind the page:
+   night blue for the panels, moon white for text, and one warm pale
+   gold as the accent, the same colour as the boat's lamp. Panels stay
+   see-through so the water shows, with thin borders and soft shadows.
+   Highlights use a richer gold, because the pale one turns grey when
+   it is thinned out over blue.
    --------------------------------------------------------------- */
 
 :root {
@@ -95,37 +92,37 @@
   --font-label:   var(--font-mono);
   --hero-scale:   0.86;
 
-  --paper:        #0e0f10;
-  --paper-sunk:   #080909;
-  --paper-raised: #1a1b1d;
-  --rule:         #34363a;
-  --rule-soft:    #24262a;
+  --paper:        #070b18;
+  --paper-sunk:   #050813;
+  --paper-raised: #111a30;
+  --rule:         rgba(210, 222, 245, 0.24);
+  --rule-soft:    rgba(210, 222, 245, 0.12);
 
-  --ink:          #f2f2ee;
-  --ink-soft:     #b9bab5;
-  --ink-faint:    #8e908a;
+  --ink:          #f5f2e8;
+  --ink-soft:     #c7cdda;
+  --ink-faint:    #9aa3b8;
 
-  --accent:       #d7ff3a;
-  --accent-soft:  #3b4712;
-  --accent-ink:   #0e0f10;
+  /* Warm moonlight: the one accent. */
+  --accent:       #f3dfae;
+  --accent-soft:  rgba(226, 170, 72, 0.42);
+  --accent-ink:   #070b18;
 
-  /* The light sheets that sit on the black. Anything inside a card
-     takes its colours from these, not from the page's. */
-  --card-bg:           #ecece6;
-  --card-ink:          #0e0f10;
-  --card-soft:         #3d3d3d;
-  --card-faint:        #666666;
-  --card-accent:       #9bbd1a;
-  --card-accent-text:  #4d6100;
-  --card-rule:         #cfcfc7;
+  /* Panels: deep night, with the water showing faintly through. */
+  --card-bg:           rgba(9, 16, 34, 0.78);
+  --card-ink:          var(--ink);
+  --card-soft:         var(--ink-soft);
+  --card-faint:        var(--ink-faint);
+  --card-accent:       #e2aa48;
+  --card-accent-text:  #f3dfae;
+  --card-rule:         rgba(210, 222, 245, 0.2);
 
   --glass-tint:        var(--card-bg);
   --glass-tint-strong: var(--card-bg);
-  --glass-border:      var(--card-ink);
+  --glass-border:      rgba(222, 230, 250, 0.3);
   --glass-edge:        transparent;
   --glass-blur:        0px;
-  --glass-shadow:      5px 5px 0 var(--accent);
-  --glass-radius:      3px;
-  --shadow-hard:       5px 5px 0 var(--accent);
-  --card-hover:        9px 9px 0 var(--accent);
+  --glass-shadow:      0 18px 50px rgba(2, 5, 14, 0.45);
+  --glass-radius:      6px;
+  --shadow-hard:       var(--glass-shadow);
+  --card-hover:        0 26px 70px rgba(2, 5, 14, 0.6), 0 0 34px rgba(243, 223, 174, 0.14);
 }

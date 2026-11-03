@@ -206,7 +206,7 @@
     };
     root.addEventListener('focusin', focus);
 
-    /* ---- tilt toward the pointer, with a lime edge light ---- */
+    /* ---- tilt toward the pointer, with a moonlit edge ---- */
     const cleanup: Array<() => void> = [];
     if (matchMedia('(pointer: fine)').matches) {
       cards.forEach((card) => {
@@ -376,14 +376,14 @@
     box-shadow: var(--card-hover);
   }
 
-  /* A lime edge light that follows the pointer around the border. */
+  /* A moonlit edge that follows the pointer around the border. */
   .card::after {
     content: '';
     position: absolute;
     inset: -1.5px;
     border-radius: inherit;
     padding: 1.5px;
-    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), #d7ff3a, transparent 62%);
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), #f3dfae, transparent 62%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -411,7 +411,7 @@
     background: linear-gradient(
       105deg,
       transparent 40%,
-      color-mix(in oklab, #d7ff3a 85%, transparent) 50%,
+      color-mix(in oklab, #f3dfae 70%, transparent) 50%,
       transparent 60%
     );
     transform: translateX(var(--sh, 60%));

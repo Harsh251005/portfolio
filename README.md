@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page over a moonlit sea, with light cards and one acid-green accent.
+A static site. One scrolling page over a moonlit sea, with night-blue panels and one warm moonlight accent.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
 
@@ -99,9 +99,9 @@ What moves:
   then a sweep of attention crosses the text once, every word lit in proportion to
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
-  the card tilts toward the pointer with a lime light along its edge.
+  the card tilts toward the pointer with moonlight along its edge.
 - **The About section** inks its headline in: a wave of variable-font weight runs
-  through it, and letters near the pointer swell afterwards. Each column then rises, a lime rule draws across it, and
+  through it, and letters near the pointer swell afterwards. Each column then rises, a moonlit rule draws across it, and
   its words come into focus.
 - **The skills map** starts as noise and scrolling pulls the dots into labelled
   clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest

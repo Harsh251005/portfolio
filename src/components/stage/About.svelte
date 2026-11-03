@@ -2,9 +2,9 @@
   /* The person: what I am now, then the short version.
 
      The headline is inked in: a wave of weight runs through it, each letter
-     growing from a hairline to heavy and lime, then settling. Afterwards the
+     growing from a hairline to heavy and moonlit, then settling. Afterwards the
      letters near the pointer swell, which only a variable font can do. Each
-     column then rises, a lime rule draws across its top, and its words come
+     column then rises, a moonlit rule draws across its top, and its words come
      into focus one by one.
 
      It is all plain text from the start. Script hides it only once it can

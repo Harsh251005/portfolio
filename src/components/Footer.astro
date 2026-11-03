@@ -66,7 +66,8 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
     gap: var(--s-3);
     min-height: 4rem;
     padding: var(--s-3) var(--s-5);
-    border: 1.5px solid var(--accent);
+    border: 1px solid var(--glass-border);
+    background: rgba(9, 16, 34, 0.55);
     border-radius: var(--glass-radius);
     color: var(--ink);
     font-size: var(--t-lg);
@@ -79,14 +80,15 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
       color 260ms var(--ease);
   }
 
-  .primary { background: var(--accent); color: var(--paper); }
+  .primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 
   .btn:hover,
   .btn:focus-visible {
     background: var(--accent);
     color: var(--paper);
     transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 0 var(--ink);
+    box-shadow: 0 14px 40px rgba(243, 223, 174, 0.22);
+    border-color: var(--accent);
   }
 
   .arrow { margin-left: auto; transition: transform 260ms var(--ease-out); }

@@ -21,7 +21,7 @@
     { name: 'Build & ship', skills: ['Python', 'SQL', 'FastAPI', 'Streamlit', 'Docker', 'Git', 'Render', 'Railway'] },
   ];
 
-  const LIME = '#d7ff3a';
+  const MOON = '#f3dfae';
   /** Dots per skill that fill out each cloud. */
   const CLOUD = 26;
   /** How many neighbours a skill reaches for. */
@@ -248,7 +248,7 @@
       // Quiet links inside each cluster, once it has formed.
       const linked = clamp((u - 0.7) * 3.4);
       if (linked > 0) {
-        ctx.strokeStyle = LIME;
+        ctx.strokeStyle = MOON;
         ctx.lineWidth = 1;
         ctx.globalAlpha = 0.34 * linked * dimmed;
         ctx.beginPath();
@@ -262,7 +262,7 @@
       }
 
       // The clouds and the noise they come from.
-      ctx.fillStyle = LIME;
+      ctx.fillStyle = MOON;
       for (let i = skills.length; i < dots.length; i++) {
         const p = place(dots[i], now);
         ctx.globalAlpha = (0.3 + 0.4 * Math.sin(now * 0.001 + dots[i].ph) ** 2) * dimmed;
@@ -273,7 +273,7 @@
       if (active >= 0 && glow > 0.01) {
         const a = place(dots[active], now);
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = LIME;
+        ctx.strokeStyle = MOON;
         ctx.globalAlpha = glow;
         ctx.beginPath();
         for (const j of near[active]) {
@@ -458,14 +458,14 @@
     white-space: nowrap;
     opacity: clamp(0, calc((var(--v, 1) - var(--s)) * 7), 1);
     transition: color 220ms var(--ease);
-    text-shadow: 0 0 6px var(--paper), 0 0 2px var(--paper);
+    text-shadow: 0 0 8px var(--paper), 0 0 2px var(--paper);
   }
 
   :global(.armed) .gname {
     padding: 0.15rem 0.5rem;
-    background: var(--paper);
-    border: 1.5px solid var(--accent);
-    border-radius: 3px;
+    background: rgba(7, 11, 24, 0.82);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
     pointer-events: none;
     text-shadow: none;
   }

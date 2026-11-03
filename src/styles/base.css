@@ -129,21 +129,19 @@ a.touch {
 /* ---------------------------------------------------------------
    Cards.
 
-   One class, used everywhere a panel is needed. A flat sheet of
-   paper, a thin ink border, and a hard offset shadow. (Named
-   `.glass` for historical reasons; the material is paper now.)
+   One class, used everywhere a panel is needed. Deep night blue with
+   the water showing faintly through, a thin moonlit border and a soft
+   shadow. No blur, on purpose: that look reads as generated.
    --------------------------------------------------------------- */
 
 .glass {
-  /* Everything inside a card reads against light paper, so it takes
-     the card's colours instead of the page's. */
+  /* Everything inside a card takes the card's colours. */
   --ink: var(--card-ink);
   --ink-soft: var(--card-soft);
   --ink-faint: var(--card-faint);
   --accent: var(--card-accent-text);
-  --accent-soft: color-mix(in oklab, var(--card-accent) 38%, transparent);
+  --accent-soft: color-mix(in oklab, var(--card-accent) 42%, transparent);
   --rule: var(--card-rule);
-  --paper-sunk: #e0e0d8;
   color: var(--ink);
   position: relative;
   border-radius: var(--glass-radius);

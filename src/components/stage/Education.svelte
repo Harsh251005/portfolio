@@ -134,10 +134,10 @@
     will-change: transform;
   }
 
-  /* Dark to light as the climb goes up. */
-  .col:nth-child(1) .step { background: #1a1b1d; }
-  .col:nth-child(2) .step { background: #303230; }
-  .col:nth-child(3) .step { background: var(--card-bg); color: var(--card-ink); }
+  /* Night lifting as the climb goes up. */
+  .col:nth-child(1) .step { background: rgba(9, 16, 34, 0.76); }
+  .col:nth-child(2) .step { background: rgba(26, 38, 68, 0.78); }
+  .col:nth-child(3) .step { background: rgba(50, 66, 104, 0.8); }
   .col:nth-child(1) { width: 72%; }
   .col:nth-child(2) { width: 82%; }
   .col:nth-child(3) { width: 92%; }
@@ -161,7 +161,7 @@
   /* The step that isn't built yet. */
   .next .step {
     background: transparent;
-    border: 2px dashed var(--accent);
+    border: 1.5px dashed var(--accent);
     color: var(--accent);
     text-decoration: none;
     transition: background-color 320ms var(--ease), color 320ms var(--ease);
@@ -178,7 +178,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: end;
       height: clamp(30rem, 66vh, 38rem);
-      border-bottom: 1.5px solid var(--ink);
+      border-bottom: 1px solid var(--rule);
     }
 
     .col:nth-child(n) { width: auto; }
