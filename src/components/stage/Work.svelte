@@ -12,6 +12,37 @@
 
   let { entries }: { entries: Entry[] } = $props();
 
+  /** Words a model would barely look at. */
+  const STOP = new Set(['a','an','the','in','and','or','of','it','its','to','is','as','with','on','for','at','by','into','but','their','them']);
+
+  interface Word { t: string; w: number }
+
+  /** Splits a blurb into words, each with a weight 0–1: how hard a
+   *  reader (or a model) would look at it. Words wrapped in *stars*
+   *  in the content are the ones that matter and get full weight;
+   *  everything else gets a small, uneven weight, so hovering shows a
+   *  graded map rather than two flat colours. */
+  function weigh(blurb: string): Word[] {
+    const out: Word[] = [];
+    let n = 0;
+    for (const part of blurb.split(/(\*[^*]+\*)/)) {
+      const strong = part.startsWith('*');
+      const text = strong ? part.slice(1, -1) : part;
+      for (const piece of text.split(/(\s+)/)) {
+        if (!piece) continue;
+        if (/^\s+$/.test(piece)) {
+          out.push({ t: piece, w: 0 });
+          continue;
+        }
+        const bare = piece.replace(/[^\w']/g, '').toLowerCase();
+        const base = STOP.has(bare) ? 0.04 : 0.12 + (((n * 37) % 7) / 7) * 0.2;
+        out.push({ t: piece, w: strong ? 1 : base });
+        n++;
+      }
+    }
+    return out;
+  }
+
   /** Which way each card leans as it arrives. It rests square. */
   const LEAN = [-2.5, 1.8, -1.5];
 
@@ -49,10 +80,18 @@
 
   <ol class="deck" class:armed class:dealt bind:this={deck}>
     {#each entries as entry, i (entry.id)}
-      <li class="card" style={`--lean:${LEAN[i % LEAN.length]}deg; --i:${i}`}>
-        <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <li class="card glass" style={`--lean:${LEAN[i % LEAN.length]}deg; --i:${i}`}>
+        <div class="top">
+          <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <span class="hint" aria-hidden="true">attention</span>
+        </div>
         <h3>{entry.tagline ?? entry.short}</h3>
-        <p>{entry.blurb ?? entry.plain}</p>
+        <p>
+          {#each weigh(entry.blurb ?? entry.plain ?? '') as word, k (k)}<span
+              class="w"
+              style={`--w:${word.w}; --k:${k}`}>{word.t}</span
+            >{/each}
+        </p>
         {#if entry.link}
           <a href={entry.link} rel="noreferrer noopener">
             How it's built <span aria-hidden="true">↗</span>
@@ -88,17 +127,51 @@
     flex-direction: column;
     gap: var(--s-3);
     padding: var(--s-6);
-    background: var(--paper-raised);
+    background: var(--card-bg);
     border: 1.5px solid var(--glass-border);
     border-radius: var(--glass-radius);
     box-shadow: var(--shadow-hard);
-    transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out), border-color 420ms var(--ease-out);
+    transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out);
   }
 
   .card:hover {
     transform: translate(-3px, -3px);
     box-shadow: var(--card-hover);
-    border-color: var(--accent);
+  }
+
+  .top { display: flex; justify-content: space-between; align-items: baseline; }
+
+  .hint {
+    font-family: var(--font-label);
+    font-size: var(--t-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    opacity: 0;
+    transition: opacity 320ms var(--ease);
+  }
+
+  /* What a model's attention might look like over this sentence:
+     each word lights in proportion to its weight, sweeping left to
+     right. Hover or keyboard focus shows it; on a touch screen,
+     where there is no hover, it is shown at rest. */
+  .w {
+    border-radius: 2px;
+    padding-block: 0.04em;
+    transition: background-color 420ms var(--ease) calc(var(--k) * 24ms);
+  }
+
+  .card:hover .w,
+  .card:focus-within .w {
+    background-color: color-mix(in oklab, var(--accent) calc(var(--w) * 42%), transparent);
+  }
+
+  .card:hover .hint,
+  .card:focus-within .hint { opacity: 1; }
+
+  @media (hover: none) {
+    .w { background-color: color-mix(in oklab, var(--accent) calc(var(--w) * 26%), transparent); }
+    .hint { opacity: 1; }
   }
 
   .num {

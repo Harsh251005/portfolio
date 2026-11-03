@@ -6,7 +6,7 @@
      pressing into paper. The text is plain text the whole time; the
      weight is the only thing that moves. */
   import { onMount } from 'svelte';
-  import Marker from './Marker.svelte';
+  import TokenStream from './TokenStream.svelte';
 
   interface Props {
     role: string;
@@ -62,8 +62,13 @@
       </h1>
 
       <p class="statement">
-        I build AI that answers phones, reads documents and fixes its own code.
-        <Marker>And I make sure it holds up.</Marker>
+        <TokenStream
+          start={700}
+          parts={[
+            { text: 'I build AI that answers phones, reads documents and fixes its own code. ' },
+            { text: 'And I make sure it holds up.', mark: true },
+          ]}
+        />
       </p>
 
       <a class="cue" href="#work">See what I've built <span aria-hidden="true">↓</span></a>
@@ -173,7 +178,7 @@
   .frame {
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 1.5px solid var(--glass-border);
+    border: 1.5px solid var(--rule);
     border-radius: var(--glass-radius);
     background: var(--paper-sunk);
     box-shadow: var(--shadow-hard);

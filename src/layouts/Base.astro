@@ -9,17 +9,14 @@ interface Props {
   description: string;
   /** Path only, e.g. "/everything". Joined to `site` for canonical. */
   path?: string;
-  /** A design direction under review (data-theme on <html>). */
-  theme?: 'a' | 'b' | 'c';
 }
 
-const { title, description, path = '/', theme } = Astro.props;
-const THEME_COLOUR = { a: '#121211', b: '#0b1713', c: '#eceff3' } as const;
+const { title, description, path = '/' } = Astro.props;
 const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme}>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,8 +33,10 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {/* Matches the page, so the browser chrome does not flash. */}
-    <meta name="theme-color" content={theme ? THEME_COLOUR[theme] : '#f3eee4'} />
-    {theme && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#2a3140" />
+    {/* Lets CSS hold back entrance effects only when script is running,
+        so nothing is hidden for anyone it cannot reach. */}
+    <script is:inline>document.documentElement.classList.add('js');</script>
 
   </head>
 

@@ -9,7 +9,7 @@ order: 1
 moment: "It's nine at night. Your child has a fever, and the clinic's phone just rings and rings."
 tagline: "A receptionist that never sleeps"
 plain: "So I built one that always picks up. It talks to callers in Hindi or English, books, moves or cancels their appointment, and the clinic sees it on their screen."
-blurb: "Answers a clinic's phone in Hindi and English, and books the appointment."
+blurb: "Answers a clinic's *phone* in *Hindi and English*, and *books the appointment*."
 link: "https://github.com/Harsh251005/clinic-voice-agent"
 followups: ["code-fixer", "the-problem"]
 ---

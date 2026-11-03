@@ -1,5 +1,53 @@
 ---
-import HomePage from '../components/HomePage.astro';
+/* The page, as an ordered stack of bands: who, the person, the work,
+   how to reach me. Reordering the page means moving these blocks,
+   nothing else. */
+import Base from '../layouts/Base.astro';
+import Band from '../components/stage/Band.astro';
+import Footer from '../components/Footer.astro';
+import { PORTRAIT } from '../lib/portrait';
+
+import Hero from '../components/stage/Hero.svelte';
+import About from '../components/stage/About.svelte';
+import Work from '../components/stage/Work.svelte';
+import Contact from '../components/stage/Contact.svelte';
+
+import { loadEntries } from '../lib/knowledge';
+import { OWNER, LINKS } from '../lib/links';
+
+const entries = await loadEntries();
+const projects = entries.filter((entry) => entry.card === 'project');
+
 ---
 
-<HomePage />
+
+<Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
+  <Band id="top" flush>
+    <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} portrait={PORTRAIT} />
+  </Band>
+
+  <Band id="about">
+    <About client:visible />
+  </Band>
+
+  <Band id="work">
+    <Work client:visible entries={projects} />
+  </Band>
+
+  <Band id="contact">
+    <Contact client:visible links={LINKS} />
+  </Band>
+
+  <Band flush>
+    <Footer />
+  </Band>
+</Base>
+
+<script>
+  import { initSmoothScroll } from '../lib/motion/smooth';
+  initSmoothScroll();
+</script>
+
+<style is:global>
+  body { display: flex; flex-direction: column; }
+</style>

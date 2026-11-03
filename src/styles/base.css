@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  background: var(--grid), var(--paper);
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: var(--t-base);
@@ -111,7 +111,7 @@ a.touch {
   font-variation-settings: 'wght' 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -135,6 +135,16 @@ a.touch {
    --------------------------------------------------------------- */
 
 .glass {
+  /* Everything inside a card reads against light paper, so it takes
+     the card's colours instead of the page's. */
+  --ink: var(--card-ink);
+  --ink-soft: var(--card-soft);
+  --ink-faint: var(--card-faint);
+  --accent: var(--card-accent);
+  --accent-soft: #dbe1ff;
+  --rule: var(--card-rule);
+  --paper-sunk: #e0e4ea;
+  color: var(--ink);
   position: relative;
   border-radius: var(--glass-radius);
   background: var(--glass-tint);

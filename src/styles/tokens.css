@@ -63,7 +63,7 @@
 
   --tap: 44px;
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 /* Short and wide: a laptop with browser chrome open, or a phone held
@@ -79,138 +79,51 @@
 }
 
 /* --- Colour ---------------------------------------------------
-   Warm paper, ink, and one red: the red of a cricket ball. No
-   gradients, no glow, no second accent. A page that commits to two
-   colours and a paper tone looks designed; a page with a gradient
-   for every section looks generated.
+   Between light and dark: a slate ground with light cards on it, so
+   both tones are on screen at once. One accent, a cobalt, brightened
+   for the dark ground and left at full strength on the cards. No
+   gradients, no glow.
 
-   Text is checked against the *darkest* surface it sits on:
-   --ink-faint on --paper is about 5:1, --accent on --paper-raised
-   about 5.7:1.
+   Contrast, checked: --ink-faint on --paper about 5:1, --accent on
+   --paper about 4.7:1; on the cards, --card-soft about 8:1 and
+   --card-accent about 7.5:1.
    --------------------------------------------------------------- */
 
 :root {
-  --paper:        #f3eee4;
-  --paper-sunk:   #e9e2d3;
-  --paper-raised: #fbf8f1;
-  --rule:         #cdc3af;
-  --rule-soft:    #ddd5c4;
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-label:   var(--font-mono);
+  --hero-scale:   0.86;
 
-  --ink:          #1c1913;
-  --ink-soft:     #4b453a;
-  --ink-faint:    #6a6354;
+  --paper:        #2a3140;
+  --paper-sunk:   #222834;
+  --paper-raised: #343c4e;
+  --rule:         #4a5468;
+  --rule-soft:    #3a4256;
 
-  --accent:       #b02a1e;
-  --accent-soft:  #f0d9d2;
-  --accent-ink:   #fbf8f1;
+  --ink:          #eef1f6;
+  --ink-soft:     #c3cad8;
+  --ink-faint:    #9aa4b8;
 
-  /* A card is a flat sheet of paper with a hard, offset shadow, like
-     something printed and pinned. (The class is still called
-     `.glass` in places; it is not glass any more.) */
-  --glass-tint:        var(--paper-raised);
-  --glass-tint-strong: var(--paper-raised);
-  --glass-border:      var(--ink);
+  --accent:       #7f97ff;
+  --accent-soft:  #3a4670;
+  --accent-ink:   #0d0f14;
+
+  /* The light sheets that sit on the slate. Anything inside a card
+     takes its colours from these, not from the page's. */
+  --card-bg:      #eef1f6;
+  --card-ink:     #0d0f14;
+  --card-soft:    #3d4452;
+  --card-faint:   #5d6575;
+  --card-accent:  #1f3df5;
+  --card-rule:    #c3cad6;
+
+  --glass-tint:        var(--card-bg);
+  --glass-tint-strong: var(--card-bg);
+  --glass-border:      var(--card-ink);
   --glass-edge:        transparent;
   --glass-blur:        0px;
-  --glass-shadow:      5px 5px 0 var(--ink);
-  --glass-radius:      6px;
-  --shadow-hard:       5px 5px 0 var(--ink);
-}
-
-/* --- Directions under review ---------------------------------
-   Three candidate looks on the same layout, switched by
-   <html data-theme="a|b|c">. Only colour, display face, card
-   treatment and one backdrop detail differ. Once one is chosen it
-   moves up into :root and the other two are deleted. */
-
-:root {
-  --font-label: var(--font-body);
-  --hero-scale: 1;
-  --grid: none;
-}
-
-/* A — Graphite and amber. An instrument panel: warm black, one
-   signal-amber, a grotesque for headings, mono for labels. */
-[data-theme='a'] {
-  color-scheme: dark;
-  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
-  --font-label: var(--font-mono);
-  --hero-scale: 0.86;
-
-  --paper:        #121211;
-  --paper-sunk:   #0c0c0b;
-  --paper-raised: #1b1b19;
-  --rule:         #3a3933;
-  --rule-soft:    #26251f;
-
-  --ink:          #ece8dd;
-  --ink-soft:     #b8b3a6;
-  --ink-faint:    #8f8a7c;
-
-  --accent:       #ffb224;
-  --accent-soft:  #3b2c0c;
-  --accent-ink:   #121211;
-
-  --glass-border:  var(--rule);
-  --glass-shadow:  none;
-  --glass-radius:  4px;
-  --shadow-hard:   none;
-  --card-hover:    0 0 0 1px var(--accent);
-  --grid: radial-gradient(circle, #ffffff14 1px, transparent 1.4px) 0 0 / 28px 28px;
-}
-
-/* B — Deep green and lime. A terminal at night, not a neon one:
-   green-black, bone text, one acid-lime, a serif for warmth. */
-[data-theme='b'] {
-  color-scheme: dark;
-  --font-label: var(--font-mono);
-
-  --paper:        #0b1713;
-  --paper-sunk:   #07100d;
-  --paper-raised: #12241d;
-  --rule:         #2a443a;
-  --rule-soft:    #1b2f27;
-
-  --ink:          #e8e6da;
-  --ink-soft:     #b4bdb2;
-  --ink-faint:    #8a9a8f;
-
-  --accent:       #c5f06a;
-  --accent-soft:  #26391a;
-  --accent-ink:   #0b1713;
-
-  --glass-border:  var(--rule);
-  --glass-shadow:  none;
-  --glass-radius:  4px;
-  --shadow-hard:   none;
-  --card-hover:    0 0 0 1px var(--accent);
-}
-
-/* C — Cobalt on cool white. A design-studio page: flat, cold white,
-   black ink, one electric cobalt, hard shadows. */
-[data-theme='c'] {
-  color-scheme: light;
-  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
-  --font-label: var(--font-mono);
-  --hero-scale: 0.86;
-
-  --paper:        #eceff3;
-  --paper-sunk:   #e0e4ea;
-  --paper-raised: #f8f9fb;
-  --rule:         #c3cad6;
-  --rule-soft:    #d6dce5;
-
-  --ink:          #0d0f14;
-  --ink-soft:     #3d4452;
-  --ink-faint:    #5d6575;
-
-  --accent:       #1f3df5;
-  --accent-soft:  #dbe1ff;
-  --accent-ink:   #ffffff;
-
-  --glass-border:  var(--ink);
-  --glass-shadow:  5px 5px 0 var(--ink);
-  --glass-radius:  2px;
-  --shadow-hard:   5px 5px 0 var(--ink);
-  --card-hover:    9px 9px 0 var(--accent);
+  --glass-shadow:      5px 5px 0 var(--accent);
+  --glass-radius:      3px;
+  --shadow-hard:       5px 5px 0 var(--accent);
+  --card-hover:        9px 9px 0 var(--accent);
 }

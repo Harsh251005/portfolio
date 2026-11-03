@@ -8,7 +8,7 @@ order: 3
 moment: "Someone hands you a hundred-page PDF and asks you one question about it."
 tagline: "A reader that shows its working"
 plain: "This reads it for you and answers, with the page number behind every part of the answer. If the answer isn't in there, it says so instead of making one up."
-blurb: "Answers questions about a document with the page number, or says it couldn't find it."
+blurb: "Answers questions about a document *with the page number*, or *says it couldn't find it*."
 link: "https://github.com/Harsh251005/Evident-AI"
 followups: ["receptionist", "the-problem"]
 ---

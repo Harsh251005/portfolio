@@ -8,7 +8,7 @@ order: 2
 moment: "You ask for a small app. The first version crashes, the way first versions always do."
 tagline: "Code that fixes its own mistakes"
 plain: "This one writes the app, runs it, reads its own error, and fixes the broken part. After five tries it stops and tells you, instead of trying forever."
-blurb: "Writes an app, runs it, reads its own errors and fixes them. Stops after five tries."
+blurb: "Writes an app, runs it, *reads its own errors* and *fixes them*. *Stops after five tries.*"
 link: "https://github.com/Harsh251005/PhoenixAI"
 followups: ["document-reader", "how-i-work"]
 ---

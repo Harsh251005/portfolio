@@ -1,6 +1,6 @@
 # Portfolio — Harsh Dharnidharka
 
-A static site. One scrolling page on warm paper, plus one
+A static site. One scrolling page on a slate ground with light cards, plus one
 page per entry (about me, how I work, each project) in the same style.
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
@@ -48,7 +48,7 @@ place.
 | `src/lib/portrait.ts` | Finds the photo, if there is one. See below. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
-| `src/components/stage/Seam.svelte` | The cricket ball that rolls down a stitched line in the left margin as you scroll. Self-contained; delete the one line in `index.astro` and it is gone. |
+| `src/components/stage/TokenStream.svelte` | The hero sentence, which arrives piece by piece the way a model writes it. Pure CSS; the text is real text from the start. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and card setting. Restyling the site should mean editing this file and nothing else. |
 
 **Where detail lives.** The site tells each project as a short story anyone can
@@ -61,7 +61,7 @@ whole section shouldn't require touching anything else.
 ## The two ways in
 
 - `/` — the page.
-- `/ask/<id>` — one page per entry, on the same paper, as one card. Readable with JavaScript off, so it is also
+- `/ask/<id>` — one page per entry, on the same slate, as one light card. Readable with JavaScript off, so it is also
   what search engines read.
 
 ## The photo
@@ -88,24 +88,28 @@ scaling.
 
 ## Motion
 
-Everything animated is behind `prefers-reduced-motion`. With it on: the ball
-still marks your place but does not spin, the name does not change weight, the
-cards and highlighter marks are simply there, and the link rows do not fill.
+Everything animated is behind `prefers-reduced-motion`. With it on: the hero
+sentence is simply there, the name does not change weight, the cards and
+highlighter marks are static, and the link rows do not fill.
 
-What moves, and why it is not a stock effect:
+What moves:
 
-- **The ball** rolls down the stitched seam in the left margin. Its position is
-  how far through the page you are; its spin is the distance scrolled divided by
-  its radius, so it rolls the way a ball does.
+- **The hero sentence** streams in like a model writing it: small pieces, uneven
+  speed, a longer beat after a full stop, the newest piece briefly lit. Long
+  words arrive in two halves, as a tokeniser would cut them.
 - **The name** gets heavier, letter by letter, while you scroll, and settles
-  when you stop. It is a variable font, so the weight itself animates.
+  when you stop (a variable font, so the weight itself animates).
+- **The project cards** are dealt onto the page in turn, and on hover each shows
+  an attention map of its description: every word lights in proportion to its
+  weight, sweeping left to right. Words wrapped in `*stars*` in a project's
+  `blurb` get full weight; the rest get a small uneven one. On touch screens it
+  is shown at rest, since there is no hover.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
-- **The project cards** are dealt onto the page, each landing tilted and rocking
-  into place in turn.
-- **The contact rows** fill with ink from below on hover.
+- **The contact rows** fill with light from below on hover.
 
-Every one of them is content that is on the page from the start: the effect
-only decides when it becomes visible, and a timer guarantees it does.
+Every one of them is on the page from the start. An entrance is a CSS animation
+that only runs when the page has marked itself as running script (`.js` on
+`<html>`), so without script, or with reduced motion, nothing is hidden.
 
 ## Content that isn't there on purpose
 
