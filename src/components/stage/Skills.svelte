@@ -329,6 +329,20 @@
         else last = 0;
         return;
       }
+      // A star glows while it is on the move, each on its own schedule, and
+      // settles once it has arrived.
+      const glowOf = (k: number) => Math.sin(Math.PI * k) ** 1.5;
+      const halo = (x: number, y: number, g: number, dim: number) => {
+        if (g < 0.03) return;
+        ctx.globalAlpha = 0.11 * g * dim;
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5 + 5.5 * g, 0, 6.2832);
+        ctx.fill();
+        ctx.globalAlpha = 0.28 * g * dim;
+        ctx.beginPath();
+        ctx.arc(x, y, 1.2 + 1.8 * g, 0, 6.2832);
+        ctx.fill();
+      };
       const tw = (d: Dot) => 0.4 + 0.6 * Math.sin(now * 0.001 * d.sp + d.ph) ** 2;
 
       // Quiet links inside each cluster, once it has formed.
@@ -354,6 +368,7 @@
         const p = place(d, now);
         if (d.star >= 0) {
           const size = d.s0 + (2.6 - d.s0) * p.k;
+          halo(p.x, p.y, glowOf(p.k), dimmed);
           ctx.globalAlpha = (tw(d) * (1 - p.k) + (0.3 + 0.4 * Math.sin(now * 0.001 + d.ph) ** 2) * p.k) * dimmed;
           ctx.fillRect(p.x - size / 2 + ((1 - p.k) * d.s0) / 2, p.y - size / 2 + ((1 - p.k) * d.s0) / 2, size, size);
           continue;
@@ -386,6 +401,7 @@
         const target = on ? 9 : 5;
         if (d.star >= 0) {
           const s = d.s0 + (target - d.s0) * p.k;
+          halo(p.x, p.y, glowOf(p.k), 1);
           ctx.globalAlpha = tw(d) * (1 - p.k) + final * p.k;
           ctx.fillRect(p.x - s / 2 + ((1 - p.k) * d.s0) / 2, p.y - s / 2 + ((1 - p.k) * d.s0) / 2, s, s);
           continue;
