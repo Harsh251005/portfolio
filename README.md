@@ -82,8 +82,8 @@ What moves:
 
 - **The moonlit sea** sits fixed behind the whole page (`src/lib/scene/sea.ts`). The
   water is a WebGL shader, so the moon's path comes from real reflection; the sky is
-  a 2D canvas with stars, clouds, a sailing boat and the odd shooting star. The path leans
-  toward the cursor. Scrolling never changes the scene. Colours live in one palette
+  a 2D canvas with stars, clouds, a sailing boat and the odd shooting star. The moon and its path
+  on the water brighten when the cursor is on the moon. Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
 - **The name** drops in letter by letter, tilted, and bounces to rest. While each

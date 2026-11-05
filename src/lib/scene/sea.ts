@@ -58,6 +58,7 @@ uniform vec3 uHorizon;
 uniform vec3 uZenith;
 uniform vec3 uDeep;
 uniform vec3 uMoonCol;
+uniform float uGlow;    // 0-1: the moon brightens when the cursor is near it
 
 const float FOCAL = 1.05;
 const float CAM = 3.0;
@@ -113,7 +114,7 @@ void main() {
 
   // The moon: a wide soft sheen and tight glitter on top of it.
   float m = max(dot(r, uMoon), 0.);
-  col += uMoonCol * (pow(m, 90.) * 0.22 + pow(m, 700.) * 0.9 + pow(m, 4000.) * 1.6);
+  col += uMoonCol * (pow(m, 90.) * 0.22 + pow(m, 700.) * 0.9 + pow(m, 4000.) * 1.6) * (1. + uGlow * 0.7);
 
   // Distance melts into the horizon, with no hard line.
   col = mix(uHorizon, col, exp(-t * 0.0052));
@@ -150,6 +151,7 @@ function makeWater(canvas: HTMLCanvasElement) {
   const u = (name: string) => gl.getUniformLocation(prog, name);
   const uTime = u('uTime');
   const uMoon = u('uMoon');
+  const uGlow = u('uGlow');
   const vec = (c: RGB) => [(c[0] / 255) ** 2.2, (c[1] / 255) ** 2.2, (c[2] / 255) ** 2.2].map((v) => v ** (1 / 2.2));
 
   return {
@@ -164,8 +166,9 @@ function makeWater(canvas: HTMLCanvasElement) {
       gl.uniform3fv(u('uDeep'), vec(palette.deep));
       gl.uniform3fv(u('uMoonCol'), vec(palette.moon));
     },
-    draw(time: number, moon: [number, number, number]) {
+    draw(time: number, moon: [number, number, number], glow: number) {
       gl.uniform1f(uTime, time);
+      gl.uniform1f(uGlow, glow);
       gl.uniform3fv(uMoon, moon);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
@@ -300,7 +303,7 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
   let nextShot = 6000;
   let last = 0;
 
-  return (now: number) => {
+  return (now: number, moonGlow = 0) => {
     const dt = Math.min(100, now - last || 16);
     last = now;
     const t = now * 0.001;
@@ -345,6 +348,14 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
       }
     }
 
+    if (moonGlow > 0.01) {
+      // The moon brightens a little when the cursor is on it.
+      const lit = ctx.createRadialGradient(spot.x, spot.y, spot.r * 0.8, spot.x, spot.y, spot.r * 4.2);
+      lit.addColorStop(0, `rgba(255,240,208,${0.3 * moonGlow})`);
+      lit.addColorStop(1, 'rgba(255,240,208,0)');
+      ctx.fillStyle = lit;
+      ctx.fillRect(spot.x - spot.r * 4.2, spot.y - spot.r * 4.2, spot.r * 8.4, spot.r * 8.4);
+    }
     ctx.drawImage(moon, spot.x - moon.width / 2, spot.y - moon.height / 2);
 
     for (const c of clouds) {
@@ -446,12 +457,12 @@ export function startSea(water: HTMLCanvasElement, skyCanvas: HTMLCanvasElement,
   const WATER_SCALE = coarse ? 0.5 : 0.75;
   const FRAME = coarse ? 1000 / 24 : 1000 / 40;
 
-  let paintSky: (now: number) => void = () => {};
+  let paintSky: (now: number, glow?: number) => void = () => {};
   let moonDir: [number, number, number] = [0, 0.3, 1];
-  let moonX = 0;
+  let moon = { x: 0, y: 0, r: 1 };
   let w = 0, h = 0;
-  let cursorX: number | null = null;
-  let lean = 0;
+  let cursor: { x: number; y: number } | null = null;
+  let glow = 0;
 
   const size = () => {
     const box = water.parentElement!;
@@ -464,8 +475,7 @@ export function startSea(water: HTMLCanvasElement, skyCanvas: HTMLCanvasElement,
     paintSky = makeSky(skyCanvas, w, h, palette);
 
     const s = moonSpot(w, h);
-    moonX = s.x;
-    lean = 0;
+    moon = s;
     const dy = (hz - s.y) / h;
     const len = (x: number) => Math.hypot(x, dy, 1.05);
     moonDir = [((s.x - w / 2) / h) / len((s.x - w / 2) / h), dy / len((s.x - w / 2) / h), 1.05 / len((s.x - w / 2) / h)];
@@ -485,16 +495,16 @@ export function startSea(water: HTMLCanvasElement, skyCanvas: HTMLCanvasElement,
   };
   addEventListener('resize', resize, { passive: true });
 
-  const pointer = (e: PointerEvent) => (cursorX = e.clientX);
+  const pointer = (e: PointerEvent) => (cursor = { x: e.clientX, y: e.clientY });
   const fine = matchMedia('(pointer: fine)').matches;
   if (fine) addEventListener('pointermove', pointer, { passive: true });
 
   const draw = (now: number) => {
-    paintSky(now);
-    // The moon's path leans a little toward the cursor.
-    const want = cursorX === null ? 0 : ((cursorX - moonX) / h) * 0.11;
-    lean += (want - lean) * 0.05;
-    gl?.draw(now * 0.001, [moonDir[0] + lean, moonDir[1], moonDir[2]]);
+    // The moon brightens when the cursor is on it, and so does its path on the water.
+    const near = cursor ? Math.max(0, Math.min(1, 1 - (Math.hypot(cursor.x - moon.x, cursor.y - moon.y) - moon.r) / (moon.r * 1.5))) : 0;
+    glow += (near - glow) * 0.08;
+    paintSky(now, glow);
+    gl?.draw(now * 0.001, moonDir, glow);
   };
 
   if (still) {

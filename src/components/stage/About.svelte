@@ -11,7 +11,7 @@
     },
     {
       hook: 'Then I pointed that habit at AI.',
-      body: "A few months ago, and for the first time, I got serious. Now I build things that have to work with a real person on the other end: a receptionist that answers a clinic's phone, a coder that reads its own errors and knows when to stop.",
+      body: "That's when it got serious. Now I build things that have to work with a real person on the other end: a receptionist that answers a clinic's phone, a coder that reads its own errors and knows when to stop.",
     },
     {
       hook: 'Away from the screen, it’s cricket.',

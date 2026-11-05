@@ -209,9 +209,13 @@
     /* ---- tilt toward the pointer, with a moonlit edge ---- */
     const cleanup: Array<() => void> = [];
     if (matchMedia('(pointer: fine)').matches) {
-      cards.forEach((card) => {
+      // Listen on the fixed slot, not the card: the card tilts and lifts
+      // away from the pointer, and hovering it directly made hover (and
+      // everything tied to it) switch on and off at the edges.
+      slots.forEach((slot, i) => {
+        const card = cards[i];
         const move = (e: PointerEvent) => {
-          const r = card.getBoundingClientRect();
+          const r = slot.getBoundingClientRect();
           const x = e.clientX - r.left;
           const y = e.clientY - r.top;
           card.style.setProperty('--ry', `${((x / r.width - 0.5) * 9).toFixed(2)}deg`);
@@ -223,11 +227,11 @@
           card.style.setProperty('--ry', '0deg');
           card.style.setProperty('--rx', '0deg');
         };
-        card.addEventListener('pointermove', move);
-        card.addEventListener('pointerleave', leave);
+        slot.addEventListener('pointermove', move);
+        slot.addEventListener('pointerleave', leave);
         cleanup.push(() => {
-          card.removeEventListener('pointermove', move);
-          card.removeEventListener('pointerleave', leave);
+          slot.removeEventListener('pointermove', move);
+          slot.removeEventListener('pointerleave', leave);
         });
       });
     }
@@ -370,7 +374,7 @@
     transition: transform 320ms var(--ease-out), box-shadow 420ms var(--ease-out);
   }
 
-  .card:hover {
+  .slot:hover .card {
     --tx: -3px;
     --ty: -3px;
     box-shadow: var(--card-hover);
@@ -393,7 +397,7 @@
     pointer-events: none;
   }
 
-  .card:hover::after { opacity: 1; }
+  .slot:hover .card::after { opacity: 1; }
 
   /* The band of light that crosses the face as it turns up. */
   .sheen {
@@ -429,7 +433,7 @@
     transition: opacity 320ms var(--ease);
   }
 
-  .card:hover .hint { opacity: 1; }
+  .slot:hover .hint { opacity: 1; }
 
   .num {
     font-family: var(--font-label);
@@ -455,7 +459,7 @@
   }
 
   /* Hover: the whole attention map, held. */
-  .card:hover .w {
+  .slot:hover .w {
     background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent);
   }
 
@@ -531,6 +535,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .card, .card:hover { transform: none; transition: none; }
+    .card, .slot:hover .card { transform: none; transition: none; }
   }
 </style>

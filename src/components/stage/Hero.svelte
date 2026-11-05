@@ -104,8 +104,8 @@
       </h1>
 
       <p class="statement">
-        I build AI that answers phones, reads documents and fixes its own code.
-        <Marker delay={1900}>And I make sure it holds up.</Marker>
+        I build AI products people can actually rely on.
+        <Marker delay={1900}>Then I try to break them, so your users don’t.</Marker>
       </p>
 
       <div class="cues">
