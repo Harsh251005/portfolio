@@ -165,3 +165,24 @@ a.touch {
   opacity: 0;
   transform: translateY(22px);
 }
+
+/* ---------------------------------------------------------------
+   Moving between pages. The sea is its own layer and is kept alive, so it
+   never fades or restarts; the page above it leaves and arrives, and a
+   project card that was clicked grows into the top of its page.
+   --------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: 280ms var(--ease) both vt-leave; }
+  ::view-transition-new(root) { animation: 560ms var(--ease-out) 120ms both vt-arrive; }
+
+  /* The sea is the same on both pages: show the live one, not a still. */
+  ::view-transition-old(sea) { display: none; }
+  ::view-transition-new(sea) { animation: none; mix-blend-mode: normal; }
+
+  ::view-transition-group(*) { animation-duration: 640ms; animation-timing-function: var(--ease-out); }
+  ::view-transition-group(root), ::view-transition-group(sea) { animation-duration: 0s; }
+}
+
+@keyframes vt-leave { to { opacity: 0; transform: scale(0.985); filter: blur(3px); } }
+@keyframes vt-arrive { from { opacity: 0; transform: translateY(24px); } }

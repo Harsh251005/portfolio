@@ -497,9 +497,12 @@ export function startSea(water: HTMLCanvasElement, skyCanvas: HTMLCanvasElement,
     const len = (x: number) => Math.hypot(x, dy, 1.05);
     moonDir = [((s.x - w / 2) / h) / len((s.x - w / 2) / h), dy / len((s.x - w / 2) / h), 1.05 / len((s.x - w / 2) / h)];
 
-    water.style.top = `${hz}px`;
-    water.style.height = `${h - hz}px`;
-    gl?.size(Math.round(w * WATER_SCALE), Math.round((h - hz) * WATER_SCALE), h * WATER_SCALE, palette);
+    // The water starts a pixel above the horizon and on a whole pixel. On a
+    // fractional edge the two canvases left a hairline of page showing through.
+    const top = Math.floor(hz) - 1;
+    water.style.top = `${top}px`;
+    water.style.height = `${h - top}px`;
+    gl?.size(Math.round(w * WATER_SCALE), Math.round((h - top) * WATER_SCALE), h * WATER_SCALE, palette);
   };
   size();
 

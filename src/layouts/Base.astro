@@ -3,6 +3,8 @@ import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/prose.css';
+import { ClientRouter } from 'astro:transitions';
+import SeaScene from '../components/stage/SeaScene.svelte';
 
 interface Props {
   title: string;
@@ -37,15 +39,44 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
     <meta name="theme-color" content="#070b18" />
     {/* Lets CSS hold back entrance effects only when script is running,
         so nothing is hidden for anyone it cannot reach. */}
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline data-astro-rerun>document.documentElement.classList.add('js');</script>
+
+    {/* Pages change without a reload, so the sea behind them never restarts. */}
+    <ClientRouter />
 
   </head>
 
   <body>
     <a class="skip" href="#main">Skip to content</a>
+    <SeaScene client:load transition:persist />
     <slot />
   </body>
 </html>
+
+<script>
+  import { initSmoothScroll, landOnHash } from '../lib/motion/smooth';
+
+  // Runs on the first load and after every page change: the scroll engine is
+  // rebuilt for the new page, and a link that arrived with #id glides there.
+  let stop: (() => void) | null = null;
+  let cancelLand: (() => void) | null = null;
+  let run = 0;
+
+  document.addEventListener('astro:page-load', async () => {
+    const mine = ++run;
+    const cleanup = await initSmoothScroll();
+    if (mine !== run) return cleanup?.();
+    stop = cleanup;
+    cancelLand = landOnHash();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    run++;
+    cancelLand?.();
+    stop?.();
+    stop = null;
+  });
+</script>
 
 <style>
   .skip {

@@ -43,6 +43,7 @@ place.
 | `src/content/knowledge/*.md` | The three projects (`blurb` for the home-page card, plus a `link` to the repo). The other files (`the-problem`, `how-i-work`, `working-with-me`, `talk-to-me`) aren't shown anywhere: they are kept only for a future agent, read by `src/lib/brain/`. |
 | `src/content/projects/*.md` | One long write-up per project, named like the project's id (`receptionist`, `code-fixer`, `document-reader`). Frontmatter holds the tools (`stack`) and up to three big facts (`facts`); the Markdown body is the page's write-up, so write anything Markdown can hold. Only state what the repo backs up. |
 | `src/pages/work/[slug].astro` | The page at `/work/<id>`, one per project: the card copy, tools, facts, the write-up, and links to the next project and to Contact. The home-page card's "How it's built" opens it; the GitHub link lives on this page. |
+| `src/components/work/*.svelte` | One interactive demo per project, picked by `demo.kind` in the project's frontmatter: `CallDemo` (a made-up call played turn by turn, with the pipeline lighting up and the confirm-first rule), `FixLoopDemo` (the write, run, fix loop and its five-try limit), `RetrievalDemo` (a chatbot vs the reader: search, rerank, answer with pages). The scenarios are made up and labelled so; the behaviour they show is the real one. A new kind of demo is one component plus one line in the page. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
@@ -112,6 +113,14 @@ What moves:
   clusters, each star glowing while it travels. Hovering or tapping a skill draws
   lines to its nearest neighbours. Only the core skills are shown; the resume has
   the full list. On narrow or short screens it stays the older noise-to-clusters map. The grouping is hand-made from the resume and the voice project, not computed by a model.
+- **Changing page** uses Astro's page router (`<ClientRouter />` in `Base.astro`). The sea
+  is kept alive across pages (`transition:persist`), so it never restarts or flashes; the
+  page above it leaves and arrives; and the project card that was clicked grows into the
+  header panel of its page (matching `view-transition-name`, set on click in `Work.svelte`).
+  Scroll handling is rebuilt on every page (`astro:page-load`). A link that arrives with
+  `#id` waits for the page to stop growing, then glides down from the top
+  (`landOnHash` in `smooth.ts`). The hero's "See what I've built" stops a little way into
+  the held Work section (`data-scroll-progress`), so one light scroll starts opening the cards.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 
 Every one of them is on the page from the start. An entrance is a CSS animation

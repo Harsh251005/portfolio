@@ -1,13 +1,15 @@
 ---
 /* One page per project: /work/<id>. The card copy comes from the project's
-   knowledge entry, the numbers and tools from src/content/projects/<id>.md,
+   knowledge entry, the numbers, tools and demo from src/content/projects/<id>.md,
    and the write-up is that file's Markdown body. Add a project by adding
-   both files; nothing here changes. */
+   both files; nothing here changes (a new kind of demo needs one component). */
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Band from '../../components/stage/Band.astro';
 import Footer from '../../components/Footer.astro';
-import SeaScene from '../../components/stage/SeaScene.svelte';
+import CallDemo from '../../components/work/CallDemo.svelte';
+import FixLoopDemo from '../../components/work/FixLoopDemo.svelte';
+import RetrievalDemo from '../../components/work/RetrievalDemo.svelte';
 import { loadEntries } from '../../lib/knowledge';
 import { OWNER } from '../../lib/links';
 
@@ -31,6 +33,7 @@ export async function getStaticPaths() {
 
 const { entry, detail, next, index, total } = Astro.props;
 const Content = detail ? (await render(detail)).Content : null;
+const demo = detail?.data.demo;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -39,36 +42,52 @@ const pad = (n: number) => String(n).padStart(2, '0');
   description={entry.plain ?? OWNER.tagline}
   path={`/work/${entry.id}`}
 >
-  <SeaScene client:load />
-
   <main id="main">
     <Band flush>
       <div class="page head">
         <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to the work</a>
 
-        <p class="label">Project {pad(index + 1)} of {pad(total)}</p>
-        <h1>{entry.tagline ?? entry.short}</h1>
-        {entry.moment && <p class="moment">{entry.moment}</p>}
-        {entry.plain && <p class="plain">{entry.plain}</p>}
+        {/* The clicked card on the home page grows into this panel. */}
+        <section class="panel glass" style={`view-transition-name: proj-${entry.id}`}>
+          <p class="label">Project {pad(index + 1)} of {pad(total)}</p>
+          <h1>{entry.tagline ?? entry.short}</h1>
+          {entry.moment && <p class="moment">{entry.moment}</p>}
+          {entry.plain && <p class="plain">{entry.plain}</p>}
 
-        <div class="meta">
-          {detail && detail.data.stack.length > 0 && (
-            <ul class="stack" aria-label="Built with">
-              {detail.data.stack.map((tool) => <li>{tool}</li>)}
-            </ul>
-          )}
-          {entry.link && (
-            <a class="code" href={entry.link} rel="noreferrer noopener">
-              See the code on GitHub <span aria-hidden="true">↗</span>
-            </a>
-          )}
-        </div>
+          <div class="meta">
+            {detail && detail.data.stack.length > 0 && (
+              <ul class="stack" aria-label="Built with">
+                {detail.data.stack.map((tool) => <li>{tool}</li>)}
+              </ul>
+            )}
+            {entry.link && (
+              <a class="code" href={entry.link} rel="noreferrer noopener">
+                See the code on GitHub <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </section>
       </div>
     </Band>
 
+    {demo && (
+      <Band flush class="demo-band">
+        <section class="page rise" style="--i: 1" aria-labelledby="demo-title">
+          <p class="label">See it work</p>
+          <h2 id="demo-title">{demo.title}</h2>
+          <p class="lead">{demo.lead}</p>
+          <div class="stage">
+            {demo.kind === 'call' && <CallDemo client:visible />}
+            {demo.kind === 'loop' && <FixLoopDemo client:visible />}
+            {demo.kind === 'retrieval' && <RetrievalDemo client:visible />}
+          </div>
+        </section>
+      </Band>
+    )}
+
     {detail && detail.data.facts.length > 0 && (
       <Band flush class="facts-band">
-        <ul class="page facts">
+        <ul class="page facts rise" style="--i: 2">
           {detail.data.facts.map((fact) => (
             <li class="glass">
               <p class="value">{fact.value}</p>
@@ -80,7 +99,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     )}
 
     <Band flush class="body-band">
-      <div class="page">
+      <div class="page rise" style="--i: 3">
         <article class="glass article prose">
           <div class="story" set:html={entry.html} />
           {Content && <div class="detail"><Content /></div>}
@@ -89,7 +108,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     </Band>
 
     <Band flush class="next-band">
-      <nav class="page next" aria-label="More work">
+      <nav class="page next rise" style="--i: 4" aria-label="More work">
         <a class="more" href={`/work/${next.id}`}>
           <span class="label">Next project</span>
           <span class="title">{next.tagline ?? next.short} <span aria-hidden="true">→</span></span>
@@ -105,11 +124,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <Footer />
 </Base>
 
-<script>
-  import { initSmoothScroll } from '../../lib/motion/smooth';
-  initSmoothScroll();
-</script>
-
 <style is:global>
   body { display: flex; flex-direction: column; }
 </style>
@@ -122,12 +136,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
     align-items: center;
     gap: var(--s-2);
     min-height: var(--tap);
-    margin-bottom: var(--s-5);
+    margin-bottom: var(--s-4);
     font-size: var(--t-sm);
     color: var(--ink-soft);
     text-decoration: none;
   }
   .back:hover { color: var(--accent); }
+
+  .panel { padding: var(--s-6); }
 
   h1 {
     margin-top: var(--s-4);
@@ -196,9 +212,31 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
   .code:hover { color: var(--accent); }
 
+  /* ---------- the page arrives in order ---------- */
+
+  .rise { animation: arrive 720ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 110ms + 250ms); }
+  @keyframes arrive { from { opacity: 0; transform: translateY(26px); } }
+  @media (prefers-reduced-motion: reduce) { .rise { animation: none; } }
+
+  /* ---------- the demo ---------- */
+
+  :global(.band.demo-band) { padding-top: var(--s-8); }
+
+  :global(.demo-band) h2 {
+    margin-top: var(--s-4);
+    font-size: clamp(2rem, 4vw + 1rem, 4rem);
+    font-variation-settings: 'wght' 560;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+  }
+
+  .lead { margin-top: var(--s-4); max-width: 52ch; font-size: var(--t-lg); color: var(--ink-soft); }
+  .stage { margin-top: var(--s-6); }
+
   /* ---------- the three facts ---------- */
 
-  :global(.band.facts-band) { padding-top: var(--s-7); }
+  :global(.band.facts-band) { padding-top: var(--s-8); }
 
   .facts {
     list-style: none;
@@ -256,14 +294,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background: rgba(9, 16, 34, 0.76);
     color: var(--ink);
     text-decoration: none;
-    transition: background-color 320ms var(--ease);
+    transition: background-color 320ms var(--ease), transform 320ms var(--ease-out);
   }
-  .more:hover { background: rgba(26, 38, 68, 0.85); }
+  .more:hover { background: rgba(26, 38, 68, 0.85); transform: translateY(-3px); }
   .more .title { font-size: var(--t-xl); font-variation-settings: 'wght' 560; letter-spacing: -0.02em; }
 
   @media (width >= 48rem) {
     .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .next { grid-template-columns: 1fr 1fr; }
     .article { padding: var(--s-7); }
+    .panel { padding: var(--s-7); }
   }
 </style>

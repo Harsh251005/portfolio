@@ -7,6 +7,10 @@ facts:
     label: "Write the code, save it, run it, then read what went wrong."
   - value: "Sealed box"
     label: "The code it writes runs in isolation, away from the rest of the computer."
+demo:
+  kind: "loop"
+  title: "Watch it fix itself, then watch it give up."
+  lead: "Pick a bug it can fix and one it can’t. The counter shows why a loop like this needs a limit."
 ---
 
 ## The loop

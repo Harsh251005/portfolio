@@ -7,6 +7,10 @@ facts:
     label: "Every booking change is confirmed with the caller, and the code enforces it, not the prompt."
   - value: "₹ per call"
     label: "What every call costs is tracked in rupees, against the vendors' own bills."
+demo:
+  kind: "call"
+  title: "Listen in on a call."
+  lead: "Play one example call a turn at a time. Watch what is working at each step, then try to make it break its own rule."
 ---
 
 ## How a call works

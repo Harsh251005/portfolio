@@ -217,8 +217,15 @@
         if ((e.target as Element).closest('a') || getSelection()?.toString()) return;
         cards[i].querySelector<HTMLAnchorElement>('a')?.click();
       };
+      // The card that was clicked grows into the top of its page: it takes the
+      // name that the page's header carries, just before the page changes.
+      const name = () => cards[i].style.setProperty('view-transition-name', `proj-${entries[i].id}`);
+      slot.addEventListener('click', name, true);
       slot.addEventListener('click', open);
-      cleanup.push(() => slot.removeEventListener('click', open));
+      cleanup.push(() => {
+        slot.removeEventListener('click', name, true);
+        slot.removeEventListener('click', open);
+      });
     });
 
     /* ---- tilt toward the pointer, with a moonlit edge ---- */

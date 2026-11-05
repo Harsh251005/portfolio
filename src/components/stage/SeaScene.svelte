@@ -24,6 +24,7 @@
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
+    view-transition-name: sea;
   }
 
   canvas { position: absolute; left: 0; width: 100%; }

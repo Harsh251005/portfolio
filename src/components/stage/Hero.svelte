@@ -109,7 +109,7 @@
       </p>
 
       <div class="cues">
-        <a class="cue" href="#work">See what I've built <span aria-hidden="true">↓</span></a>
+        <a class="cue" href="#work" data-scroll-progress="0.05">See what I've built <span aria-hidden="true">↓</span></a>
         <a class="cue" href={RESUME}>Resume <span aria-hidden="true">↗</span></a>
       </div>
     </div>

@@ -6,7 +6,6 @@ import Base from '../layouts/Base.astro';
 import Band from './stage/Band.astro';
 import Footer from './Footer.astro';
 
-import SeaScene from './stage/SeaScene.svelte';
 import Hero from './stage/Hero.svelte';
 import About from './stage/About.svelte';
 import Work from './stage/Work.svelte';
@@ -23,8 +22,6 @@ const projects = entries.filter((entry) => entry.card === 'project');
 ---
 
 <Base title={`${OWNER.name} — ${OWNER.role}`} description={OWNER.tagline} path="/">
-  <SeaScene client:load />
-
   <Band id="top" flush>
     <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
   </Band>
@@ -53,11 +50,6 @@ const projects = entries.filter((entry) => entry.card === 'project');
     <Footer />
   </Band>
 </Base>
-
-<script>
-  import { initSmoothScroll } from '../lib/motion/smooth';
-  initSmoothScroll();
-</script>
 
 <style is:global>
   body { display: flex; flex-direction: column; }

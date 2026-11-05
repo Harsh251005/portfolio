@@ -105,6 +105,15 @@ const projects = defineCollection({
       .array(z.object({ value: z.string(), label: z.string() }))
       .max(3)
       .default([]),
+    /** An interactive demonstration shown under the page header. `kind`
+     *  picks the component in src/components/work/. */
+    demo: z
+      .object({
+        kind: z.enum(['call', 'loop', 'retrieval']),
+        title: z.string(),
+        lead: z.string(),
+      })
+      .optional(),
   }),
 });
 

@@ -7,6 +7,10 @@ facts:
     label: "The quality bar. A change that scores lower is rejected automatically."
   - value: "4 to 5 s"
     label: "Per question, once it is warm."
+demo:
+  kind: "retrieval"
+  title: "Ask the same question twice."
+  lead: "Once to an ordinary chatbot, once to this reader. Then step through how the reader finds its answer."
 ---
 
 ## From PDF to answer

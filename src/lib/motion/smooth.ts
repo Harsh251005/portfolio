@@ -39,23 +39,77 @@ export async function initSmoothScroll() {
   }
   raf = requestAnimationFrame(frame);
 
-  // In-page anchors have to go through Lenis or they fight it.
+  // In-page anchors have to go through Lenis or they fight it. A link can ask
+  // to stop part-way into a held section (`data-scroll-progress`, 0 to 1 of
+  // the hold) instead of at its top, so a light scroll carries on from there.
   function onClick(event: MouseEvent) {
-    const link = (event.target as HTMLElement)?.closest?.('a[href^="#"]');
+    if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+    const link = (event.target as HTMLElement)?.closest?.<HTMLAnchorElement>('a[href]');
     if (!link) return;
-    const id = link.getAttribute('href')!.slice(1);
-    const target = id && document.getElementById(id);
+    const url = new URL(link.href, location.href);
+    if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+    const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
     if (!target) return;
     event.preventDefault();
-    lenis.scrollTo(target, { offset: 0 });
+
+    let offset = 0;
+    const progress = Number(link.dataset.scrollProgress);
+    const hold = target.querySelector<HTMLElement>('.pinned');
+    if (progress > 0 && hold) {
+      const into = hold.getBoundingClientRect().top - target.getBoundingClientRect().top;
+      // Lenis stops short by the page's scroll-padding; this puts it back.
+      const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      offset = into + pad + progress * (hold.offsetHeight - innerHeight);
+    }
+    lenis.scrollTo(target, { offset });
   }
 
-  document.addEventListener('click', onClick);
+  // Capture phase: the page router also claims same-page links, and has to
+  // find this one already handled.
+  document.addEventListener('click', onClick, true);
 
   return () => {
     cancelAnimationFrame(raf);
-    document.removeEventListener('click', onClick);
+    document.removeEventListener('click', onClick, true);
     delete (window as unknown as { __lenis?: unknown }).__lenis;
     lenis.destroy();
   };
+}
+
+/** Arriving from another page with `#id` in the address: wait for the page to
+ *  stop growing (held sections add height as they start up), then glide down
+ *  from the top, so the link visibly goes somewhere and ends in the right place.
+ *  Returns a function that cancels it, and it cancels itself on a wheel or touch. */
+export function landOnHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (!id) return () => {};
+
+  const lenis = (window as unknown as { __lenis?: { scrollTo: (t: unknown, o?: object) => void } }).__lenis;
+  let stopped = false;
+  let tries = 0;
+  let lastHeight = -1;
+  let steady = 0;
+
+  scrollTo(0, 0);
+  lenis?.scrollTo(0, { immediate: true });
+
+  const tick = () => {
+    if (stopped) return;
+    const target = document.getElementById(id);
+    const height = document.documentElement.scrollHeight;
+    steady = height === lastHeight ? steady + 1 : 0;
+    lastHeight = height;
+    if (target && steady >= 3) {
+      if (lenis) lenis.scrollTo(target, { duration: 1.6 });
+      else target.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (++tries < 40) setTimeout(tick, 100);
+  };
+  setTimeout(tick, 100);
+
+  const cancel = () => { stopped = true; };
+  addEventListener('wheel', cancel, { once: true, passive: true });
+  addEventListener('touchstart', cancel, { once: true, passive: true });
+  return cancel;
 }
