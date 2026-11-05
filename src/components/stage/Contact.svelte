@@ -7,7 +7,7 @@
 <div class="page contact">
   <p class="label">Talk to me</p>
 
-  <h2>Hiring for AI? <Marker>Let's talk.</Marker></h2>
+  <h2>Let's build something people can <Marker>rely on.</Marker></h2>
 
   <p class="sub">
     I'm looking for an AI engineering role on a team that ships to real users.
@@ -23,7 +23,7 @@
     font-variation-settings: 'wght' 560;
     line-height: 0.98;
     letter-spacing: -0.035em;
-    max-width: 12ch;
+    max-width: 15ch;
   }
 
   .sub {

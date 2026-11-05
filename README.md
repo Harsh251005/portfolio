@@ -102,9 +102,12 @@ What moves:
   the card tilts toward the pointer with moonlight along its edge.
 - **About and Education** fade and rise once as they come into view
   (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
-- **The skills map** starts as noise and scrolling pulls the dots into labelled
-  clusters (`Skills.svelte`). Hovering or tapping a skill draws lines to its nearest
-  neighbours. The grouping is hand-made from the resume and the voice project, not computed by a model.
+- **The skills map** (`Skills.svelte`): while the section is held in place, its dots
+  are real background stars borrowed from the sea's sky (`skyBridge` in `sea.ts`).
+  They look like ordinary stars at first; scrolling moves them into labelled
+  clusters, each star glowing while it travels. Hovering or tapping a skill draws
+  lines to its nearest neighbours. Only the core skills are shown; the resume has
+  the full list. On narrow or short screens it stays the older noise-to-clusters map. The grouping is hand-made from the resume and the voice project, not computed by a model.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 
 Every one of them is on the page from the start. An entrance is a CSS animation

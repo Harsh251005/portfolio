@@ -14,19 +14,22 @@
   import Marker from './Marker.svelte';
   import { skyBridge } from '../../lib/scene/sea';
 
+  /* The core skills only: a recruiter reads these in seconds. The resume
+     has the full list. */
   const GROUPS = [
-    { name: 'Agents', skills: ['LangGraph', 'LangChain', 'OpenAI Agents SDK', 'MCP', 'Agentic workflows', 'Pydantic'] },
-    { name: 'Retrieval', skills: ['RAG pipelines', 'Hybrid search', 'BM25', 'Reranking', 'Qdrant', 'Pinecone', 'ChromaDB'] },
-    { name: 'Voice', skills: ['LiveKit', 'Sarvam', 'ElevenLabs', 'Speech-to-text', 'Text-to-speech'] },
-    { name: 'Models & evals', skills: ['OpenAI API', 'Groq', 'Hugging Face', 'Sentence-Transformers', 'Prompt engineering', 'LangSmith'] },
-    { name: 'Build & ship', skills: ['Python', 'SQL', 'FastAPI', 'Streamlit', 'Docker', 'Git', 'Render', 'Railway'] },
+    { name: 'Agents', skills: ['LangGraph', 'LangChain', 'OpenAI Agents SDK', 'MCP', 'Pydantic'] },
+    { name: 'Retrieval', skills: ['RAG pipelines', 'Hybrid search', 'Reranking', 'Qdrant'] },
+    { name: 'Voice', skills: ['LiveKit', 'Sarvam', 'ElevenLabs', 'Speech-to-text'] },
+    { name: 'Models & evals', skills: ['OpenAI API', 'Prompt engineering', 'LangSmith', 'Hugging Face'] },
+    { name: 'Build & ship', skills: ['Python', 'FastAPI', 'SQL', 'Docker', 'Git'] },
   ];
+
 
   const MOON = '#f3dfae';
   /** Dots per skill that fill out each cloud. */
   const CLOUD = 26;
   /** The same, when the dots are real stars: fewer, so the sky stays a sky. */
-  const CLOUD_STARS = 6;
+  const CLOUD_STARS = 9;
   /** How many neighbours a skill reaches for. */
   const NEAREST = 3;
 
@@ -95,6 +98,12 @@
       }
     };
 
+    /** Where the map's top edge sits on screen while the section is held. */
+    const pinTop = () => {
+      const stage = root.querySelector<HTMLElement>('.stage')!;
+      return map.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+    };
+
     const layout = () => {
       const wide = innerWidth >= 960;
       pinned = wide && innerHeight >= 680;
@@ -117,8 +126,11 @@
       let y = 0;
       const centres = GROUPS.map((g, c) => {
         if (wide) {
-          const spots = [[0.15, 0.27], [0.5, 0.2], [0.85, 0.28], [0.29, 0.76], [0.74, 0.77]];
-          return { x: W * spots[c][0], y: H * spots[c][1] };
+          // Both rows sit in the sky when it can be found: the stars are
+          // the sky's, and they look wrong out over the water.
+          const sky = pinned && skyBridge.hz ? Math.max(0.3, (skyBridge.hz - pinTop()) / H) : 0.62;
+          const spots = [[0.15, 0.3], [0.5, 0.22], [0.85, 0.32], [0.3, 0.78], [0.7, 0.74]];
+          return { x: W * spots[c][0], y: H * sky * spots[c][1] };
         }
         const band = 104 + g.skills.length * 19;
         const at = { x: W / 2, y: y + band / 2 };
@@ -224,10 +236,8 @@
       owned = false;
       skyBridge.taken = new Set();
       if (!pinned || !skyBridge.stars.length) return;
-      const stage = root.querySelector<HTMLElement>('.stage')!;
-      const mr = map.getBoundingClientRect();
-      const ox = mr.left;
-      const oy = mr.top - stage.getBoundingClientRect().top;
+      const ox = map.getBoundingClientRect().left;
+      const oy = pinTop();
       const free: number[] = [];
       skyBridge.stars.forEach((s, i) => {
         const x = s.x - ox;
@@ -603,7 +613,7 @@
 
   /* ---------- the hold ---------- */
 
-  .skills:global(.pinned) { height: 205vh; }
+  .skills:global(.pinned) { height: 160vh; }
 
   .skills:global(.pinned) .stage {
     position: sticky;
