@@ -278,11 +278,9 @@
                       style={`--w:${word.w}; --rest:${word.strong ? 1 : 0}; --k:${title.length + k}`}>{word.t}</span
                     >{' '}{/each}
                 </p>
-                {#if entry.link}
-                  <a href={entry.link} rel="noreferrer noopener">
-                    How it's built <span aria-hidden="true">↗</span>
-                  </a>
-                {/if}
+                <a href={`/work/${entry.id}`}>
+                  How it's built <span aria-hidden="true">→</span>
+                </a>
                 <span class="sheen" aria-hidden="true"></span>
               </div>
             </div>

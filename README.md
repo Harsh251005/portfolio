@@ -41,6 +41,8 @@ place.
 | Path | What it is |
 |---|---|
 | `src/content/knowledge/*.md` | The three projects (`blurb` for the home-page card, plus a `link` to the repo). The other files (`the-problem`, `how-i-work`, `working-with-me`, `talk-to-me`) aren't shown anywhere: they are kept only for a future agent, read by `src/lib/brain/`. |
+| `src/content/projects/*.md` | One long write-up per project, named like the project's id (`receptionist`, `code-fixer`, `document-reader`). Frontmatter holds the tools (`stack`) and up to three big facts (`facts`); the Markdown body is the page's write-up, so write anything Markdown can hold. Only state what the repo backs up. |
+| `src/pages/work/[slug].astro` | The page at `/work/<id>`, one per project: the card copy, tools, facts, the write-up, and links to the next project and to Contact. The home-page card's "How it's built" opens it; the GitHub link lives on this page. |
 | `src/content.config.ts` | The schema those files must satisfy, plus the group and card-type lists. |
 | `src/lib/knowledge.ts` | Loads and flattens the content. Everything that displays an answer reads it through here. |
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |

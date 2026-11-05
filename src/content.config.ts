@@ -85,4 +85,27 @@ const knowledge = defineCollection({
   }),
 });
 
-export const collections = { knowledge };
+/* ---------------------------------------------------------------
+   One project page = one Markdown file here, named like the project's
+   id in the knowledge collection (receptionist, code-fixer, ...).
+
+   The page at /work/<id> shows the project's card copy from the
+   knowledge entry first, then the frontmatter below, then this file's
+   body. Write the body freely: headings, lists, images, anything
+   Markdown can hold. Only state what is true of the project.
+   --------------------------------------------------------------- */
+
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+  schema: z.object({
+    /** The tools it is built with, as short chips. */
+    stack: z.array(z.string()).default([]),
+    /** Up to three numbers or facts to show big, above the write-up. */
+    facts: z
+      .array(z.object({ value: z.string(), label: z.string() }))
+      .max(3)
+      .default([]),
+  }),
+});
+
+export const collections = { knowledge, projects };
