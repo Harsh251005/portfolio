@@ -12,6 +12,7 @@
      reduced motion it stays as the lists. */
   import { onMount } from 'svelte';
   import Marker from './Marker.svelte';
+  import { skyBridge } from '../../lib/scene/sea';
 
   const GROUPS = [
     { name: 'Agents', skills: ['LangGraph', 'LangChain', 'OpenAI Agents SDK', 'MCP', 'Agentic workflows', 'Pydantic'] },
@@ -24,6 +25,8 @@
   const MOON = '#f3dfae';
   /** Dots per skill that fill out each cloud. */
   const CLOUD = 26;
+  /** The same, when the dots are real stars: fewer, so the sky stays a sky. */
+  const CLOUD_STARS = 6;
   /** How many neighbours a skill reaches for. */
   const NEAREST = 3;
 
@@ -31,7 +34,7 @@
   let map: HTMLElement;
   let canvas: HTMLCanvasElement;
 
-  interface Dot { sx: number; sy: number; tx: number; ty: number; ph: number; delay: number; anchor: boolean }
+  interface Dot { sx: number; sy: number; tx: number; ty: number; ph: number; delay: number; anchor: boolean; star: number; s0: number; sp: number }
   interface Box { el: HTMLElement; x: number; y: number; w: number; h: number; c: number; title: boolean }
 
   onMount(() => {
@@ -55,6 +58,10 @@
     let near: number[][] = [];
     let edges: Array<[number, number]> = [];
     let lastWidth = -1;
+    /** Pinned: the dots are real sky stars, borrowed while the section holds. */
+    let starMode = false;
+    let seen = -1;
+    let owned = false;
 
     /** Spreads the labels apart around their cluster centres. Same input, same map. */
     const relax = (boxes: Box[], centres: { x: number; y: number }[]) => {
@@ -182,11 +189,14 @@
           ph: Math.random() * 6.28,
           delay: Math.random(),
           anchor: true,
+          star: -1,
+          s0: 0,
+          sp: 0,
         };
       });
       GROUPS.forEach((g, c) => {
         const reach = Math.max(80, Math.min(W, H) * 0.3);
-        for (let i = 0; i < g.skills.length * CLOUD; i++) {
+        for (let i = 0; i < g.skills.length * (pinned ? CLOUD_STARS : CLOUD); i++) {
           // Roughly bell-shaped, wider than tall like the labels.
           const gx = (Math.random() + Math.random() + Math.random()) / 1.5 - 1;
           const gy = (Math.random() + Math.random() + Math.random()) / 1.5 - 1;
@@ -198,15 +208,79 @@
             ph: Math.random() * 6.28,
             delay: Math.random(),
             anchor: false,
+            star: -1,
+            s0: 0,
+            sp: 0,
           });
         }
       });
+      borrowStars();
+    };
+
+    /** Hands real sky stars to the dots, so they start out as ordinary stars. */
+    const borrowStars = () => {
+      starMode = false;
+      seen = skyBridge.version;
+      owned = false;
+      skyBridge.taken = new Set();
+      if (!pinned || !skyBridge.stars.length) return;
+      const stage = root.querySelector<HTMLElement>('.stage')!;
+      const mr = map.getBoundingClientRect();
+      const ox = mr.left;
+      const oy = mr.top - stage.getBoundingClientRect().top;
+      const free: number[] = [];
+      skyBridge.stars.forEach((s, i) => {
+        const x = s.x - ox;
+        const y = s.y - oy;
+        if (x >= 0 && x <= W && y >= 0 && y <= H && s.y < skyBridge.hz - 6) free.push(i);
+      });
+      if (free.length < skills.length) return;
+      const used = new Set<number>();
+      const give = (d: Dot, i: number) => {
+        const s = skyBridge.stars[i];
+        used.add(i);
+        d.star = i;
+        d.sx = s.x - ox;
+        d.sy = s.y - oy;
+        d.s0 = s.s;
+        d.sp = s.sp;
+        d.ph = s.ph;
+      };
+      // Each skill takes the free star nearest to where its label sits.
+      for (let n = 0; n < skills.length; n++) {
+        let best = -1;
+        let bd = Infinity;
+        for (const i of free) {
+          if (used.has(i)) continue;
+          const d = Math.hypot(skyBridge.stars[i].x - ox - dots[n].tx, skyBridge.stars[i].y - oy - dots[n].ty);
+          if (d < bd) { bd = d; best = i; }
+        }
+        give(dots[n], best);
+      }
+      // The cloud around them comes from stars picked at random.
+      const rest = free.filter((i) => !used.has(i)).sort(() => Math.random() - 0.5);
+      for (let n = skills.length, r = 0; n < dots.length && r < rest.length; n++, r++) give(dots[n], rest[r]);
+      starMode = true;
+    };
+
+    /** The stars are ours only while the section is held still on screen. */
+    const syncOwner = () => {
+      let on = false;
+      if (starMode) {
+        const r = root.getBoundingClientRect();
+        on = r.top <= 0 && r.bottom >= innerHeight - 1;
+      }
+      if (on !== owned) {
+        owned = on;
+        skyBridge.taken = on ? new Set(dots.filter((d) => d.star >= 0).map((d) => d.star)) : new Set();
+      }
     };
 
     /* ---- what the scroll asks for, and the damped follow ---- */
     let want = 0;
     let u = 0;
     const measure = () => {
+      syncOwner();
       if (pinned) {
         const r = root.getBoundingClientRect();
         want = clamp((-r.top / (r.height - innerHeight) - 0.04) / 0.72);
@@ -224,7 +298,7 @@
 
     const place = (d: Dot, now: number) => {
       const k = ease(clamp(u * 1.45 - d.delay * 0.45));
-      const sway = d.anchor ? 12 * (1 - k) : 12 - 9 * k;
+      const sway = d.star >= 0 ? 10 * Math.sin(Math.PI * k) + 2.5 * k : d.anchor ? 12 * (1 - k) : 12 - 9 * k;
       return {
         x: d.sx + (d.tx - d.sx) * k + Math.sin(now * 0.0007 + d.ph) * sway,
         y: d.sy + (d.ty - d.sy) * k + Math.cos(now * 0.0006 + d.ph * 1.7) * sway,
@@ -245,6 +319,18 @@
       ctx.clearRect(0, 0, W, H);
       const dimmed = 1 - glow * 0.55;
 
+      // The stars are the sky's own until the section is held in place;
+      // then they are drawn here, exactly where and how the sky had them.
+      if (starMode && seen !== skyBridge.version) layout();
+      syncOwner();
+      // Unformed and not held: nothing to draw, the sky's stars are its own.
+      if (starMode && !owned && u < 0.002) {
+        if (visible && !document.hidden) raf = requestAnimationFrame(frame);
+        else last = 0;
+        return;
+      }
+      const tw = (d: Dot) => 0.4 + 0.6 * Math.sin(now * 0.001 * d.sp + d.ph) ** 2;
+
       // Quiet links inside each cluster, once it has formed.
       const linked = clamp((u - 0.7) * 3.4);
       if (linked > 0) {
@@ -264,8 +350,15 @@
       // The clouds and the noise they come from.
       ctx.fillStyle = MOON;
       for (let i = skills.length; i < dots.length; i++) {
-        const p = place(dots[i], now);
-        ctx.globalAlpha = (0.3 + 0.4 * Math.sin(now * 0.001 + dots[i].ph) ** 2) * dimmed;
+        const d = dots[i];
+        const p = place(d, now);
+        if (d.star >= 0) {
+          const size = d.s0 + (2.6 - d.s0) * p.k;
+          ctx.globalAlpha = (tw(d) * (1 - p.k) + (0.3 + 0.4 * Math.sin(now * 0.001 + d.ph) ** 2) * p.k) * dimmed;
+          ctx.fillRect(p.x - size / 2 + ((1 - p.k) * d.s0) / 2, p.y - size / 2 + ((1 - p.k) * d.s0) / 2, size, size);
+          continue;
+        }
+        ctx.globalAlpha = (0.3 + 0.4 * Math.sin(now * 0.001 + d.ph) ** 2) * dimmed;
         ctx.fillRect(p.x, p.y, 2.5, 2.5);
       }
 
@@ -286,11 +379,19 @@
 
       // The skills themselves.
       for (let i = 0; i < skills.length; i++) {
-        const p = place(dots[i], now);
+        const d = dots[i];
+        const p = place(d, now);
         const on = i === active || (active >= 0 && near[active].includes(i));
-        ctx.globalAlpha = on ? 1 : 0.55 + 0.45 * dimmed * p.k;
-        const s = on ? 9 : 5;
-        ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+        const final = on ? 1 : 0.55 + 0.45 * dimmed * p.k;
+        const target = on ? 9 : 5;
+        if (d.star >= 0) {
+          const s = d.s0 + (target - d.s0) * p.k;
+          ctx.globalAlpha = tw(d) * (1 - p.k) + final * p.k;
+          ctx.fillRect(p.x - s / 2 + ((1 - p.k) * d.s0) / 2, p.y - s / 2 + ((1 - p.k) * d.s0) / 2, s, s);
+          continue;
+        }
+        ctx.globalAlpha = final;
+        ctx.fillRect(p.x - target / 2, p.y - target / 2, target, target);
       }
       ctx.globalAlpha = 1;
 
@@ -360,6 +461,7 @@
 
     return () => {
       cancelAnimationFrame(raf);
+      skyBridge.taken = new Set();
       io.disconnect();
       removeEventListener('scroll', measure);
       removeEventListener('resize', resize);

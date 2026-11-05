@@ -38,6 +38,16 @@ const smooth = (a: number, b: number, x: number) => {
 const css = (c: RGB, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 const rng = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 
+/** The sky's stars, shared so other parts of the page can borrow some of
+ *  them: a borrowed star is skipped here and drawn by its borrower instead. */
+export interface Star { x: number; y: number; s: number; ph: number; sp: number }
+export const skyBridge = {
+  stars: [] as Star[],
+  hz: 0,
+  version: 0,
+  taken: new Set<number>(),
+};
+
 /** Where the moon sits, in screen pixels. */
 function moonSpot(w: number, h: number) {
   const narrow = w < h;
@@ -293,6 +303,10 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
   const stars = Array.from({ length: Math.round(360 * area) }, () => ({
     x: r() * w, y: r() * hz, s: 0.5 + r() * r() * 1.7, ph: r() * 6.28, sp: 0.4 + r() * 1.4,
   }));
+  skyBridge.stars = stars;
+  skyBridge.hz = hz;
+  skyBridge.version++;
+  skyBridge.taken = new Set();
   const moon = makeMoon(spot.r);
   const clouds = Array.from({ length: 5 }, (_, i) => {
     const cw = 520 + (i % 3) * 170;
@@ -311,7 +325,10 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
     ctx.drawImage(backdrop, 0, 0);
 
     ctx.fillStyle = '#e6efff';
-    for (const s of stars) {
+    const taken = skyBridge.taken;
+    for (let i = 0; i < stars.length; i++) {
+      if (taken.has(i)) continue;
+      const s = stars[i];
       ctx.globalAlpha = 0.4 + 0.6 * Math.sin(t * s.sp + s.ph) ** 2;
       ctx.fillRect(s.x, s.y, s.s, s.s);
     }
