@@ -31,7 +31,7 @@
     <li class="col next" data-reveal style="--d:4">
       <a class="step" href="#contact">
         <p class="when">Next</p>
-        <p class="where">Your team? Let's talk <span aria-hidden="true">↓</span></p>
+        <p class="where">Open to what's next. Let's talk <span aria-hidden="true">↓</span></p>
       </a>
     </li>
   </ol>
