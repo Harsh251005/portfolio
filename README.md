@@ -101,7 +101,9 @@ What moves:
   then a sweep of attention crosses the text once, every word lit in proportion to
   its weight. Words wrapped in `*stars*` in a project's `blurb` get full weight and
   stay marked; the rest get a small uneven one. On hover the whole map is held, and
-  the card tilts toward the pointer with moonlight along its edge.
+  the card tilts toward the pointer with moonlight along its edge. The whole card is a link to its project page: the
+  card lifts away from the pointer on hover, so the click is caught on the fixed wrapper
+  around it (`Work.svelte`), not only on the "How it's built" link.
 - **About and Education** fade and rise once as they come into view
   (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
 - **The skills map** (`Skills.svelte`): while the section is held in place, its dots

@@ -206,8 +206,22 @@
     };
     root.addEventListener('focusin', focus);
 
-    /* ---- tilt toward the pointer, with a moonlit edge ---- */
+    /* ---- the whole card opens its page ---- */
     const cleanup: Array<() => void> = [];
+    // The card lifts and tilts away from the pointer on hover, so a press can
+    // go down on its link and come up on the wrapper beside it. The browser
+    // then fires the click on the wrapper, not on the link, so follow the
+    // card's link from here.
+    slots.forEach((slot, i) => {
+      const open = (e: MouseEvent) => {
+        if ((e.target as Element).closest('a') || getSelection()?.toString()) return;
+        cards[i].querySelector<HTMLAnchorElement>('a')?.click();
+      };
+      slot.addEventListener('click', open);
+      cleanup.push(() => slot.removeEventListener('click', open));
+    });
+
+    /* ---- tilt toward the pointer, with a moonlit edge ---- */
     if (matchMedia('(pointer: fine)').matches) {
       // Listen on the fixed slot, not the card: the card tilts and lifts
       // away from the pointer, and hovering it directly made hover (and
@@ -477,6 +491,20 @@
   }
 
   .card a:hover { color: var(--accent); }
+
+  /* The whole card is the link: the anchor's own box stays small, and this
+     stretches its click area over the card. */
+  .card { cursor: pointer; }
+  .card a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .card:has(a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .card a:focus-visible { outline: none; }
 
   @media (hover: none) {
     .hint { opacity: 1; }

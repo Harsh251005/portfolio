@@ -6,3 +6,8 @@ node_modules/
 .env.production
 .vercel
 .env*
+
+# Agent skills (local-only, installed via `npx skills add`)
+.agents/
+.claude/
+skills-lock.json
