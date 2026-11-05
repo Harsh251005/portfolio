@@ -13,7 +13,7 @@ items:
   - label: "I learn fast"
     body: "Most of what I use today I didn't know a year ago. I'm comfortable being a beginner for the few weeks it takes to stop being one."
   - label: "I'm early in my career"
-    body: "I finished my degree in 2026. What I have is working projects, not years of experience, and I'd rather you know that up front."
+    body: "I finished my degree in 2026. What I have is working projects and an internship at Crucibl, where I test and build. I don't have years of experience, and I'd rather you know that up front."
 followups: ["how-i-work", "talk-to-me"]
 ---
 

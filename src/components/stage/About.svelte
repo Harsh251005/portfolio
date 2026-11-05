@@ -11,7 +11,7 @@
     },
     {
       hook: 'Then I pointed that habit at AI.',
-      body: "That's when it got serious. Now I build things that have to work with a real person on the other end: a receptionist that answers a clinic's phone, a coder that reads its own errors and knows when to stop.",
+      body: "That's when it got serious. Now I build things that have to work with a real person on the other end: a receptionist that answers a clinic's phone, a coder that reads its own errors and knows when to stop. Right now I'm a QA Engineer intern at Crucibl, where the work mixes testing with development.",
     },
     {
       hook: 'Away from the screen, it’s cricket.',
