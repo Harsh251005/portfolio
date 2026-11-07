@@ -37,7 +37,8 @@ The caller starts talking in Hindi, mixing in English words the way people do.
 The audio travels over LiveKit to a Python worker that listens, decides what the
 caller wants, uses the booking tools and answers out loud, one turn at a time.
 Marathi and English are already built and switched off for now: they go live
-once they sound as natural as the Hindi.
+once they sound as natural as the Hindi. Today the call happens on the clinic's
+website; a real phone number comes once a clinic signs up.
 
 ## The rules are not in the prompt
 

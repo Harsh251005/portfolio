@@ -45,7 +45,7 @@
   const trySkip = () => { skipped = true; step = SKIP_AT + 1; };
 </script>
 
-<div class="demo glass" aria-label="An example phone call, played one turn at a time">
+<div class="demo glass" aria-label="An example call, played one turn at a time">
   <div class="cols">
     <ol class="talk" aria-live="polite">
       {#each shown as s, i (i + (skipped ? 'a' : 'b'))}
