@@ -4,9 +4,8 @@ A static site. One scrolling page over a moonlit sea, with night-blue panels and
 
 Builds to a plain `dist/` folder. No server, no database, no vendor lock-in.
 
-**Before you deploy:** [`NEEDS-INPUT.md`](./NEEDS-INPUT.md) lists what is still
-missing. Anything unwritten renders as a loud marked box on the page, so nothing
-half-finished can ship by accident.
+Anything unwritten (marked `⟨…⟩`) renders as a loud marked box on the page, so
+nothing half-finished can ship by accident.
 
 ## Run it
 
