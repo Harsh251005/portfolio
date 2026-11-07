@@ -54,7 +54,13 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 </html>
 
 <script>
-  import { initSmoothScroll, landOnHash } from '../lib/motion/smooth';
+  import { initSmoothScroll, landOnHash, restoreTo } from '../lib/motion/smooth';
+  import { watchPlace, wasReload, savedPlace } from '../lib/motion/keep-place';
+
+  watchPlace();
+  // Only the very first page of a refreshed tab is a reload; later page
+  // changes happen inside the same document.
+  let firstLoad = true;
 
   // Runs on the first load and after every page change: the scroll engine is
   // rebuilt for the new page, and a link that arrived with #id glides there.
@@ -67,7 +73,9 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
     const cleanup = await initSmoothScroll();
     if (mine !== run) return cleanup?.();
     stop = cleanup;
-    cancelLand = landOnHash();
+    const place = firstLoad && wasReload() ? savedPlace() : null;
+    firstLoad = false;
+    cancelLand = place !== null ? restoreTo(place) : landOnHash();
   });
 
   document.addEventListener('astro:before-swap', () => {

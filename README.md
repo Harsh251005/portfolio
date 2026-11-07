@@ -122,7 +122,10 @@ What moves:
   (`landOnHash` in `smooth.ts`). A band can set `land` (0 to 1) to be arrived at part-way
   into its held section, without a glide: the Work band uses 0.96, so coming back from a project
   page ("Back to the work", the browser's Back, or a shared `/#work`) always opens the deck fully
-  spread. Narrow screens have no held deck and glide to the section top. The hero's "See what I've built" stops a little way into
+  spread. Narrow screens have no held deck and glide to the section top.
+  A refresh (normal or hard) keeps you exactly where you were on any page, even with a
+  `#id` in the address: the position is saved when the page is left and put back on reload
+  (`keep-place.ts`, `restoreTo` in `smooth.ts`). The hero's "See what I've built" stops a little way into
   the held Work section (`data-scroll-progress`), so one light scroll starts opening the cards.
 - **The highlighter** is drawn under a phrase the first time it scrolls into view.
 

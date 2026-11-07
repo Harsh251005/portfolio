@@ -76,6 +76,33 @@ export async function initSmoothScroll() {
   };
 }
 
+/** After a refresh: put the page back at `y`, re-placing it while held
+ *  sections add height, until the page stops growing. No glide. Returns a
+ *  function that cancels it, and it cancels itself on a wheel or touch. */
+export function restoreTo(y: number) {
+  const lenis = (window as unknown as { __lenis?: { scrollTo: (t: unknown, o?: object) => void } }).__lenis;
+  let stopped = false;
+  let tries = 0;
+  let lastHeight = -1;
+  let steady = 0;
+  const jump = () => { scrollTo(0, y); lenis?.scrollTo(y, { immediate: true, force: true }); };
+  jump();
+  const tick = () => {
+    if (stopped) return;
+    const height = document.documentElement.scrollHeight;
+    steady = height === lastHeight ? steady + 1 : 0;
+    lastHeight = height;
+    jump();
+    if (steady >= 3) return;
+    if (++tries < 40) setTimeout(tick, 100);
+  };
+  setTimeout(tick, 100);
+  const cancel = () => { stopped = true; };
+  addEventListener('wheel', cancel, { once: true, passive: true });
+  addEventListener('touchstart', cancel, { once: true, passive: true });
+  return cancel;
+}
+
 /** Arriving from another page with `#id` in the address: wait for the page to
  *  stop growing (held sections add height as they start up), then glide down
  *  from the top, so the link visibly goes somewhere and ends in the right place.
