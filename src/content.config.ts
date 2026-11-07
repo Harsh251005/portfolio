@@ -109,8 +109,11 @@ const projects = defineCollection({
      *  a plain line and the tools. When present, the page shows this strip
      *  and folds the long write-up behind a toggle. */
     build: z
-      .array(z.object({ step: z.string(), does: z.string(), tools: z.array(z.string()).default([]) }))
-      .default([]),
+      .object({
+        title: z.string(),
+        steps: z.array(z.object({ step: z.string(), does: z.string(), tools: z.array(z.string()).default([]) })),
+      })
+      .optional(),
     /** An interactive demonstration shown under the page header. `kind`
      *  picks the component in src/components/work/. */
     demo: z

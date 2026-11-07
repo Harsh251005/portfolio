@@ -35,7 +35,8 @@ export async function getStaticPaths() {
 const { entry, detail, next, index, total } = Astro.props;
 const Content = detail ? (await render(detail)).Content : null;
 const demo = detail?.data.demo;
-const build = detail?.data.build ?? [];
+const build = detail?.data.build;
+const hasBuild = !!build && build.steps.length > 0;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -100,19 +101,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </Band>
     )}
 
-    {build.length > 0 && (
+    {hasBuild && (
       <Band flush class="build-band">
         <section class="page rise" style="--i: 2" aria-labelledby="build-title">
           <p class="label">How it's built</p>
-          <h2 id="build-title">From the call to the clinic's screen.</h2>
-          <div class="glass build"><BuildStrip steps={build} /></div>
+          <h2 id="build-title">{build!.title}</h2>
+          <div class="glass build"><BuildStrip steps={build!.steps} /></div>
         </section>
       </Band>
     )}
 
     <Band flush class="body-band">
       <div class="page rise" style="--i: 3">
-        {build.length > 0 ? (
+        {hasBuild ? (
           <details class="glass article prose writeup">
             <summary><span>Read the technical write-up</span><span class="chev" aria-hidden="true">+</span></summary>
             <div class="story" set:html={entry.html} />

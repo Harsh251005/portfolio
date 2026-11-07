@@ -8,21 +8,23 @@ facts:
   - value: "₹ per call"
     label: "What every call costs is tracked in rupees, against the vendors' own bills."
 build:
-  - step: "The call"
-    does: "The patient opens the clinic's call page and talks in Hindi."
-    tools: ["Browser", "WebRTC"]
-  - step: "Live audio"
-    does: "Carries the voice both ways, in a fresh room for every call."
-    tools: ["LiveKit"]
-  - step: "Listen, think, speak"
-    does: "Knows when the caller has finished, writes it down, decides, and answers out loud."
-    tools: ["Python", "Silero VAD", "Sarvam"]
-  - step: "Booking rules"
-    does: "Free slots, the read-back and the caller's yes are checked in code, not the prompt."
-    tools: ["Python", "Postgres"]
-  - step: "Clinic screen"
-    does: "Staff see every booking, and what was said on every call."
-    tools: ["FastAPI", "Next.js"]
+  title: "From the call to the clinic's screen."
+  steps:
+    - step: "The call"
+      does: "The patient opens the clinic's call page and talks in Hindi."
+      tools: ["Browser", "WebRTC"]
+    - step: "Live audio"
+      does: "Carries the voice both ways, in a fresh room for every call."
+      tools: ["LiveKit"]
+    - step: "Listen, think, speak"
+      does: "Knows when the caller has finished, writes it down, decides, and answers out loud."
+      tools: ["Python", "Silero VAD", "Sarvam"]
+    - step: "Booking rules"
+      does: "Free slots, the read-back and the caller's yes are checked in code, not the prompt."
+      tools: ["Python", "Postgres"]
+    - step: "Clinic screen"
+      does: "Staff see every booking, and what was said on every call."
+      tools: ["FastAPI", "Next.js"]
 demo:
   kind: "call"
   title: "Listen in on a call."

@@ -7,6 +7,24 @@ facts:
     label: "Write the code, save it, run it, then read what went wrong."
   - value: "Sealed box"
     label: "The code it writes runs in isolation, away from the rest of the computer."
+build:
+  title: "From one sentence to a running app."
+  steps:
+    - step: "The ask"
+      does: "You describe an app in plain English."
+      tools: ["CLI", "FastAPI"]
+    - step: "Coder"
+      does: "Plans the project and writes every file, as checked, structured output."
+      tools: ["LangGraph", "OpenAI API", "Pydantic"]
+    - step: "Writer"
+      does: "Saves the files to disk, one folder per project."
+      tools: ["Python"]
+    - step: "Executor"
+      does: "Runs it in a locked box: no network, capped memory and CPU."
+      tools: ["Docker"]
+    - step: "Critic"
+      does: "Reads the error and sends the broken files back to the coder. Five tries, then it stops."
+      tools: ["LangGraph", "LangSmith"]
 demo:
   kind: "loop"
   title: "Watch it fix itself, then watch it give up."

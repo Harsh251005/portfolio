@@ -7,6 +7,24 @@ facts:
     label: "Test answers backed by a real page number from the document."
   - value: "0.80"
     label: "The quality bar. A change that scores lower is rejected automatically."
+build:
+  title: "From a PDF to an answer you can check."
+  steps:
+    - step: "Upload"
+      does: "The PDF is split into passages and stored in its own collection."
+      tools: ["Streamlit", "LangChain", "Qdrant"]
+    - step: "Two searches"
+      does: "Search by meaning and by keyword, merged into one ranked list."
+      tools: ["Qdrant", "BM25"]
+    - step: "Second opinion"
+      does: "A reranker re-scores the top ten passages and keeps the best four."
+      tools: ["FlashRank"]
+    - step: "Answer with pages"
+      does: "Every claim carries a page number, and it only counts if that page was retrieved."
+      tools: ["OpenAI", "LangChain"]
+    - step: "Tests itself"
+      does: "50 known questions score every code change. Below 0.80, it is rejected."
+      tools: ["RAGAS", "LangSmith"]
 demo:
   kind: "retrieval"
   title: "Ask the same question twice."
