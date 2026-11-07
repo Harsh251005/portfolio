@@ -10,6 +10,7 @@ import Footer from '../../components/Footer.astro';
 import CallDemo from '../../components/work/CallDemo.svelte';
 import FixLoopDemo from '../../components/work/FixLoopDemo.svelte';
 import RetrievalDemo from '../../components/work/RetrievalDemo.svelte';
+import BuildStrip from '../../components/work/BuildStrip.astro';
 import { loadEntries } from '../../lib/knowledge';
 import { OWNER } from '../../lib/links';
 
@@ -34,6 +35,7 @@ export async function getStaticPaths() {
 const { entry, detail, next, index, total } = Astro.props;
 const Content = detail ? (await render(detail)).Content : null;
 const demo = detail?.data.demo;
+const build = detail?.data.build ?? [];
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -98,12 +100,30 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </Band>
     )}
 
+    {build.length > 0 && (
+      <Band flush class="build-band">
+        <section class="page rise" style="--i: 2" aria-labelledby="build-title">
+          <p class="label">How it's built</p>
+          <h2 id="build-title">From the call to the clinic's screen.</h2>
+          <div class="glass build"><BuildStrip steps={build} /></div>
+        </section>
+      </Band>
+    )}
+
     <Band flush class="body-band">
       <div class="page rise" style="--i: 3">
-        <article class="glass article prose">
-          <div class="story" set:html={entry.html} />
-          {Content && <div class="detail"><Content /></div>}
-        </article>
+        {build.length > 0 ? (
+          <details class="glass article prose writeup">
+            <summary><span>Read the technical write-up</span><span class="chev" aria-hidden="true">+</span></summary>
+            <div class="story" set:html={entry.html} />
+            {Content && <div class="detail"><Content /></div>}
+          </details>
+        ) : (
+          <article class="glass article prose">
+            <div class="story" set:html={entry.html} />
+            {Content && <div class="detail"><Content /></div>}
+          </article>
+        )}
       </div>
     </Band>
 
@@ -257,6 +277,40 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   .what { font-size: var(--t-sm); line-height: 1.45; color: var(--ink-soft); }
+
+  /* ---------- how it's built ---------- */
+
+  :global(.band.build-band) { padding-top: var(--s-8); }
+  :global(.build-band) h2 {
+    margin-top: var(--s-4);
+    font-size: clamp(2rem, 4vw + 1rem, 4rem);
+    font-variation-settings: 'wght' 560;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+  }
+  .build { margin-top: var(--s-6); padding: 0; }
+
+  /* ---------- the write-up ---------- */
+
+  .writeup summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: var(--tap);
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--t-lg);
+    font-variation-settings: 'wght' 580;
+    color: var(--ink);
+  }
+  .writeup summary::-webkit-details-marker { display: none; }
+  .writeup summary:hover { color: var(--accent); }
+  .chev { font-family: var(--font-mono); font-size: var(--t-xl); color: var(--accent); transition: transform 300ms var(--ease-out); }
+  .writeup[open] .chev { transform: rotate(45deg); }
+  .writeup[open] summary { margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px solid var(--rule); }
+  .writeup:not([open]) { padding-block: var(--s-4); }
 
   /* ---------- the write-up ---------- */
 

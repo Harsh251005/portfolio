@@ -9,32 +9,40 @@
   interface Step { who: Who; text: string; gloss?: string; active: number[]; note: string }
 
   const STAGES = [
-    { name: 'Caller', hint: 'speaks in Hindi, English, or both' },
+    { name: 'Caller', hint: 'speaks Hindi, with some English mixed in' },
     { name: 'Turn detection', hint: 'knows when they have finished' },
     { name: 'Speech to text', hint: 'writes down what was said' },
     { name: 'Language model', hint: 'decides what to do, uses the booking tools' },
     { name: 'Text to speech', hint: 'says the answer out loud' },
   ];
 
-  const ASK: Step = { who: 'caller', text: 'Kal subah ke liye appointment mil sakta hai?', gloss: 'Can I get an appointment tomorrow morning?', active: [0, 1, 2, 3], note: 'The caller speaks. It is heard, transcribed and handed to the model.' };
-  const OFFER: Step = { who: 'agent', text: 'Haan ji, kal subah 10:30 par Dr. Mehta free hain. Book kar dun?', gloss: 'Yes, Dr. Mehta is free at 10:30 tomorrow. Shall I book it?', active: [3, 4, 0], note: 'The model looks up free slots, then asks before it books anything.' };
-  const YES: Step = { who: 'caller', text: 'Haan, kar dijiye.', gloss: 'Yes, please.', active: [0, 1, 2, 3], note: 'This yes is the confirmation the booking tool is waiting for.' };
-  const DONE: Step = { who: 'system', text: 'book_appointment ✓ confirmed by caller → saved to the clinic’s diary', active: [3], note: 'The tool runs, and the booking appears on the front-desk screen.' };
-  const BYE: Step = { who: 'agent', text: 'Ho gaya. Kal subah 10:30, Dr. Mehta. Dhanyavaad!', gloss: 'Done. Tomorrow at 10:30 with Dr. Mehta. Thank you!', active: [3, 4, 0], note: 'The call ends politely.' };
-  const TRY: Step = { who: 'system', text: 'book_appointment ✗ blocked: the caller has not confirmed yet', active: [3], note: 'The model tried to book without a yes. The rule in the code said no, whatever the prompt said.' };
-  const ASKAGAIN: Step = { who: 'agent', text: 'Pehle main confirm kar loon: kal subah 10:30, Dr. Mehta, theek hai?', gloss: 'Let me confirm first: tomorrow 10:30, Dr. Mehta, is that right?', active: [3, 4, 0], note: 'Blocked, the model has to ask the caller instead.' };
+  const ASK: Step = { who: 'caller', text: 'Mere bete ko bukhaar hai. Kal subah doctor ko dikha sakte hain?', gloss: 'My son has a fever. Can a doctor see him tomorrow morning?', active: [0, 1, 2, 3], note: 'The caller speaks. It is heard, transcribed and handed to the model.' };
+  const OFFER: Step = { who: 'agent', text: 'Ji, kal subah Dr. Mehta 10:30 ya 11:00 baje free hain. Kaunsa time theek rahega?', gloss: 'Dr. Mehta is free at 10:30 or 11:00 tomorrow morning. Which time suits you?', active: [3, 4, 0], note: 'The model looks up the free slots and offers only times the diary returned.' };
+  const PICK: Step = { who: 'caller', text: '10:30 theek hai.', gloss: '10:30 is fine.', active: [0, 1, 2, 3], note: 'A time is chosen. Nothing is booked yet.' };
+  const DETAILS_ASK: Step = { who: 'agent', text: 'Patient ka naam aur das digit ka mobile number bata dijiye. Chahein toh aane ki wajah bhi.', gloss: "Please tell me the patient's name and a ten-digit mobile number. And the reason for the visit, if you like.", active: [3, 4, 0], note: 'Before booking, it needs the patient’s name and number. The reason is optional.' };
+  const DETAILS: Step = { who: 'caller', text: 'Aarav Shah. Number 98765 43210. Bukhaar ke liye.', gloss: 'Aarav Shah. Number 98765 43210. For the fever.', active: [0, 1, 2, 3], note: 'The details are written down and handed to the model.' };
+  const CHECK: Step = { who: 'system', text: 'check_booking ✓ slot still free, details ready to read back (nothing booked)', active: [3], note: 'A check, not a booking: the slot is still free and the details are valid.' };
+  const READBACK: Step = { who: 'agent', text: 'Ek baar confirm kar loon: kal subah 10:30, Dr. Mehta, Aarav Shah, 98765 43210. Sab sahi hai?', gloss: 'Let me confirm: tomorrow 10:30, Dr. Mehta, Aarav Shah, 98765 43210. Is all of that right?', active: [3, 4, 0], note: 'Everything is read back. Now it has to wait for the caller’s answer.' };
+  const YES: Step = { who: 'caller', text: 'Haan, sab sahi hai.', gloss: 'Yes, all correct.', active: [0, 1, 2, 3], note: 'This yes, after the read-back, is what the booking tool is waiting for.' };
+  const DONE: Step = { who: 'system', text: 'book_appointment ✓ caller answered the read-back → saved to the clinic’s diary', active: [3], note: 'The tool runs, and the booking appears on the front-desk screen.' };
+  const BYE: Step = { who: 'agent', text: 'Ho gaya ji. Aarav ji ka appointment kal subah 10:30 par hai. Dhanyavaad!', gloss: 'Done. Aarav’s appointment is tomorrow at 10:30. Thank you!', active: [3, 4, 0], note: 'The call ends politely.' };
+  const TRY: Step = { who: 'system', text: 'book_appointment ✗ blocked: the caller has not answered the read-back yet', active: [3], note: 'The model tried to book before the caller answered. The rule in the code said no, whatever the prompt said.' };
+  const WAIT: Step = { who: 'agent', text: 'Bas ek baar bata dijiye, yeh sab details sahi hain?', gloss: 'Just tell me once, are all these details right?', active: [3, 4, 0], note: 'Blocked, the model has to wait for the caller instead.' };
+
+  const BEFORE = [ASK, OFFER, PICK, DETAILS_ASK, DETAILS, CHECK, READBACK];
+  const SKIP_AT = BEFORE.length - 1; // the read-back: where skipping would happen
 
   let skipped = $state(false);
   let step = $state(0);
 
-  const script = $derived(skipped ? [ASK, TRY, ASKAGAIN, YES, DONE, BYE] : [ASK, OFFER, YES, DONE, BYE]);
+  const script = $derived(skipped ? [...BEFORE, TRY, WAIT, YES, DONE, BYE] : [...BEFORE, YES, DONE, BYE]);
   const shown = $derived(script.slice(0, step + 1));
   const now = $derived(script[Math.min(step, script.length - 1)]);
   const finished = $derived(step >= script.length - 1);
 
   const next = () => { if (!finished) step++; };
   const restart = (skip = false) => { skipped = skip; step = 0; };
-  const trySkip = () => { skipped = true; step = 1; };
+  const trySkip = () => { skipped = true; step = SKIP_AT + 1; };
 </script>
 
 <div class="demo glass" aria-label="An example phone call, played one turn at a time">
@@ -72,8 +80,8 @@
     {:else}
       <button class="go" onclick={() => restart(skipped)}>Play again</button>
     {/if}
-    {#if !skipped && step === 1}
-      <button class="ghost" onclick={trySkip}>Make it skip the confirmation</button>
+    {#if !skipped && step === SKIP_AT}
+      <button class="ghost" onclick={trySkip}>Make it book before the yes</button>
     {/if}
     {#if skipped}
       <button class="ghost" onclick={() => restart(false)}>Back to the normal call</button>

@@ -105,6 +105,12 @@ const projects = defineCollection({
       .array(z.object({ value: z.string(), label: z.string() }))
       .max(3)
       .default([]),
+    /** How it is built, as the path the work travels: one stop per step,
+     *  a plain line and the tools. When present, the page shows this strip
+     *  and folds the long write-up behind a toggle. */
+    build: z
+      .array(z.object({ step: z.string(), does: z.string(), tools: z.array(z.string()).default([]) }))
+      .default([]),
     /** An interactive demonstration shown under the page header. `kind`
      *  picks the component in src/components/work/. */
     demo: z

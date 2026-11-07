@@ -6,10 +6,10 @@ group: things-built
 card: project
 featured: true
 order: 1
-moment: "It's nine at night. Your child has a fever, and the clinic's phone just rings and rings."
+moment: "It's nine at night and your child has a fever. You just want a doctor to see them first thing tomorrow, and the clinic has closed for the day."
 tagline: "A receptionist that never sleeps"
-plain: "So I built one that always picks up. It talks to callers in Hindi or English, books, moves or cancels their appointment, and the clinic sees it on their screen."
-blurb: "Answers a clinic's *phone* in *Hindi and English*, and *books the appointment*."
+plain: "So I built a receptionist that answers at any hour, finds the next free slot with a doctor and books it. It speaks Hindi today, with Marathi and English next, and the clinic sees every booking on their screen."
+blurb: "Answers a clinic's *phone* in *Hindi*, and *books the appointment*."
 link: "https://github.com/Harsh251005/clinic-voice-agent"
 followups: ["code-fixer", "the-problem"]
 ---
@@ -18,8 +18,8 @@ Small clinics usually have one person on the front desk. When that person is
 busy with a patient, the phone rings out, and the caller tries another clinic.
 
 So I built a receptionist that picks up every call. It listens, works out what
-the caller wants, answers out loud, and books the appointment. It speaks Hindi
-and English, including the mix of the two that most people actually use.
+the caller wants, answers out loud, and books the appointment. It speaks Hindi,
+including the English words most people mix in. Marathi and English are next.
 
 Voice was the hardest thing I have built. In a chat, a short pause while the
 system thinks goes unnoticed. On a phone call, the same pause makes the caller

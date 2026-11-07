@@ -1,12 +1,28 @@
 ---
 stack: ["Python", "LiveKit", "Sarvam", "ElevenLabs", "OpenAI", "FastAPI", "Postgres", "Next.js"]
 facts:
-  - value: "Hindi + English"
-    label: "Callers can mix them mid-sentence, the way people really talk."
+  - value: "Hindi first"
+    label: "Callers can mix in English words, the way people really talk. Marathi and English are next."
   - value: "Confirmed first"
     label: "Every booking change is confirmed with the caller, and the code enforces it, not the prompt."
   - value: "₹ per call"
     label: "What every call costs is tracked in rupees, against the vendors' own bills."
+build:
+  - step: "The call"
+    does: "The patient opens the clinic's call page and talks in Hindi."
+    tools: ["Browser", "WebRTC"]
+  - step: "Live audio"
+    does: "Carries the voice both ways, in a fresh room for every call."
+    tools: ["LiveKit"]
+  - step: "Listen, think, speak"
+    does: "Knows when the caller has finished, writes it down, decides, and answers out loud."
+    tools: ["Python", "Silero VAD", "Sarvam"]
+  - step: "Booking rules"
+    does: "Free slots, the read-back and the caller's yes are checked in code, not the prompt."
+    tools: ["Python", "Postgres"]
+  - step: "Clinic screen"
+    does: "Staff see every booking, and what was said on every call."
+    tools: ["FastAPI", "Next.js"]
 demo:
   kind: "call"
   title: "Listen in on a call."
@@ -15,11 +31,11 @@ demo:
 
 ## How a call works
 
-The caller picks Hindi or English in the browser and starts talking. The audio
-travels over LiveKit to a Python worker that listens, decides what the caller
-wants, uses the booking tools and answers out loud, one turn at a time. Each
-language has its own pipeline, kept for the whole call, so the voice never
-changes halfway through.
+The caller starts talking in Hindi, mixing in English words the way people do.
+The audio travels over LiveKit to a Python worker that listens, decides what the
+caller wants, uses the booking tools and answers out loud, one turn at a time.
+Marathi and English are already built and switched off for now: they go live
+once they sound as natural as the Hindi.
 
 ## The rules are not in the prompt
 
