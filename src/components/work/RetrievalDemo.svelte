@@ -20,13 +20,14 @@
     { page: 40, text: 'Disputes are heard in the local civil court.', how: 'meaning' },
   ];
 
-  interface Q { label: string; ask: string; chatbot: string; kept: number[]; reader: { text: string; cite?: number }[] }
+  interface Q { label: string; ask: string; chatbot: string; kept: number[]; found: boolean; reader: { text: string; cite?: number }[] }
   const QUESTIONS: Record<string, Q> = {
     inside: {
       label: 'A question the document answers',
       ask: 'Can I end the lease early?',
       chatbot: 'Yes. You can usually end a lease early by giving notice and paying a small fee.',
       kept: [14, 15, 31, 16],
+      found: true,
       reader: [
         { text: 'You can end it early with sixty days’ written notice ' }, { text: 'p.14', cite: 14 },
         { text: '\u2060, sent by registered post ' }, { text: 'p.31', cite: 31 },
@@ -38,8 +39,10 @@
       label: 'A question it never covers',
       ask: 'Can I sublet the flat?',
       chatbot: 'Yes. Subletting is generally allowed with your landlord’s consent.',
-      kept: [],
-      reader: [{ text: 'The document doesn’t say. Nothing in it covers subletting.' }],
+      // The reranker always keeps its best four; none of them mention subletting.
+      kept: [27, 22, 14, 3],
+      found: false,
+      reader: [{ text: 'I could not find this information in the provided document.' }],
     },
   };
 
@@ -108,7 +111,7 @@
         <p>
           {#each q.reader as part, i (i)}{#if part.cite}<button class="cite" onpointerenter={() => (hover = part.cite!)} onpointerleave={() => (hover = null)} onfocus={() => (hover = part.cite!)} onblur={() => (hover = null)}>{part.text}</button>{:else}{part.text}{/if}{/each}
         </p>
-        <p class="good">{q.kept.length ? 'Hover a page tag to see exactly where it came from.' : 'It would rather say nothing than guess.'}</p>
+        <p class="good">{q.found ? 'Hover a page tag to see exactly where it came from.' : 'It kept the four closest passages. None of them mention subletting, so it says so instead of guessing.'}</p>
       </div>
     {/if}
 

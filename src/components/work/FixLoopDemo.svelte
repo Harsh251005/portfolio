@@ -1,30 +1,29 @@
 <script lang="ts">
   /* The code-fixer's loop, run in front of you. Pick a bug it can fix or one
-     it can't and press Run: it writes, saves, runs, reads the failure and goes
-     round again, and the counter shows why it has to stop. The bugs are made
-     up; the loop and the five-try limit are the real behaviour. */
+     it can't and press Run: it writes, saves, runs, and on a failure the
+     Critic reads the error and sends the broken files back. After the first
+     run it gets five fixes, then it stops (route_from_critic_to_coder in the
+     repo). The bugs are made up; the loop and the limit are the real ones. */
 
   const STAGES = ['Coder', 'Writer', 'Executor', 'Critic'];
-  const MAX = 5;
+  const MAX = 5; // fix attempts after the first run
 
-  interface Scenario { label: string; fails: string[]; passes: boolean }
+  interface Scenario { label: string; fails: string[] }
   const SCENARIOS: Record<string, Scenario> = {
     fixable: {
       label: 'A bug it can fix',
       fails: ["ModuleNotFoundError: No module named 'flask'", "NameError: name 'app' is not defined"],
-      passes: true,
     },
     stuck: {
       label: 'A bug it cannot fix',
-      fails: Array(MAX).fill("PermissionError: cannot open /secure/data.db"),
-      passes: false,
+      fails: Array(MAX + 1).fill('PermissionError: cannot open /secure/data.db'),
     },
   };
 
   let kind = $state<'fixable' | 'stuck'>('fixable');
   let running = $state(false);
   let stage = $state(-1);
-  let attempt = $state(0);
+  let fixes = $state(0);
   let log = $state<{ tone: 'info' | 'bad' | 'good' | 'stop'; text: string }[]>([]);
   let result = $state<'' | 'pass' | 'stop'>('');
   let token = 0;
@@ -41,32 +40,32 @@
   async function run() {
     const mine = ++token;
     const sc = SCENARIOS[kind];
-    running = true; result = ''; log = []; attempt = 0; stage = -1;
+    running = true; result = ''; log = []; fixes = 0; stage = -1;
     const alive = () => mine === token;
     const say = (tone: 'info' | 'bad' | 'good' | 'stop', text: string) => (log = [...log, { tone, text }]);
 
-    for (let n = 1; n <= MAX; n++) {
-      attempt = n;
-      stage = 0; say('info', n === 1 ? 'Coder: writes the project from the description' : 'Coder: rewrites only the files the Critic flagged');
+    for (let n = 0; n <= MAX; n++) {
+      if (n > 0) fixes = n;
+      stage = 0; say('info', n === 0 ? 'Coder: writes the project from the description' : `Coder: fix ${n} of ${MAX}, rewrites only the files the Critic flagged`);
       await wait(750); if (!alive()) return;
       stage = 1; say('info', 'Writer: saves the files'); await wait(550); if (!alive()) return;
       stage = 2; say('info', 'Executor: runs the project in a sealed box'); await wait(750); if (!alive()) return;
 
-      const err = sc.fails[n - 1];
+      const err = sc.fails[n];
       if (!err) { say('good', 'Ran without errors. Done.'); result = 'pass'; break; }
       say('bad', err);
-      stage = 3; await wait(650); if (!alive()) return;
+      stage = 3; say('info', 'Critic: reads the error and flags the broken files'); await wait(650); if (!alive()) return;
       if (n === MAX) {
-        say('stop', `That was try ${MAX} of ${MAX}. It stops and tells you it couldn't, instead of paying to try again.`);
+        say('stop', `That was fix ${MAX} of ${MAX}. It stops and tells you it gave up, instead of paying to try again.`);
         result = 'stop';
         break;
       }
-      say('info', 'Critic: reads the error, sends the broken file back'); await wait(550); if (!alive()) return;
+      say('info', 'Critic: sends them back to the Coder'); await wait(550); if (!alive()) return;
     }
     stage = -1; running = false;
   }
 
-  function pick(k: 'fixable' | 'stuck') { token++; kind = k; running = false; stage = -1; attempt = 0; log = []; result = ''; }
+  function pick(k: 'fixable' | 'stuck') { token++; kind = k; running = false; stage = -1; fixes = 0; log = []; result = ''; }
 </script>
 
 <div class="demo glass" aria-label="The code fixer running a loop">
@@ -84,12 +83,12 @@
     <span class="back" class:on={stage === 3}>↺ back to the Coder</span>
   </div>
 
-  <div class="tries" aria-label={`Try ${attempt} of ${MAX}`}>
-    <span class="lab">Tries</span>
+  <div class="tries" aria-label={`Fix ${fixes} of ${MAX}`}>
+    <span class="lab">Fixes</span>
     {#each Array(MAX) as _, i (i)}
-      <span class="dot" class:used={attempt > i} class:cur={attempt === i + 1 && running}></span>
+      <span class="dot" class:used={fixes > i} class:cur={fixes === i + 1 && running}></span>
     {/each}
-    <span class="count">{attempt} of {MAX}</span>
+    <span class="count">{fixes} of {MAX}</span>
   </div>
 
   <ul class="log" aria-live="polite" bind:this={logEl}>
@@ -99,10 +98,10 @@
 
   <div class="controls">
     <button class="go" onclick={run} disabled={running}>{result ? 'Run it again' : running ? 'Running…' : 'Run'} <span aria-hidden="true">→</span></button>
-    {#if result === 'pass'}<span class="out good">Fixed in {attempt} {attempt === 1 ? 'try' : 'tries'}.</span>{/if}
+    {#if result === 'pass'}<span class="out good">{fixes === 0 ? 'Worked first time.' : `Fixed after ${fixes} ${fixes === 1 ? 'fix' : 'fixes'}.`}</span>{/if}
     {#if result === 'stop'}<span class="out stop">Stopped. It said so.</span>{/if}
   </div>
-  <p class="tag">A replay with made-up bugs. The loop and the five-try limit are how it really works.</p>
+  <p class="tag">A replay with made-up bugs. The loop and the five-fix limit are how it really works.</p>
 </div>
 
 <style>

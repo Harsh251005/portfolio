@@ -1,8 +1,8 @@
 ---
 stack: ["Python", "LangGraph", "OpenAI API", "Pydantic", "Docker", "LangSmith"]
 facts:
-  - value: "5 tries"
-    label: "Then it stops and says so, instead of paying to repeat the same broken fix."
+  - value: "5 fixes"
+    label: "If the first run fails, it gets five fixes. Then it stops and says so, instead of paying to repeat the same broken fix."
   - value: "4 stages"
     label: "Write the code, save it, run it, then read what went wrong."
   - value: "Sealed box"
@@ -23,7 +23,7 @@ build:
       does: "Runs it in a locked box: no network, capped memory and CPU."
       tools: ["Docker"]
     - step: "Critic"
-      does: "Reads the error and sends the broken files back to the coder. Five tries, then it stops."
+      does: "Reads the error and sends the broken files back to the coder. Five fixes, then it stops."
       tools: ["LangGraph", "LangSmith"]
 demo:
   kind: "loop"
@@ -41,7 +41,7 @@ there:
 3. **Executor** runs the project and captures what it printed and how it exited.
 4. **Critic** reads any failure and sends the broken files back to the coder.
 
-A successful run ends the loop. A failed one goes round again, up to five times.
+A successful run ends the loop. A failed one goes back for a fix, up to five times.
 
 ## Why it stops
 
