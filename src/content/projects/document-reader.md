@@ -1,12 +1,12 @@
 ---
 stack: ["Python", "LangChain", "Qdrant", "BM25", "FlashRank", "RAGAS", "LangSmith", "Streamlit"]
 facts:
+  - value: "0.97"
+    label: "Faithfulness: how closely answers stick to what the document says, scored on 50 test questions."
   - value: "46 of 50"
     label: "Test answers backed by a real page number from the document."
   - value: "0.80"
     label: "The quality bar. A change that scores lower is rejected automatically."
-  - value: "4 to 5 s"
-    label: "Per question, once it is warm."
 demo:
   kind: "retrieval"
   title: "Ask the same question twice."
