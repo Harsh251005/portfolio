@@ -90,8 +90,19 @@ export function landOnHash() {
   let lastHeight = -1;
   let steady = 0;
 
-  scrollTo(0, 0);
-  lenis?.scrollTo(0, { immediate: true });
+  // A section can ask to be landed in part-way (`land` on its Band, e.g. the
+  // project deck opens fully spread). That lands without a glide, at the same
+  // point every time: back link, browser Back, or a shared link.
+  const jump = (y: number) => { scrollTo(0, y); lenis?.scrollTo(y, { immediate: true, force: true }); };
+  const landing = (target: HTMLElement) => {
+    const land = Number(target.dataset.land);
+    if (!(land > 0)) return null;
+    const hold = target.querySelector<HTMLElement>('.pinned');
+    if (!hold) return null; // narrow screens: no held deck, glide to the top
+    return hold.getBoundingClientRect().top + scrollY + land * (hold.offsetHeight - innerHeight);
+  };
+
+  jump(0);
 
   const tick = () => {
     if (stopped) return;
@@ -99,7 +110,12 @@ export function landOnHash() {
     const height = document.documentElement.scrollHeight;
     steady = height === lastHeight ? steady + 1 : 0;
     lastHeight = height;
-    if (target && steady >= 3) {
+    const y = target ? landing(target) : null;
+    if (y !== null) {
+      // Held sections add height as they start up; keep re-placing until steady.
+      jump(y);
+      if (steady >= 3) return;
+    } else if (target && steady >= 3) {
       if (lenis) lenis.scrollTo(target, { duration: 1.6 });
       else target.scrollIntoView({ behavior: 'smooth' });
       return;

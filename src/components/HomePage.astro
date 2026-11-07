@@ -30,7 +30,8 @@ const projects = entries.filter((entry) => entry.card === 'project');
     <About client:load />
   </Band>
 
-  <Band id="work">
+  {/* Arriving from another page: deck fully spread (last card turns by 0.92, see Work.svelte). */}
+  <Band id="work" land={0.96}>
     <Work client:load entries={projects} />
   </Band>
 

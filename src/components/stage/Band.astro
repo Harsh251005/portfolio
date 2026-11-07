@@ -9,12 +9,15 @@ interface Props {
    *  their own, like the hero. */
   flush?: boolean;
   class?: string;
+  /** Arriving at #id from another page, land this far (0 to 1) into the
+   *  band's held section instead of at its top. */
+  land?: number;
 }
 
-const { id, flush = false, class: extra = '' } = Astro.props;
+const { id, flush = false, class: extra = '', land } = Astro.props;
 ---
 
-<section class:list={['band', { flush }, extra]} id={id}>
+<section class:list={['band', { flush }, extra]} id={id} data-land={land}>
   <slot />
 </section>
 
