@@ -1,18 +1,20 @@
 <script lang="ts">
   /* The first screen: who, and what.
 
-     The name arrives two ways at once. Each letter drops in from above,
-     tilted, and bounces to rest; while it falls it is a scrambled
-     symbol, and it resolves into the real letter as it lands. Hover
-     the name and it scrambles and resolves again.
+     The name is a solid block. Each letter starts lying flat and stands
+     up on its baseline, one after another, overshooting a touch and
+     settling; the block's depth grows behind it as it rises. After that
+     it tilts toward the pointer (src/lib/motion/solid-name.ts), and on a
+     phone it sways slowly on its own.
 
-     The letters are ordinary text from the start. The drop is a CSS
-     animation that only runs once the page is marked as running
-     script, and the scramble swaps the text only after that, so
-     without script, or with reduced motion, the name is just there. */
+     The letters are ordinary text from the start. Standing up is a CSS
+     animation that only runs once the page is marked as running script,
+     and it ends with the letters upright, so without script, or with
+     reduced motion, the name is just there. */
   import { onMount } from 'svelte';
   import Marker from './Marker.svelte';
   import { RESUME } from '../../lib/links';
+  import { solidName } from '../../lib/motion/solid-name';
 
   interface Props {
     role: string;
@@ -27,61 +29,18 @@
 
   let name: HTMLElement;
 
-  const GLYPHS = '▮▯░▒▓#@$%&01<>/\\|=+*';
-  /** Matches the CSS: when the first letter starts, and the gap between letters. */
-  const START = 750;
-  const STEP = 65;
-  /** How long a letter stays a symbol before it lands as itself. */
-  const FALL = 520;
+  /** Match the CSS: when the first letter starts, the gap between letters, and how long each takes. */
+  const START = 300;
+  const STEP = 55;
+  const STAND = 1100;
 
-  onMount(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const letters = Array.from(name.querySelectorAll<HTMLElement>('.ch'));
-    const real = letters.map((l) => l.textContent ?? '');
-    const timers = new Set<ReturnType<typeof setTimeout>>();
-
-    // A symbol is not the same width as the letter it hides. Pin each
-    // slot to its letter's width so the name never jitters.
-    // Layout width, not the bounding box: at this moment each letter is
-    // still tilted at the start of its drop, and a tilted box is wider.
-    letters.forEach((l) => (l.style.width = getComputedStyle(l).width));
-
-    /** Show symbols from `delay` ms for `span` ms, then the real letter. */
-    function scramble(i: number, delay: number, span: number) {
-      const el = letters[i];
-      const begin = performance.now() + delay;
-      const tick = () => {
-        if (performance.now() - begin >= span) {
-          el.textContent = real[i];
-          el.classList.remove('glyph');
-          return;
-        }
-        el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        el.classList.add('glyph');
-        timers.add(setTimeout(tick, 45));
-      };
-      timers.add(setTimeout(tick, delay));
-    }
-
-    letters.forEach((_, i) => scramble(i, START + i * STEP, FALL));
-
-    let busy = true;
-    timers.add(setTimeout(() => (busy = false), START + letters.length * STEP + FALL + 300));
-
-    const replay = () => {
-      if (busy) return;
-      busy = true;
-      letters.forEach((_, i) => scramble(i, i * 28, 340 + i * 28));
-      timers.add(setTimeout(() => (busy = false), 340 + letters.length * 28 + 400));
-    };
-
-    name.addEventListener('pointerenter', replay);
-    return () => {
-      name.removeEventListener('pointerenter', replay);
-      timers.forEach(clearTimeout);
-    };
-  });
+  onMount(() =>
+    solidName(name, {
+      growDelay: START,
+      growMs: (first.length + last.length - 1) * STEP + STAND * 0.7,
+      area: name.closest('section') ?? name,
+    }),
+  );
 </script>
 
 <section class="hero" id="main">
@@ -161,28 +120,19 @@
 
   .line { display: block; white-space: nowrap; }
 
+  h1 { width: fit-content; transform-origin: 40% 90%; }
+
   .ch {
     display: inline-block;
-    text-align: center;
-    font-variation-settings: 'wght' 580;
-    transition: color 650ms var(--ease);
+    font-variation-settings: 'wght' 720;
+    transform-origin: 50% 88%;
   }
 
-  /* While it is still a symbol. */
-  .ch.glyph {
-    font-family: var(--font-mono);
-    font-variation-settings: 'wght' 500;
-    color: var(--accent);
-    transition: none;
-  }
-
-  .ch:nth-child(odd)  { --r: -26deg; }
-  .ch:nth-child(even) { --r: 26deg; }
-
+  /* Each letter stands up from flat on its baseline, like a sprung tile. */
   @media (prefers-reduced-motion: no-preference) {
     :global(.js) .ch {
-      animation: drop 1000ms cubic-bezier(0.25, 0.9, 0.3, 1) both;
-      animation-delay: calc(750ms + var(--i) * 65ms);
+      animation: stand 1100ms linear both;
+      animation-delay: calc(300ms + var(--i) * 55ms);
     }
   }
 
@@ -198,10 +148,14 @@
     to   { opacity: 1; transform: none; }
   }
 
-  @keyframes drop {
-    0%   { opacity: 0; transform: translateY(-160%) rotate(var(--r)); }
-    55%  { opacity: 1; transform: translateY(9%) rotate(calc(var(--r) * -0.18)); }
-    75%  { transform: translateY(-4%) rotate(calc(var(--r) * 0.06)); }
+  /* A damped spring, sampled: up past upright, back, and settle. */
+  @keyframes stand {
+    0%   { opacity: 0; transform: perspective(500px) rotateX(90deg); animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1); }
+    12%  { opacity: 1; }
+    30%  { transform: perspective(500px) rotateX(-16deg); animation-timing-function: ease-in-out; }
+    52%  { transform: perspective(500px) rotateX(7deg); animation-timing-function: ease-in-out; }
+    72%  { transform: perspective(500px) rotateX(-2.5deg); animation-timing-function: ease-in-out; }
+    88%  { transform: perspective(500px) rotateX(0.8deg); }
     100% { opacity: 1; transform: none; }
   }
 

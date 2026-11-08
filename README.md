@@ -89,9 +89,11 @@ What moves:
   empty sky above the hero text, and the boat drifts slower (its speed follows its size). Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
-- **The name** drops in letter by letter, tilted, and bounces to rest. While each
-  letter falls it is a scrambled symbol, and it resolves into the real letter as
-  it lands. Hover the name and it scrambles and resolves again.
+- **The name** is a solid block with real depth (`src/lib/motion/solid-name.ts`).
+  Each letter starts lying flat and stands up on its baseline, one after another,
+  overshooting a touch and settling, while the depth grows behind it. Then it
+  tilts toward the mouse, lit from the moon's side; on a phone it sways slowly.
+  With reduced motion it is the solid block, still.
 - **The hero sentence** settles in after the name lands.
 - **The project cards** start as one face-down dark deck. Scrolling opens it: on a
   wide screen the section holds while the cards lift, turn over and settle into
