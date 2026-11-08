@@ -56,8 +56,10 @@ const canonical = new URL(path, Astro.site ?? 'https://example.com').href;
 <script>
   import { initSmoothScroll, landOnHash, restoreTo } from '../lib/motion/smooth';
   import { watchPlace, wasReload, savedPlace } from '../lib/motion/keep-place';
+  import { smoothDisclosures } from '../lib/motion/disclosure';
 
   watchPlace();
+  smoothDisclosures();
   // Only the very first page of a refreshed tab is a reload; later page
   // changes happen inside the same document.
   let firstLoad = true;

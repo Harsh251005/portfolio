@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { appear } from '../../lib/motion/gentle';
   /* The receptionist, shown instead of described: one example call, played a
      turn at a time, with the pipeline lighting up where the work is happening.
      The second button shows the rule that matters most: the booking tool
@@ -72,7 +73,7 @@
     </ol>
   </div>
 
-  <p class="note">{now.note}</p>
+  {#key now.note}<p class="note" in:appear>{now.note}</p>{/key}
 
   <div class="controls">
     {#if !finished}
@@ -81,10 +82,10 @@
       <button class="go" onclick={() => restart(skipped)}>Play again</button>
     {/if}
     {#if !skipped && step === SKIP_AT}
-      <button class="ghost" onclick={trySkip}>Make it book before the yes</button>
+      <button class="ghost" in:appear onclick={trySkip}>Make it book before the yes</button>
     {/if}
     {#if skipped}
-      <button class="ghost" onclick={() => restart(false)}>Back to the normal call</button>
+      <button class="ghost" in:appear onclick={() => restart(false)}>Back to the normal call</button>
     {/if}
   </div>
   <p class="tag">An example call. The conversation is made up; how each turn is handled is how it really works.</p>

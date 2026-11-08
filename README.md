@@ -85,7 +85,8 @@ What moves:
 - **The moonlit sea** sits fixed behind the whole page (`src/lib/scene/sea.ts`). The
   water is a WebGL shader, so the moon's path comes from real reflection; the sky is
   a 2D canvas with stars, clouds, a sailing boat and the odd shooting star. The moon and its path
-  on the water brighten when the cursor is on the moon. Scrolling never changes the scene. Colours live in one palette
+  on the water brighten when the cursor is on the moon. On a portrait screen the moon sits high in the
+  empty sky above the hero text, and the boat drifts slower (its speed follows its size). Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
 - **The name** drops in letter by letter, tilted, and bounces to rest. While each
@@ -104,6 +105,11 @@ What moves:
   the card tilts toward the pointer with moonlight along its edge. The whole card is a link to its project page: the
   card lifts away from the pointer on hover, so the click is caught on the fixed wrapper
   around it (`Work.svelte`), not only on the "How it's built" link.
+- **Anything that opens or closes** eases instead of snapping. Every `<details>`,
+  such as "Read the technical write-up", grows or shrinks to its new height and
+  reverses if clicked mid-way (`src/lib/motion/disclosure.ts`, one listener on the
+  document). In the demos, parts that appear or leave use the `appear` and `fold`
+  transitions in `src/lib/motion/gentle.ts`. New open/close UI should use these two.
 - **About and Education** fade and rise once as they come into view
   (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
 - **The skills map** (`Skills.svelte`): while the section is held in place, its dots

@@ -86,7 +86,7 @@
   transition: transform var(--dur) var(--ease);
 }
 
-.more[open] .more__summary::after { transform: rotate(-135deg) translateY(-0.1em); }
+.more[open]:not([data-closing]) .more__summary::after { transform: rotate(-135deg) translateY(-0.1em); }
 
 .more[open] > *:not(.more__summary) {
   animation: more-in var(--dur) var(--ease-out) both;

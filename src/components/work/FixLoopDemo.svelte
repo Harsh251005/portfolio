@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { appear } from '../../lib/motion/gentle';
   /* The code-fixer's loop, run in front of you. Pick a bug it can fix or one
      it can't and press Run: it writes, saves, runs, and on a failure the
      Critic reads the error and sends the broken files back. After the first
@@ -98,8 +99,8 @@
 
   <div class="controls">
     <button class="go" onclick={run} disabled={running}>{result ? 'Run it again' : running ? 'Running…' : 'Run'} <span aria-hidden="true">→</span></button>
-    {#if result === 'pass'}<span class="out good">{fixes === 0 ? 'Worked first time.' : `Fixed after ${fixes} ${fixes === 1 ? 'fix' : 'fixes'}.`}</span>{/if}
-    {#if result === 'stop'}<span class="out stop">Stopped. It said so.</span>{/if}
+    {#if result === 'pass'}<span class="out good" in:appear>{fixes === 0 ? 'Worked first time.' : `Fixed after ${fixes} ${fixes === 1 ? 'fix' : 'fixes'}.`}</span>{/if}
+    {#if result === 'stop'}<span class="out stop" in:appear>Stopped. It said so.</span>{/if}
   </div>
   <p class="tag">A replay with made-up bugs. The loop and the five-fix limit are how it really works.</p>
 </div>

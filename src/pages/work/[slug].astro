@@ -309,7 +309,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .writeup summary::-webkit-details-marker { display: none; }
   .writeup summary:hover { color: var(--accent); }
   .chev { font-family: var(--font-mono); font-size: var(--t-xl); color: var(--accent); transition: transform 300ms var(--ease-out); }
-  .writeup[open] .chev { transform: rotate(45deg); }
+  .writeup[open]:not([data-closing]) .chev { transform: rotate(45deg); }
   .writeup[open] summary { margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px solid var(--rule); }
   .writeup:not([open]) { padding-block: var(--s-4); }
 

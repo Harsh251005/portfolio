@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { appear, fold } from '../../lib/motion/gentle';
   /* The document reader, shown by contrast. Ask the same question of an
      ordinary chatbot and of this reader, then step through what the reader
      does: ten passages found two ways, reranked down to four, and an answer
@@ -67,7 +68,7 @@
     {/each}
   </div>
 
-  <p class="ask"><span class="lab">The question</span>“{q.ask}”</p>
+  {#key qk}<p class="ask" in:appear><span class="lab">The question</span>“{q.ask}”</p>{/key}
 
   <div class="row" role="group" aria-label="Who answers">
     <button class:on={who === 'chatbot'} onclick={() => pickWho('chatbot')}>An ordinary chatbot</button>
@@ -75,12 +76,12 @@
   </div>
 
   {#if who === 'chatbot'}
-    <div class="answer plain">
+    <div class="answer plain" in:appear>
       <p>{q.chatbot}</p>
       <p class="warn">Where did that come from? There is no way to tell, and it sounds just as sure either way.</p>
     </div>
   {:else}
-    <div class="bar">
+    <div class="bar" in:appear>
       <ol class="steps">
         <li class:done={phase >= 1}>1 Search two ways</li>
         <li class:done={phase >= 2}>2 Rerank, keep four</li>
@@ -93,21 +94,21 @@
       {/if}
     </div>
 
-    <ul class="passages">
+    <ul class="passages" in:appear>
       {#each list as p (p.page)}
         {@const kept = phase >= 2 && q.kept.includes(p.page)}
         {@const dropped = phase >= 2 && !kept}
         <li class:kept class:dropped class:lit={hover === p.page} style:order={phase >= 2 ? 0 : undefined}>
           <span class="pg">p.{p.page}</span>
           <span class="tx">{p.text}</span>
-          {#if phase >= 1 && phase < 2}<span class={`how ${p.how}`}>{p.how === 'both' ? 'meaning + keyword' : p.how}</span>{/if}
-          {#if dropped}<span class="how">dropped</span>{/if}
+          {#if phase >= 1 && phase < 2}<span class={`how ${p.how}`} in:appear>{p.how === 'both' ? 'meaning + keyword' : p.how}</span>{/if}
+          {#if dropped}<span class="how" in:appear>dropped</span>{/if}
         </li>
       {/each}
     </ul>
 
     {#if phase >= 3}
-      <div class="answer">
+      <div class="answer" transition:fold>
         <p>
           {#each q.reader as part, i (i)}{#if part.cite}<button class="cite" onpointerenter={() => (hover = part.cite!)} onpointerleave={() => (hover = null)} onfocus={() => (hover = part.cite!)} onblur={() => (hover = null)}>{part.text}</button>{:else}{part.text}{/if}{/each}
         </p>
