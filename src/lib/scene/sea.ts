@@ -48,10 +48,11 @@ export const skyBridge = {
   taken: new Set<number>(),
 };
 
-/** Where the moon sits, in screen pixels. */
+/** Where the moon sits, in screen pixels. On a phone the hero text fills the
+ *  middle of the screen, so the moon goes up into the empty sky above it. */
 function moonSpot(w: number, h: number) {
   const narrow = w < h;
-  return { x: w * (narrow ? 0.8 : 0.885), y: h * HORIZON * (narrow ? 0.88 : 0.42), r: Math.min(w, h) * (narrow ? 0.07 : 0.062) };
+  return { x: w * (narrow ? 0.78 : 0.885), y: h * HORIZON * (narrow ? 0.2 : 0.42), r: Math.min(w, h) * (narrow ? 0.075 : 0.062) };
 }
 
 /* ---------- the water ---------- */
