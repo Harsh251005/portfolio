@@ -385,8 +385,9 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
     /* ---- a small sailboat, out on the water, under way ---- */
     const scale = Math.min(1, w / 1100) * 0.45 + 0.55;
     const span = w + 240;
-    // Heading left at a walking pace, and round again.
-    const bx = w + 120 - ((w * 0.36 + 120 + t * 15) % span);
+    // Heading left at an easy drift, and round again. The speed follows the
+    // boat's size, so on a small screen it doesn't race across.
+    const bx = w + 120 - ((w * 0.36 + 120 + t * 10 * scale) % span);
     const wy = hz + (h - hz) * 0.2;
     const by = wy + Math.sin(t * 0.9) * 1.6 * scale;
     const roll = Math.sin(t * 0.7 + 1) * 0.035;
