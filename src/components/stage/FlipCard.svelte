@@ -3,12 +3,23 @@
      on it turns it; each face also has a real button for keyboards and
      screen readers. Both faces share one grid cell, so the card is always
      as tall as its taller face and nothing jumps. With reduced motion the
-     faces cross-fade instead of turning. */
+     faces cross-fade instead of turning.
+
+     Each face keeps its own height, and the card's height follows the face
+     that is showing, easing between the two during the turn, so a short
+     front never sits half empty. */
   import type { Snippet } from 'svelte';
 
   let { front, back, frontCue, backCue }: { front: Snippet; back: Snippet; frontCue: string; backCue: string } = $props();
   let flipped = $state(false);
   let card: HTMLElement;
+  let frontH = $state(0);
+  let backH = $state(0);
+  // Until both faces are measured (or without script), the card is as tall as its taller face.
+  const height = $derived(frontH && backH ? `${flipped ? backH : frontH}px` : undefined);
+  // Grow in the first half of the turn and shrink in the second, so the
+  // taller face is never showing while the card is shorter than it.
+  const shrinking = $derived(flipped ? backH < frontH : frontH < backH);
 
   const turn = (e: MouseEvent) => {
     flipped = !flipped;
@@ -27,12 +38,12 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (the cue buttons are the keyboard path) -->
 <div class="card" class:flipped bind:this={card} onclick={onCard}>
-  <div class="turn">
-    <div class="face glass front" inert={flipped}>
+  <div class="turn" class:shrinking style:height={height}>
+    <div class="face glass front" inert={flipped} bind:offsetHeight={frontH}>
       {@render front()}
       <button class="cue" type="button" aria-expanded={flipped} onclick={turn}>{frontCue} <span aria-hidden="true">↻</span></button>
     </div>
-    <div class="face glass back" inert={!flipped}>
+    <div class="face glass back" inert={!flipped} bind:offsetHeight={backH}>
       {@render back()}
       <button class="cue" type="button" onclick={turn}>{backCue} <span aria-hidden="true">↺</span></button>
     </div>
@@ -40,18 +51,19 @@
 </div>
 
 <style>
-  .card { height: 100%; cursor: pointer; perspective: 1400px; }
+  .card { cursor: pointer; perspective: 1400px; }
 
   .turn {
     display: grid;
-    height: 100%;
     transform-style: preserve-3d;
-    transition: transform 700ms cubic-bezier(0.45, 0, 0.2, 1);
+    transition: transform 700ms cubic-bezier(0.45, 0, 0.2, 1), height 350ms var(--ease);
   }
+  .turn.shrinking { transition-delay: 0ms, 350ms; }
   .flipped .turn { transform: rotateY(180deg); }
 
   .face {
     grid-area: 1 / 1;
+    align-self: start;
     display: flex;
     flex-direction: column;
     gap: var(--s-2);
@@ -83,7 +95,7 @@
   .cue:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .turn, .flipped .turn { transform: none; transition: none; }
+    .turn, .flipped .turn { transform: none; transition: height 240ms var(--ease); }
     .back { transform: none; }
     .face { transition: opacity 240ms var(--ease); }
     .back, .flipped .front { opacity: 0; pointer-events: none; }

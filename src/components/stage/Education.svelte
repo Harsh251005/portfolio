@@ -76,7 +76,7 @@
   }
 
   .grid { margin-top: var(--s-6); display: grid; gap: var(--s-4); }
-  @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1.4fr; align-items: stretch; } }
+  @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1.4fr; align-items: start; } }
 
   .now { display: flex; flex-direction: column; gap: var(--s-4); }
 
