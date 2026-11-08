@@ -8,12 +8,16 @@
   const NOW = {
     role: 'QA Engineer · Intern',
     where: 'Crucibl',
-    line: 'Testing and development',
-    // The back of the card: what the work involves. Only what he has stated.
+    line: 'Development, testing and bug fixing',
+    // The back of the card: his day-to-day, as he described it. The title
+    // says QA; the work is all-round engineering.
+    headline: 'More than testing. I build, test and fix.',
     work: [
-      'Testing the product before it reaches its users.',
-      'Building as well as testing: QA and development, side by side.',
+      'Develop features for the product, not only check them.',
+      'Take the lead on testing, so problems are caught before users meet them.',
+      'Track down bugs and fix them in the code myself.',
     ],
+    close: 'Every day: build it, break it, fix it.',
   };
 
   const PAST = [
@@ -37,10 +41,12 @@
           <p class="line">{NOW.line}</p>
         {/snippet}
         {#snippet back()}
-          <p class="tag">At {NOW.where}</p>
+          <p class="tag">Day to day at {NOW.where}</p>
+          <p class="headline">{NOW.headline}</p>
           <ul class="work">
             {#each NOW.work as item (item)}<li>{item}</li>{/each}
           </ul>
+          <p class="close">{NOW.close}</p>
         {/snippet}
       </FlipCard>
       <a class="next" href="#contact">Open to what's next. Let's talk <span aria-hidden="true">↓</span></a>
@@ -83,7 +89,9 @@
   .at strong { color: var(--ink); font-variation-settings: 'wght' 600; }
   .line { font-size: var(--t-sm); color: var(--ink-faint); }
 
-  .work { list-style: none; margin: var(--s-4) 0 0; padding: 0; display: grid; gap: var(--s-3); }
+  .headline { margin-top: var(--s-3); font-size: var(--t-xl); font-variation-settings: 'wght' 560; letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); }
+  .close { margin-top: var(--s-3); font-size: var(--t-sm); color: var(--ink-soft); font-style: italic; }
+  .work { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: grid; gap: var(--s-3); }
   .work li { position: relative; padding-left: var(--s-5); font-size: var(--t-base); line-height: 1.5; color: var(--ink); }
   .work li::before { content: ''; position: absolute; left: 0; top: 0.65em; width: 0.6rem; height: 1px; background: var(--accent); }
 
