@@ -26,7 +26,7 @@ const projects = entries.filter((entry) => entry.card === 'project');
     <Hero client:load role={OWNER.role} location="Mumbai" status={OWNER.status} />
   </Band>
 
-  <Band id="about">
+  <Band id="about" flushTop>
     <About client:load />
   </Band>
 

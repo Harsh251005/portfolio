@@ -8,20 +8,24 @@ interface Props {
   /** Removes the default vertical padding, for bands that manage
    *  their own, like the hero. */
   flush?: boolean;
+  /** No top padding: for the band right after the hero, whose full
+   *  screen already leaves space below its content. */
+  flushTop?: boolean;
   class?: string;
   /** Arriving at #id from another page, land this far (0 to 1) into the
    *  band's held section instead of at its top. */
   land?: number;
 }
 
-const { id, flush = false, class: extra = '', land } = Astro.props;
+const { id, flush = false, flushTop = false, class: extra = '', land } = Astro.props;
 ---
 
-<section class:list={['band', { flush }, extra]} id={id} data-land={land}>
+<section class:list={['band', { flush, 'flush-top': flushTop }, extra]} id={id} data-land={land}>
   <slot />
 </section>
 
 <style>
   .band { padding-block: var(--section); }
   .flush { padding-block: 0; }
+  .flush-top { padding-top: 0; }
 </style>

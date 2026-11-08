@@ -48,6 +48,7 @@ place.
 | `src/lib/links.ts` | Name, role, and every outbound link. One place. |
 | `src/lib/brain/` | What answers a typed question. `index.ts` is the swap point for a real model. |
 | `src/components/stage/` | The page sections. One file each, in the order `src/pages/index.astro` lists them. |
+| `src/components/stage/Band.astro` | Wraps each section and owns the gap between sections (`--section` top and bottom, so every gap is the same). The band after the hero drops its top padding, because the full-screen hero already leaves space; the held project deck pulls its edges in by its spare screen space for the same reason. |
 | `src/styles/tokens.css` | Every colour, type size, spacing value and card setting. Restyling the site should mean editing this file and nothing else. |
 
 **Where detail lives.** The site tells each project as a short story anyone can

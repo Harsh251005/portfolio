@@ -99,6 +99,10 @@
       root.classList.add('pinned');
       pinned = innerWidth >= 960 && page.offsetHeight <= innerHeight - 16;
       root.classList.toggle('pinned', pinned);
+      // While held, the deck sits centred in a full screen. Pull the section's
+      // edges in by that spare space so the gap to the sections around it
+      // matches every other gap on the page.
+      root.style.setProperty('--slack', pinned ? `${Math.max(0, (innerHeight - page.offsetHeight) / 2)}px` : '0px');
 
       const midX = deck.offsetWidth / 2;
       const midY = deck.offsetHeight / 2;
@@ -549,7 +553,7 @@
 
   /* ---------- the hold ---------- */
 
-  .work:global(.pinned) { height: 220vh; }
+  .work:global(.pinned) { height: 220vh; margin-block: calc(var(--slack, 0px) * -1); }
 
   .work:global(.pinned) .stage {
     position: sticky;
