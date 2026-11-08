@@ -110,14 +110,12 @@ What moves:
   reverses if clicked mid-way (`src/lib/motion/disclosure.ts`, one listener on the
   document). In the demos, parts that appear or leave use the `appear` and `fold`
   transitions in `src/lib/motion/gentle.ts`. New open/close UI should use these two.
-- **About and Education** fade and rise once as they come into view
+- **About, Skills and Education** fade and rise once as they come into view
   (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
-- **The skills map** (`Skills.svelte`): while the section is held in place, its dots
-  are real background stars borrowed from the sea's sky (`skyBridge` in `sea.ts`).
-  They look like ordinary stars at first; scrolling moves them into labelled
-  clusters, each star glowing while it travels. Hovering or tapping a skill draws
-  lines to its nearest neighbours. Only the core skills are shown; the resume has
-  the full list. On narrow or short screens it stays the older noise-to-clusters map. The grouping is hand-made from the resume and the voice project, not computed by a model.
+- **Skills** (`Skills.svelte`) is a plain index: each group's name with its tools
+  beside it, no numbers so nothing reads as a ranking. Rows fade in like About and
+  Education; pointing at a group dims the others. Only the core skills are shown; the
+  resume has the full list.
 - **Changing page** uses Astro's page router (`<ClientRouter />` in `Base.astro`). The sea
   is kept alive across pages (`transition:persist`), so it never restarts or flashes; the
   page above it leaves and arrives; and the project card that was clicked grows into the
