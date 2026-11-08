@@ -14,6 +14,7 @@ npm install
 npm run dev      # http://localhost:4321
 npm run build    # → dist/
 npm run preview  # serve the built site
+npm run check    # type-check the .astro, .ts and .svelte files (0 errors expected)
 npm run test:brain   # the question matcher, against ~40 real questions
 ```
 

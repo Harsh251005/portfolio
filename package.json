@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
     "astro": "astro",
     "test:brain": "node --experimental-strip-types scripts/test-brain.ts"
   },
@@ -26,5 +27,9 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "svelte-check": "^4.7.8"
   }
 }
