@@ -26,7 +26,7 @@
   <div class="head" data-arrive>
     <p class="label">What I do</p>
     <span class="rule" aria-hidden="true"></span>
-    <h2>I'm an AI engineer, building <Marker delay={1500}>agents that do real work.</Marker></h2>
+    <h2>I'm an AI engineer, building <Marker delay={1700}>agents that do real work.</Marker></h2>
   </div>
 
   <div class="cols">

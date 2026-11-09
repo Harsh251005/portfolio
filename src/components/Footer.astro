@@ -1,6 +1,9 @@
 ---
 /* Sitewide footer, and the one place on the site with the ways to reach
-   me. Links live in src/lib/links.ts so they are never duplicated. */
+   me. Links live in src/lib/links.ts so they are never duplicated.
+
+   Entrance: the buttons stand up one after another, hinged at their bottom
+   edge like cards being set upright, then the name line fades in. */
 import { LINKS, OWNER } from '../lib/links';
 
 /* Brand marks are filled, as their owners draw them; the envelope is a line. */
@@ -27,7 +30,7 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
     <nav aria-label="Ways to reach me">
       <ul>
         {LINKS.map((link, i) => (
-          <li>
+          <li data-arrive style={`--d:${i}`}>
             {link.href ? (
               <a class:list={['btn', { primary: i === 0 }]} href={link.href} rel={link.external ? 'noreferrer noopener me' : undefined}>
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" {...(ICONS[link.label].filled ? { fill: 'currentColor' } : { fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' })}>
@@ -44,12 +47,25 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
       </ul>
     </nav>
 
-    <div class="line">
+    <div class="line" data-arrive style="--d:4">
       <p>{OWNER.name}</p>
       <p>{new Date().getFullYear()}</p>
     </div>
   </div>
 </footer>
+
+<script>
+  // The footer is plain HTML, so its entrance is wired here. Page changes
+  // swap the page in place, so it is set up again on every page.
+  import { arrive } from '../lib/motion/arrive';
+
+  let undo: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    undo?.();
+    const foot = document.querySelector<HTMLElement>('.foot');
+    undo = foot ? arrive(foot)?.destroy : undefined;
+  });
+</script>
 
 <style>
   .foot {
@@ -63,7 +79,20 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
     list-style: none;
     margin: 0;
     padding: 0;
+    perspective: 900px;
   }
+
+  /* ---- the entrance (only once script has armed it) ---- */
+  .foot.arrive-armed li {
+    transform-origin: 50% 100%;
+    transition: rotate 1000ms var(--ease-out), opacity 500ms var(--ease-out);
+    transition-delay: calc(var(--d) * 130ms);
+  }
+  .foot.arrive-armed li:not(.in) { rotate: x 80deg; opacity: 0; }
+  .foot.arrive-armed .line { transition: opacity 700ms var(--ease-out); transition-delay: 600ms; }
+  .foot.arrive-armed .line:not(.in) { opacity: 0; }
+  .foot.arrive-armed li.done,
+  .foot.arrive-armed .line.done { transition: none; }
 
   .btn {
     display: flex;

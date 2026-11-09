@@ -129,6 +129,10 @@ What moves:
   soft edge, the card slides in, and a gold timeline line grows down the list, each step
   appearing as it passes (the card's half-turn hint waits until it has arrived). Talk to me:
   the heading's words light up one after another, each catching the gold for a moment.
+  Footer (every page): the email, GitHub, LinkedIn and Resume buttons stand up one after
+  another, hinged at their bottom edge. Things at the very end of the page arrive once they
+  are fully on screen. The gold highlights under a heading phrase (`Marker.svelte`) draw only
+  once that phrase is reached, after its heading's entrance, never on a timer from page load.
   Reduced motion and no script see everything at once.
 - **Skills** (`Skills.svelte`) is a plain index: each group's name with its tools
   beside it, no numbers so nothing reads as a ranking. Pointing at a group dims the others. Only the core skills are shown; the

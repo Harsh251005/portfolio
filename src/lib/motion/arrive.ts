@@ -1,6 +1,7 @@
 /* A section's entrance: each [data-arrive] item inside the element arrives
    once it is well into view (its top above 75% of the screen), not the moment
-   it peeks in, so the visitor actually sees it happen. What the arrival looks
+   it peeks in, so the visitor actually sees it happen (or once it is fully on
+   screen, for things at the very end of the page). What the arrival looks
    like is up to each section's own CSS, keyed on `.arrive-armed` on the root
    and `.in` / `.done` on the item, so every section can enter differently.
    Set --d on an item to stagger it.
@@ -25,7 +26,10 @@ export function arrive(root: HTMLElement, { doneAfter = 3000 }: { doneAfter?: nu
 
   const check = () => {
     for (const el of items) {
-      if (el.getBoundingClientRect().top < innerHeight * 0.75) open(el);
+      const r = el.getBoundingClientRect();
+      // Fully on screen counts too: the last things on the page (the footer)
+      // can never scroll up as far as the 75% line.
+      if (r.top < innerHeight * 0.75 || (r.bottom <= innerHeight && r.bottom > 0)) open(el);
     }
     if (items.every((el) => el.classList.contains('in'))) stop();
   };

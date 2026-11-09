@@ -284,7 +284,7 @@
       <div class="intro" data-arrive>
         <p class="label"><span class="rw"><span class="ri">Things I've built</span></span></p>
         <h2>
-          {#each HEAD as t, i (i)}<span class="rw"><span class="ri" style={`--i:${i + 1}`}>{t}</span></span>{' '}{/each}<Marker delay={1100}
+          {#each HEAD as t, i (i)}<span class="rw"><span class="ri" style={`--i:${i + 1}`}>{t}</span></span>{' '}{/each}<Marker delay={1500}
             >{#each TAIL as t, i (i)}<span class="rw"><span class="ri" style={`--i:${HEAD.length + i + 1}`}>{t}</span></span>{#if i < TAIL.length - 1}{' '}{/if}{/each}</Marker
           >
         </h2>

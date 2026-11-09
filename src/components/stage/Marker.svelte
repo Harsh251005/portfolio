@@ -3,7 +3,8 @@
      it scrolls into view, as if someone marked it with a pen.
 
      The mark is on by default in CSS; JavaScript takes it away only
-     once it can bring it back, and a timer always brings it back. */
+     once it can bring it back, and brings it back once the phrase is
+     reached, after `delay` (time for the heading's entrance to finish). */
   import { onMount } from 'svelte';
 
   let { children, delay = 350 }: { children?: any; delay?: number } = $props();
@@ -14,24 +15,28 @@
 
   onMount(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (typeof IntersectionObserver === 'undefined') return;
 
     armed = true;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          // Let the eye land on the words before the pen arrives.
-          setTimeout(() => (shown = true), delay);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.9 },
-    );
-    io.observe(el);
-    const bail = setTimeout(() => (shown = true), delay + 2650);
+    let timer = 0;
+    // Same line as the section entrances (arrive.ts): once the phrase is well
+    // into view (top above 75% of the screen), wait for the heading's own
+    // entrance, then draw. Checked on scroll and on a poll, so it also works
+    // where observers don't fire, and never before the phrase is reached.
+    const check = () => {
+      if (el.getBoundingClientRect().top >= innerHeight * 0.75) return;
+      stop();
+      timer = window.setTimeout(() => (shown = true), delay);
+    };
+    const poll = setInterval(check, 400);
+    const stop = () => {
+      removeEventListener('scroll', check);
+      clearInterval(poll);
+    };
+    addEventListener('scroll', check, { passive: true });
+    check();
     return () => {
-      io.disconnect();
-      clearTimeout(bail);
+      stop();
+      clearTimeout(timer);
     };
   });
 </script>

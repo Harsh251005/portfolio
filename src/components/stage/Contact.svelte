@@ -16,7 +16,7 @@
     <p class="label">Talk to me</p>
 
     <h2>
-      {#each HEAD as t, i (i)}<span class="lw" style={`--i:${i}`}>{t}</span>{' '}{/each}<Marker delay={1300}
+      {#each HEAD as t, i (i)}<span class="lw" style={`--i:${i}`}>{t}</span>{' '}{/each}<Marker delay={1950}
         >{#each TAIL as t, i (i)}<span class="lw" style={`--i:${HEAD.length + i}`}>{t}</span>{#if i < TAIL.length - 1}{' '}{/if}{/each}</Marker
       >
     </h2>
