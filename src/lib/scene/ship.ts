@@ -158,8 +158,9 @@ export function makeShip() {
     const L = 300 * k;
     const speed = 3 * scale; // px per second: very slow, it takes minutes to cross
     const span = w + L + 200;
-    // It starts centred under the moon, partly off the right edge, and drifts in.
-    const bx = w + L / 2 + 100 - ((w * 0.115 + L / 2 + 100 + t * speed) % span);
+    // It starts fully in view under the moon, its stern about a centimetre
+    // (40px) in from the right edge, and drifts left.
+    const bx = w + L / 2 + 100 - ((40 + L + 100 + t * speed) % span);
     const wy = hz + (h - hz) * 0.34;
     const by = wy + Math.sin(t * 0.5) * 0.6 * scale;
     const roll = Math.sin(t * 0.37 + 1) * 0.004;
