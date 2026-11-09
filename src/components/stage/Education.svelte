@@ -96,7 +96,8 @@
   .work li::before { content: ''; position: absolute; left: 0; top: 0.65em; width: 0.6rem; height: 1px; background: var(--accent); }
 
   .next { font-size: var(--t-base); font-variation-settings: 'wght' 560; color: var(--accent); text-decoration: none; }
-  .next:hover, .next:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+  .next:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+  @media (hover: hover) { .next:hover { text-decoration: underline; text-underline-offset: 4px; } }
 
   .past { list-style: none; margin: 0; padding: var(--s-2) var(--s-5); }
   .past li { display: grid; grid-template-columns: 1fr auto; gap: var(--s-1) var(--s-4); padding-block: var(--s-4); border-top: 1px solid var(--rule); }

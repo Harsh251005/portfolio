@@ -397,10 +397,12 @@
     transition: transform 320ms var(--ease-out), box-shadow 420ms var(--ease-out);
   }
 
-  .slot:hover .card {
-    --tx: -3px;
-    --ty: -3px;
-    box-shadow: var(--card-hover);
+  @media (hover: hover) {
+    .slot:hover .card {
+      --tx: -3px;
+      --ty: -3px;
+      box-shadow: var(--card-hover);
+    }
   }
 
   /* A moonlit edge that follows the pointer around the border. */
@@ -420,7 +422,7 @@
     pointer-events: none;
   }
 
-  .slot:hover .card::after { opacity: 1; }
+  @media (hover: hover) { .slot:hover .card::after { opacity: 1; } }
 
   /* The band of light that crosses the face as it turns up. */
   .sheen {
@@ -456,7 +458,7 @@
     transition: opacity 320ms var(--ease);
   }
 
-  .slot:hover .hint { opacity: 1; }
+  @media (hover: hover) { .slot:hover .hint { opacity: 1; } }
 
   .num {
     font-family: var(--font-label);
@@ -482,8 +484,10 @@
   }
 
   /* Hover: the whole attention map, held. */
-  .slot:hover .w {
-    background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent);
+  @media (hover: hover) {
+    .slot:hover .w {
+      background-color: color-mix(in oklab, var(--card-accent) calc(var(--w) * 42%), transparent);
+    }
   }
 
   .card a {
@@ -501,7 +505,7 @@
     text-underline-offset: 0.3em;
   }
 
-  .card a:hover { color: var(--accent); }
+  @media (hover: hover) { .card a:hover { color: var(--accent); } }
 
   /* The whole card is the link: the anchor's own box stays small, and this
      stretches its click area over the card. */

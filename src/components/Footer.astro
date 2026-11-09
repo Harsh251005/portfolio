@@ -90,7 +90,8 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
 
   .primary { font-size: var(--t-base); background: var(--accent); border-color: var(--accent); color: var(--paper); }
 
-  .btn:hover,
+  /* Keyboard focus always shows. Hover only on devices that really hover:
+     a phone keeps a tapped link "hovered", so it stayed lit after coming back. */
   .btn:focus-visible {
     background: var(--accent);
     color: var(--paper);
@@ -98,9 +99,18 @@ const ICONS: Record<string, { d: string; filled: boolean }> = {
     box-shadow: 0 14px 40px rgba(243, 223, 174, 0.22);
     border-color: var(--accent);
   }
+  @media (hover: hover) {
+    .btn:hover {
+      background: var(--accent);
+      color: var(--paper);
+      transform: translate(-3px, -3px);
+      box-shadow: 0 14px 40px rgba(243, 223, 174, 0.22);
+      border-color: var(--accent);
+    }
+    .btn:hover .arrow { transform: translate(3px, -3px); }
+  }
 
   .arrow { margin-left: auto; transition: transform 260ms var(--ease-out); }
-  .btn:hover .arrow { transform: translate(3px, -3px); }
 
   .line {
     display: flex;

@@ -189,7 +189,7 @@
     text-decoration-color: var(--accent);
   }
 
-  .cue:hover { color: var(--accent); }
+  @media (hover: hover) { .cue:hover { color: var(--accent); } }
 
   @media (width >= 60rem) {
     .statement { font-size: var(--t-2xl); max-width: 26ch; }
