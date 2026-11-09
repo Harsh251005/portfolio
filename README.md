@@ -86,9 +86,12 @@ What moves:
 
 - **The moonlit sea** sits fixed behind the whole page (`src/lib/scene/sea.ts`). The
   water is a WebGL shader, so the moon's path comes from real reflection; the sky is
-  a 2D canvas with stars, clouds, a sailing boat and the odd shooting star. The moon and its path
+  a 2D canvas with stars, clouds, a cruise liner and the odd shooting star. The liner
+  (`src/lib/scene/ship.ts`) has people on board: couples walking the lit promenade, diners and
+  waiters in the restaurant windows, people on the top deck and stepping out onto balconies, and
+  cabin lights that change every few seconds; its windows streak light down the water. The moon and its path
   on the water brighten when the cursor is on the moon. On a portrait screen the moon sits high in the
-  empty sky above the hero text, and the boat drifts slower (its speed follows its size). Scrolling never changes the scene. Colours live in one palette
+  empty sky above the hero text, and the liner is smaller and sails low, below the buttons. Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
 - **The name** is a solid block with real depth (`src/lib/motion/solid-name.ts`).
