@@ -159,7 +159,7 @@ export function makeShip() {
     const scale = Math.min(1, w / 1100) * 0.45 + 0.55;
     const k = narrow ? (w * 0.6) / 300 : scale * 1.75; // px per unit
     const L = 300 * k;
-    const speed = 13 * scale;
+    const speed = 3 * scale; // px per second: very slow, it takes minutes to cross
     const span = w + L + 200;
     // It starts in view, to the right of the hero text (centred on a phone).
     const bx = w + L / 2 + 100 - ((w * (narrow ? 0.5 : 0.28) + L / 2 + 100 + t * speed) % span);
