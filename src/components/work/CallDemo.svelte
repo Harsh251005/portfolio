@@ -117,9 +117,9 @@
   .controls { display: flex; flex-wrap: wrap; gap: var(--s-3); }
   button { min-height: var(--tap); padding: 0 var(--s-5); border-radius: 999px; font: inherit; font-variation-settings: 'wght' 600; font-size: var(--t-sm); cursor: pointer; transition: background-color 200ms, color 200ms, border-color 200ms; }
   .go { background: var(--accent); color: var(--paper); border: 1px solid var(--accent); }
-  .go:hover { background: var(--ink); border-color: var(--ink); }
+  @media (hover: hover) { .go:hover { background: var(--ink); border-color: var(--ink); } }
   .ghost { background: transparent; color: var(--ink); border: 1px solid var(--glass-border); }
-  .ghost:hover { border-color: var(--accent); color: var(--accent); }
+  @media (hover: hover) { .ghost:hover { border-color: var(--accent); color: var(--accent); } }
   .tag { color: var(--ink-faint); font-size: var(--t-xs); }
 
   @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.98); } }

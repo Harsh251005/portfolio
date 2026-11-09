@@ -8,8 +8,8 @@ order: 1
 items:
   - label: "It says when it doesn't know"
     body: "The document reader gives a page number, or says it couldn't find the answer. It never fills the gap with a guess."
-  - label: "It knows when to stop"
-    body: "The code fixer gets five fixes. A system left alone will keep paying to repeat the same mistake."
+  - label: "It says how sure it is"
+    body: "TruthLens gives a confidence with every verdict, and says so when a photo is too close to call."
   - label: "It checks itself"
     body: "Questions with known answers run after every change. If the answers get worse, the change is rejected."
   - label: "A person can step in"

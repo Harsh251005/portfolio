@@ -124,10 +124,10 @@
   .demo { padding: var(--s-5); display: grid; gap: var(--s-4); }
   .row { display: flex; flex-wrap: wrap; gap: var(--s-2); }
   button { min-height: var(--tap); padding: 0 var(--s-5); border-radius: 999px; font: inherit; font-variation-settings: 'wght' 600; font-size: var(--t-sm); cursor: pointer; background: transparent; color: var(--ink); border: 1px solid var(--glass-border); transition: background-color 200ms, color 200ms, border-color 200ms; }
-  button:hover { border-color: var(--accent); color: var(--accent); }
+  @media (hover: hover) { button:hover { border-color: var(--accent); color: var(--accent); } }
   button.on { background: color-mix(in oklab, var(--accent) 22%, transparent); border-color: var(--accent); color: var(--accent); }
   .go { background: var(--accent); color: var(--paper); border-color: var(--accent); }
-  .go:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  @media (hover: hover) { .go:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); } }
 
   .ask { font-size: var(--t-xl); letter-spacing: -0.02em; color: var(--ink); }
   .lab { display: block; font-family: var(--font-label); font-size: var(--t-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--s-1); }

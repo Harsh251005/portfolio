@@ -11,7 +11,7 @@ tagline: "A receptionist that never sleeps"
 plain: "So I built a receptionist that answers at any hour, finds the next free slot with a doctor and books it. It speaks Hindi today, with Marathi and English next, and the clinic sees every booking on their screen. It runs on the clinic's website for now, with a phone line to follow."
 blurb: "Talks to a clinic's patients *in Hindi* on its *website*, and *books the appointment*."
 link: "https://github.com/Harsh251005/clinic-voice-agent"
-followups: ["code-fixer", "the-problem"]
+followups: ["truthlens", "the-problem"]
 ---
 
 Small clinics usually have one person on the front desk. When that person is

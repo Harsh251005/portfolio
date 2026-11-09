@@ -96,7 +96,7 @@ const CASES: [string, string][] = [
   ['whats the most difficult thing youve built', 'receptionist'],
   ['what goes wrong', 'the-problem'],
   ['does it understand accents', 'receptionist'],
-  ['how does the code fixer work', 'code-fixer'],
+  ['is this photo real', 'truthlens'],
 ];
 
 const brain = createStaticBrain(entries);

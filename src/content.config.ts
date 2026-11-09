@@ -88,7 +88,7 @@ const knowledge = defineCollection({
 
 /* ---------------------------------------------------------------
    One project page = one Markdown file here, named like the project's
-   id in the knowledge collection (receptionist, code-fixer, ...).
+   id in the knowledge collection (receptionist, truthlens, ...).
 
    The page at /work/<id> shows the project's card copy from the
    knowledge entry first, then the frontmatter below, then this file's
@@ -119,7 +119,7 @@ const projects = defineCollection({
      *  picks the component in src/components/work/. */
     demo: z
       .object({
-        kind: z.enum(['call', 'loop', 'retrieval']),
+        kind: z.enum(['call', 'scan', 'retrieval']),
         title: z.string(),
         lead: z.string(),
       })

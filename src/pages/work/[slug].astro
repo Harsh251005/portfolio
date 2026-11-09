@@ -8,7 +8,7 @@ import Base from '../../layouts/Base.astro';
 import Band from '../../components/stage/Band.astro';
 import Footer from '../../components/Footer.astro';
 import CallDemo from '../../components/work/CallDemo.svelte';
-import FixLoopDemo from '../../components/work/FixLoopDemo.svelte';
+import ScanDemo from '../../components/work/ScanDemo.svelte';
 import RetrievalDemo from '../../components/work/RetrievalDemo.svelte';
 import BuildStrip from '../../components/work/BuildStrip.astro';
 import { loadEntries } from '../../lib/knowledge';
@@ -81,7 +81,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           <p class="lead">{demo.lead}</p>
           <div class="stage">
             {demo.kind === 'call' && <CallDemo client:visible />}
-            {demo.kind === 'loop' && <FixLoopDemo client:visible />}
+            {demo.kind === 'scan' && <ScanDemo client:visible />}
             {demo.kind === 'retrieval' && <RetrievalDemo client:visible />}
           </div>
         </section>
@@ -162,7 +162,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--ink-soft);
     text-decoration: none;
   }
-  .back:hover { color: var(--accent); }
+  @media (hover: hover) { .back:hover { color: var(--accent); } }
 
   .panel { padding: var(--s-6); }
 
@@ -231,7 +231,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     text-decoration-color: var(--accent);
     text-underline-offset: 0.3em;
   }
-  .code:hover { color: var(--accent); }
+  @media (hover: hover) { .code:hover { color: var(--accent); } }
 
   /* ---------- the page arrives in order ---------- */
 
@@ -307,7 +307,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--ink);
   }
   .writeup summary::-webkit-details-marker { display: none; }
-  .writeup summary:hover { color: var(--accent); }
+  @media (hover: hover) { .writeup summary:hover { color: var(--accent); } }
   .chev { font-family: var(--font-mono); font-size: var(--t-xl); color: var(--accent); transition: transform 300ms var(--ease-out); }
   .writeup[open]:not([data-closing]) .chev { transform: rotate(45deg); }
   .writeup[open] summary { margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px solid var(--rule); }
@@ -351,7 +351,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     text-decoration: none;
     transition: background-color 320ms var(--ease), transform 320ms var(--ease-out);
   }
-  .more:hover { background: rgba(26, 38, 68, 0.85); transform: translateY(-3px); }
+  @media (hover: hover) { .more:hover { background: rgba(26, 38, 68, 0.85); transform: translateY(-3px); } }
   .more .title { font-size: var(--t-xl); font-variation-settings: 'wght' 560; letter-spacing: -0.02em; }
 
   @media (width >= 48rem) {
