@@ -121,9 +121,12 @@ What moves:
   Education; pointing at a group dims the others. Only the core skills are shown; the
   resume has the full list.
 - **Education** (`Education.svelte`) leads with where I am now: the current role is a
-  card that turns over (`FlipCard.svelte`) on a click or tap anywhere on it, or with
-  its "What I do there" button, to show what the work involves. Past education sits
-  beside it as a list, newest first. With reduced motion the card cross-fades.
+  card that turns over (`FlipCard.svelte`) to show what the work involves: on hover
+  with a mouse, on a tap on touch screens, or with its "What I do there" button. It
+  turns back only once the pointer leaves the area of the taller face, so its change
+  in height can never make it flip back and forth. The first time it scrolls into view
+  it makes a small half-turn, a hint that it turns. Past education sits beside it as a
+  list, newest first. With reduced motion the card cross-fades and skips the half-turn.
 - **Changing page** uses Astro's page router (`<ClientRouter />` in `Base.astro`). The sea
   is kept alive across pages (`transition:persist`), so it never restarts or flashes; the
   page above it leaves and arrives; and the project card that was clicked grows into the
