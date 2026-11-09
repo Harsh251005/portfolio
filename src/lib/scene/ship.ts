@@ -153,17 +153,14 @@ export function makeShip() {
     const dt = last === null ? 0.016 : Math.min(0.1, t - last);
     last = t;
 
-    // On a phone the hero text and buttons fill the middle, so the ship is
-    // smaller (about 60% of the width) and sails lower, below the buttons.
-    const narrow = w < h;
     const scale = Math.min(1, w / 1100) * 0.45 + 0.55;
-    const k = narrow ? (w * 0.6) / 300 : scale * 1.75; // px per unit
+    const k = scale * 1.75; // px per unit
     const L = 300 * k;
     const speed = 3 * scale; // px per second: very slow, it takes minutes to cross
     const span = w + L + 200;
-    // It starts in view, to the right of the hero text (centred on a phone).
-    const bx = w + L / 2 + 100 - ((w * (narrow ? 0.5 : 0.28) + L / 2 + 100 + t * speed) % span);
-    const wy = hz + (h - hz) * (narrow ? 0.74 : 0.34);
+    // It starts centred under the moon, partly off the right edge, and drifts in.
+    const bx = w + L / 2 + 100 - ((w * 0.115 + L / 2 + 100 + t * speed) % span);
+    const wy = hz + (h - hz) * 0.34;
     const by = wy + Math.sin(t * 0.5) * 0.6 * scale;
     const roll = Math.sin(t * 0.37 + 1) * 0.004;
 

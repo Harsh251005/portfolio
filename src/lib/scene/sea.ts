@@ -12,6 +12,7 @@
    --------------------------------------------------------------- */
 
 import { makeShip } from './ship';
+import { drawSailboat } from './sailboat';
 
 type RGB = [number, number, number];
 
@@ -303,7 +304,8 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
   });
 
   let shooting: { x: number; y: number; vx: number; vy: number; t: number } | null = null;
-  const drawShip = makeShip();
+  // A cruise liner on wide screens; on a phone it has no room, so a small sailboat.
+  const drawBoat = w < h ? drawSailboat : makeShip();
   let nextShot = 6000;
   let last = 0;
 
@@ -368,8 +370,8 @@ function makeSky(canvas: HTMLCanvasElement, w: number, h: number, palette: Palet
     }
     ctx.globalAlpha = 1;
 
-    /* ---- a cruise liner out on the water, with people on board (ship.ts) ---- */
-    drawShip(ctx, t, w, h, hz);
+    /* ---- the boat: a cruise liner (ship.ts), or a sailboat on phones (sailboat.ts) ---- */
+    drawBoat(ctx, t, w, h, hz);
   };
 }
 

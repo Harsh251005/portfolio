@@ -91,7 +91,7 @@ What moves:
   waiters in the restaurant windows, people on the top deck and stepping out onto balconies, and
   cabin lights that change every few seconds; its windows streak light down the water. The moon and its path
   on the water brighten when the cursor is on the moon. On a portrait screen the moon sits high in the
-  empty sky above the hero text, and the liner is smaller and sails low, below the buttons. Scrolling never changes the scene. Colours live in one palette
+  empty sky above the hero text, and the liner (too long for a narrow screen) is swapped for a small sailboat (`src/lib/scene/sailboat.ts`). Scrolling never changes the scene. Colours live in one palette
   (`NIGHT`). With reduced motion it is a still frame, and without script the page
   stays plain dark.
 - **The name** is a solid block with real depth (`src/lib/motion/solid-name.ts`).
