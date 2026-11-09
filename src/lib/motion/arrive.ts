@@ -1,27 +1,26 @@
-/* Unfold from the top line: each [data-unfold] item inside the element opens
+/* A section's entrance: each [data-arrive] item inside the element arrives
    once it is well into view (its top above 75% of the screen), not the moment
-   it peeks in, so the visitor actually sees it happen. What the opening looks
-   like is up to the component's CSS, keyed on `.unfold-armed`, `.in` and
-   `.done`. Set --d on an item to stagger it.
+   it peeks in, so the visitor actually sees it happen. What the arrival looks
+   like is up to each section's own CSS, keyed on `.arrive-armed` on the root
+   and `.in` / `.done` on the item, so every section can enter differently.
+   Set --d on an item to stagger it.
 
    Without script, or with reduced motion, the root is never armed and
    everything is simply there. Each item also gets `.done` on a timer, which
    the CSS uses to snap to the finished state if a transition never ran
    (background tabs). Items already scrolled past, e.g. after a refresh that
    keeps the reader's place, open at once. */
-const DONE_AFTER = 2600;
-
-export function unfold(root: HTMLElement) {
+export function arrive(root: HTMLElement, { doneAfter = 3000 }: { doneAfter?: number } = {}) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const items = Array.from(root.querySelectorAll<HTMLElement>('[data-unfold]'));
-  root.classList.add('unfold-armed');
+  const items = Array.from(root.querySelectorAll<HTMLElement>('[data-arrive]'));
+  root.classList.add('arrive-armed');
   const timers: number[] = [];
 
   const open = (el: HTMLElement) => {
     if (el.classList.contains('in')) return;
     el.classList.add('in');
-    timers.push(window.setTimeout(() => el.classList.add('done'), DONE_AFTER));
+    timers.push(window.setTimeout(() => el.classList.add('done'), doneAfter));
   };
 
   const check = () => {

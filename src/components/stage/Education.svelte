@@ -1,8 +1,12 @@
 <script lang="ts">
   /* Where I am now, then how I got here. The current role leads as a card
      that turns over to show what the work involves; past education sits in
-     a plain list beside it, newest first. */
-  import { reveal } from '../../lib/motion/reveal';
+     a plain list beside it, newest first.
+
+     Entrance: the heading is wiped in from the left with a soft edge, the
+     card slides in, and a gold timeline line grows down the list, each step
+     appearing as the line reaches it. */
+  import { arrive } from '../../lib/motion/arrive';
   import FlipCard from './FlipCard.svelte';
 
   const NOW = {
@@ -27,12 +31,14 @@
   ];
 </script>
 
-<div class="page edu" use:reveal>
-  <p class="label">Experience &amp; Education</p>
-  <h2 data-reveal>Where I am now, and how I got here.</h2>
+<div class="page edu" use:arrive={{ doneAfter: 3000 }}>
+  <div class="head" data-arrive>
+    <p class="label">Experience &amp; Education</p>
+    <h2>Where I am now, and how I got here.</h2>
+  </div>
 
   <div class="grid">
-    <div class="now" data-reveal style="--d:0">
+    <div class="now" data-arrive>
       <FlipCard frontCue="What I do there" backCue="Turn back">
         {#snippet front()}
           <p class="tag"><span class="pulse" aria-hidden="true"></span>Now</p>
@@ -52,9 +58,9 @@
       <a class="next" href="#contact">Open to what's next. Let's talk <span aria-hidden="true">↓</span></a>
     </div>
 
-    <ol class="glass past" data-reveal style="--d:1">
-      {#each PAST as step (step.when)}
-        <li>
+    <ol class="glass past" data-arrive>
+      {#each PAST as step, j (step.when)}
+        <li style={`--j:${j}`}>
           <p class="when">{step.when}</p>
           <p class="what">{step.what}</p>
           <p class="where">{step.where}</p>
@@ -108,4 +114,48 @@
   .score { grid-row: 2 / span 2; grid-column: 2; align-self: center; font: var(--t-base)/1 var(--font-mono); color: var(--accent); white-space: nowrap; }
 
   @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+
+  /* ---- the entrance (only once script has armed it) ---- */
+  /* Heading: a soft-edged wipe from the left. The mask is 2.6x as wide as
+     the text, opaque on its left part: at 0% the text shows, at 100% not. */
+  .edu:global(.arrive-armed) .head > * {
+    -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+    mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+    -webkit-mask-size: 260% 100%;
+    mask-size: 260% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+    transition: -webkit-mask-position 1300ms var(--ease), mask-position 1300ms var(--ease);
+  }
+  .edu:global(.arrive-armed) .head > h2 { transition-delay: 150ms; }
+  .edu:global(.arrive-armed) .head:not(:global(.in)) > * { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  .edu:global(.arrive-armed) .head:global(.done) > * { -webkit-mask-image: none; mask-image: none; transition: none; }
+
+  /* The card slides in from the left. */
+  .edu:global(.arrive-armed) .now { transition: opacity 700ms var(--ease-out), translate 900ms var(--ease-out); }
+  .edu:global(.arrive-armed) .now:not(:global(.in)) { opacity: 0; translate: -32px 0; }
+  .edu:global(.arrive-armed) .now:global(.done) { transition: none; }
+
+  /* The list: a timeline line grows down it, each step arriving as it passes. */
+  .past { position: relative; }
+  .edu:global(.arrive-armed) .past::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--s-5) / 2);
+    top: var(--s-5);
+    bottom: var(--s-5);
+    width: 1px;
+    background: var(--accent);
+    opacity: 0.85;
+    transform-origin: top;
+    transition: transform 1200ms var(--ease);
+    transition-delay: 200ms;
+  }
+  .edu:global(.arrive-armed) .past:not(:global(.in))::before { transform: scaleY(0); }
+  .edu:global(.arrive-armed) .past li { transition: opacity 600ms var(--ease-out), translate 700ms var(--ease-out); transition-delay: calc(350ms + var(--j) * 330ms); }
+  .edu:global(.arrive-armed) .past:not(:global(.in)) li { opacity: 0; translate: -16px 0; }
+  .edu:global(.arrive-armed) .past:global(.done) li,
+  .edu:global(.arrive-armed) .past:global(.done)::before { transition: none; }
 </style>

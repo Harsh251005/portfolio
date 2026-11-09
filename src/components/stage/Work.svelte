@@ -20,8 +20,14 @@
   import { onMount } from 'svelte';
   import type { Entry } from '../../lib/brain/types';
   import Marker from './Marker.svelte';
+  import { arrive } from '../../lib/motion/arrive';
 
   let { entries }: { entries: Entry[] } = $props();
+
+  /** The heading, word by word: each word rises into view on its own line
+   *  as the section arrives. The second part is the marked phrase. */
+  const HEAD = ['AI', 'works', 'in', 'the', 'demo.', 'Then'];
+  const TAIL = ['real', 'people', 'use', 'it.'];
 
   /** Words a model would barely look at. */
   const STOP = new Set(['a','an','the','in','and','or','of','it','its','to','is','as','with','on','for','at','by','into','but','their','them']);
@@ -272,12 +278,18 @@
   });
 </script>
 
-<div class="work" bind:this={root}>
+<div class="work" bind:this={root} use:arrive>
   <div class="stage">
     <div class="page">
-      <p class="label">Things I've built</p>
-      <h2>AI works in the demo. Then <Marker>real people use it.</Marker></h2>
-      <p class="sub">Three things I built for the second part.</p>
+      <div class="intro" data-arrive>
+        <p class="label"><span class="rw"><span class="ri">Things I've built</span></span></p>
+        <h2>
+          {#each HEAD as t, i (i)}<span class="rw"><span class="ri" style={`--i:${i + 1}`}>{t}</span></span>{' '}{/each}<Marker delay={1100}
+            >{#each TAIL as t, i (i)}<span class="rw"><span class="ri" style={`--i:${HEAD.length + i + 1}`}>{t}</span></span>{#if i < TAIL.length - 1}{' '}{/if}{/each}</Marker
+          >
+        </h2>
+        <p class="sub">Three things I built for the second part.</p>
+      </div>
 
       <ol class="deck">
         {#each entries as entry, i (entry.id)}
@@ -327,6 +339,17 @@
   }
 
   .sub { margin-top: var(--s-4); font-size: var(--t-lg); color: var(--ink-soft); }
+
+  /* ---- the entrance: each word of the heading rises up out of its own
+     line, one after another, then the line below fades in ---- */
+  .rw { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+  .ri { display: inline-block; }
+  .work:global(.arrive-armed) .ri { transition: transform 850ms var(--ease-out); transition-delay: calc(var(--i, 0) * 75ms + 100ms); }
+  .work:global(.arrive-armed) .sub { transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); transition-delay: 1000ms; }
+  .work:global(.arrive-armed) .intro:not(:global(.in)) .ri { transform: translateY(110%); }
+  .work:global(.arrive-armed) .intro:not(:global(.in)) .sub { opacity: 0; transform: translateY(10px); }
+  .work:global(.arrive-armed) .intro:global(.done) .ri,
+  .work:global(.arrive-armed) .intro:global(.done) .sub { transition: none; }
 
   .deck {
     position: relative;

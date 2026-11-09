@@ -118,14 +118,20 @@ What moves:
   document). In the demos, parts that appear or leave use the `appear` and `fold`
   transitions in `src/lib/motion/gentle.ts`. New open/close UI should use these two.
 - **About** ("What I do") unfolds from its top line once it is well into view
-  (`src/lib/motion/unfold.ts`): the label, a gold line drawn across, then the heading opens
+  (`src/lib/motion/arrive.ts`): the label, a gold line drawn across, then the heading opens
   downward from it; each column does the same from its own gold line. On a phone each
   part opens as it reaches the screen; after a refresh further down it is simply open.
-- **Skills and Education** fade and rise once as they come into view
-  (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
+- **Every section enters its own way** once it is well into view, heading included,
+  through the same trigger (`src/lib/motion/arrive.ts`; the look lives in each section's CSS):
+  Things I've built: the heading's words rise one by one out of their line. Skills: the
+  heading comes into focus from a blur, then each group's name wipes in and its tools are
+  listed one at a time. Experience & Education: the heading is wiped in from the left with a
+  soft edge, the card slides in, and a gold timeline line grows down the list, each step
+  appearing as it passes (the card's half-turn hint waits until it has arrived). Talk to me:
+  the heading's words light up one after another, each catching the gold for a moment.
+  Reduced motion and no script see everything at once.
 - **Skills** (`Skills.svelte`) is a plain index: each group's name with its tools
-  beside it, no numbers so nothing reads as a ranking. Rows fade in like
-  Education; pointing at a group dims the others. Only the core skills are shown; the
+  beside it, no numbers so nothing reads as a ranking. Pointing at a group dims the others. Only the core skills are shown; the
   resume has the full list.
 - **Experience & Education** (`Education.svelte`, section id `education`) leads with where I am now: the current role is a
   card that turns over (`FlipCard.svelte`) to show what the work involves: on hover

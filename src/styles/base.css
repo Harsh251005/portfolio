@@ -151,22 +151,6 @@ a.touch {
 }
 
 /* ---------------------------------------------------------------
-   The quiet entrance. See src/lib/motion/reveal.ts.
-   --------------------------------------------------------------- */
-
-.reveal-armed [data-reveal] {
-  transition:
-    opacity 900ms var(--ease-out),
-    transform 900ms var(--ease-out);
-  transition-delay: calc(var(--d, 0) * 110ms);
-}
-
-.reveal-armed [data-reveal]:not(.in) {
-  opacity: 0;
-  transform: translateY(22px);
-}
-
-/* ---------------------------------------------------------------
    Moving between pages. The sea is its own layer and is kept alive, so it
    never fades or restarts; the page above it leaves and arrives, and a
    project card that was clicked grows into the top of its page.

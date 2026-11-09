@@ -72,13 +72,14 @@
       if (!entry.isIntersecting) return;
       io.disconnect();
       if (still) return;
-      // After the section's own reveal has settled.
+      // After the section's entrance has brought the card in. Same trigger
+      // line as that entrance (its top above 75% of the screen).
       timer = window.setTimeout(() => {
         if (flipped) return;
         peek = true;
         timer = window.setTimeout(() => (peek = false), 1300);
-      }, 700);
-    }, { threshold: 0.6 });
+      }, 1200);
+    }, { rootMargin: '0px 0px -25% 0px' });
     io.observe(card);
     return () => { io.disconnect(); clearTimeout(timer); stopWatching(); };
   });
