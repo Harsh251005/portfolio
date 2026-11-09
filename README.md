@@ -120,7 +120,7 @@ What moves:
   beside it, no numbers so nothing reads as a ranking. Rows fade in like About and
   Education; pointing at a group dims the others. Only the core skills are shown; the
   resume has the full list.
-- **Education** (`Education.svelte`) leads with where I am now: the current role is a
+- **Experience & Education** (`Education.svelte`, section id `education`) leads with where I am now: the current role is a
   card that turns over (`FlipCard.svelte`) to show what the work involves: on hover
   with a mouse, on a tap on touch screens, or with its "What I do there" button. It
   turns back only once the pointer leaves the area of the taller face, so its change

@@ -28,7 +28,7 @@
 </script>
 
 <div class="page edu" use:reveal>
-  <p class="label">Education</p>
+  <p class="label">Experience &amp; Education</p>
   <h2 data-reveal>Where I am now, and how I got here.</h2>
 
   <div class="grid">
