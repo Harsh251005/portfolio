@@ -117,10 +117,14 @@ What moves:
   reverses if clicked mid-way (`src/lib/motion/disclosure.ts`, one listener on the
   document). In the demos, parts that appear or leave use the `appear` and `fold`
   transitions in `src/lib/motion/gentle.ts`. New open/close UI should use these two.
-- **About, Skills and Education** fade and rise once as they come into view
+- **About** ("What I do") unfolds from its top line once it is well into view
+  (`src/lib/motion/unfold.ts`): the label, a gold line drawn across, then the heading opens
+  downward from it; each column does the same from its own gold line. On a phone each
+  part opens as it reaches the screen; after a refresh further down it is simply open.
+- **Skills and Education** fade and rise once as they come into view
   (`src/lib/motion/reveal.ts`), kept quiet so the sea and the deck carry the page.
 - **Skills** (`Skills.svelte`) is a plain index: each group's name with its tools
-  beside it, no numbers so nothing reads as a ranking. Rows fade in like About and
+  beside it, no numbers so nothing reads as a ranking. Rows fade in like
   Education; pointing at a group dims the others. Only the core skills are shown; the
   resume has the full list.
 - **Experience & Education** (`Education.svelte`, section id `education`) leads with where I am now: the current role is a
